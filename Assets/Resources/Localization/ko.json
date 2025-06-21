@@ -1,0 +1,142 @@
+{
+	"language": 	"한국어",
+	"font":		"Paperlogy SDF",
+	"texts": [
+		{
+			"key": "option_title",
+			"text": "설정"
+		},
+		{
+			"key": "language_label",
+			"text": "언어"
+		},
+		{
+			"key": "language_name",
+			"text": "한국어"
+		},
+		{
+			"key": "apartment_title",
+			"text": "공동 주택"
+		},
+		{
+			"key": "dock_title",
+			"text": "선착장"
+		},
+		{
+			"key": "farm_title",
+			"text": "농장"
+		},
+		{
+			"key": "fortress_title",
+			"text": "요새"
+		},
+		{
+			"key": "house_title",
+			"text": "집"
+		},
+		{
+			"key": "hydroponics_farm_title",
+			"text": "수경 농장"
+		},
+		{
+			"key": "lumber_camp_title",
+			"text": "벌목장"
+		},
+		{
+			"key": "market_title",
+			"text": "시장"
+		},
+		{
+			"key": "pier_title",
+			"text": "낚시터"
+		},
+		{
+			"key": "quarry_title",
+			"text": "채석장"
+		},
+		{
+			"key": "restaurant_title",
+			"text": "식당"
+		},
+		{
+			"key": "school_title",
+			"text": "학교"
+		},
+		{
+			"key": "textile_mill_title",
+			"text": "방직소"
+		},
+		{
+			"key": "town_hall_title",
+			"text": "시청"
+		},
+		{
+			"key": "deck_title",
+			"text": "데크"
+		},
+		{
+			"key": "empty_tile_title",
+			"text": "빈 타일"
+		},
+		{
+			"key": "woods_tile_title",
+			"text": "숲 타일"
+		},
+		{
+			"key": "stone_tile_title",
+			"text": "돌 타일"
+		},
+		{
+			"key": "fertile_tile_title",
+			"text": "비옥한 타일"
+		},
+		{
+			"key": "fertile_woods_tile_title",
+			"text": "비옥한 숲 타일"
+		},
+		{
+			"key": "fertile_stone_tile_title",
+			"text": "비옥한 돌 타일"
+		},
+		{
+			"key": "resource_info_label",
+			"text": "자원 정보"
+		},
+		{
+			"key": "population_label",
+			"text": "인구"
+		},
+		{
+			"key": "fish_label",
+			"text": "물고기"
+		},
+		{
+			"key": "food_label",
+			"text": "음식"
+		},
+		{
+			"key": "cotton_label",
+			"text": "목화"
+		},
+		{
+			"key": "clothe_label",
+			"text": "옷"
+		},
+		{
+			"key": "efficiency_bonus_label",
+			"text": "효율 보너스"
+		},
+		{
+			"key": "radius_bonus_label",
+			"text": "추가 범위"
+		},
+		{
+			"key": "provides_to_label",
+			"text": "공급하는 건물"
+		},
+		{
+			"key": "provided_from_label",
+			"text": "공급받는 건물"
+		}
+	]
+}

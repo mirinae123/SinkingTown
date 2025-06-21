@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a2d7f3515ce7c24594c96283012cf88, type: 3}
+  m_Name: School
+  m_EditorClassIdentifier: 
+  StructureType: 0
+  StructureImage: {fileID: 0}
+  StructureNameKey: school_title
+  StructurePrefab: {fileID: 9073670328388804027, guid: d6fe6e57057151a44a94ae3bb9106c0b, type: 3}
+  BuildingStructurePrefab: {fileID: 0}
+  DisabledStructurePrefab: {fileID: 0}
+  SunkenStructurePrefab: {fileID: 9073670328388804027, guid: b9680d7c6ee0d6545a65b86157fb3f2f, type: 3}
+  Needs:
+    population: 2
+    fish: 0
+    food: 0
+    wood: 0
+    stone: 0
+    cotton: 0
+    clothe: 0
+    efficiencyBonus: 0
+    radiusBonus: 0
+  Produces:
+    population: 0
+    fish: 0
+    food: 0
+    wood: 0
+    stone: 0
+    cotton: 0
+    clothe: 0
+    efficiencyBonus: 1
+    radiusBonus: 0
+  WoodCost: 2
+  StoneCost: 2
+  Radius: 3
+  MaxHappiness: 100
+  IncreaseSpeed: 0
+  DecreaseSpeed: 0
+  TimeToProduce: 0

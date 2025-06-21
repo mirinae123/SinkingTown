@@ -1,0 +1,18 @@
+{
+	"language": 	"English",
+	"font":		"Paperlogy SDF",
+	"texts": [
+		{
+			"key":		"option_title",
+			"text":		"OPTION"
+		},
+		{
+			"key":		"language_label",
+			"text":		"LANGUAGE"
+		},
+		{
+			"key":		"language_name",
+			"text":		"ENGLISH"
+		}
+	]
+}
