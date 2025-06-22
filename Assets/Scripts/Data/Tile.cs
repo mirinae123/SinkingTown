@@ -133,6 +133,8 @@ public class Tile
             // 주변 타일의 자원 제공자에 현재 건물을 추가
             AddToProviders();
         }
+
+        UIManager.Instance.UpdateTileInfo(_coordinate);
     }
 
     /// <summary>
@@ -160,6 +162,8 @@ public class Tile
             _structure = null;
             MapRenderer.Instance.UpdateTile(_coordinate);
         }
+
+        UIManager.Instance.UpdateTileInfo(_coordinate);
     }
 
     /// <summary>
