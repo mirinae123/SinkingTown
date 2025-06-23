@@ -33,9 +33,12 @@ public class CameraManager : MonoBehaviour
     private void Start()
     {
         cam = GetComponent<Camera>();
+
+        InputHandler.Instance.OnMoveInput += OnMoveInput;
+        InputHandler.Instance.OnRotateInput += OnRotateInput;
     }
 
-    void Update()
+    private void Update()
     {
         if (!isRotating)
         {
@@ -51,7 +54,13 @@ public class CameraManager : MonoBehaviour
         transform.LookAt(new Vector3(x, 0, z));
     }
 
-    void OnMove(InputValue value)
+    private void OnDestroy()
+    {
+        InputHandler.Instance.OnMoveInput -= OnMoveInput;
+        InputHandler.Instance.OnRotateInput -= OnRotateInput;
+    }
+
+    private void OnMoveInput(InputValue value)
     {
         Vector2 input = value.Get<Vector2>();
         h = -input[0];
@@ -61,7 +70,7 @@ public class CameraManager : MonoBehaviour
         z_mov = v * Mathf.Sin(phi) + h * Mathf.Sin(phi - Mathf.PI / 2.0f);
     }
 
-    void OnRotate(InputValue value)
+    private void OnRotateInput(InputValue value)
     {
         float input = value.Get<float>();
 
@@ -76,7 +85,7 @@ public class CameraManager : MonoBehaviour
         }
     }
 
-    IEnumerator Rotate()
+    private IEnumerator Rotate()
     {
         float duration = 0f;
 
