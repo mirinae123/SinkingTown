@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// 게임 상태
@@ -21,6 +22,10 @@ public class GameManager : SingletonBehaviour<GameManager>
     private float _riseCooldown = OCEAN_RISE_PERIOD;
 
     private bool _isPaused = false;
+
+    private Camera _mainCamera;
+    private Vector2 _mousePosition;
+    private bool _isPointerOverGameObject = false;
 
     /// <summary>
     /// 현재 게임 상태
@@ -99,7 +104,15 @@ public class GameManager : SingletonBehaviour<GameManager>
     }
     private bool _hasTownHall = false;
 
-    void Update()
+    private void Start()
+    {
+        _mainCamera = Camera.main;
+
+        InputHandler.Instance.OnPointMoveInput += OnPointMoveInput;
+        InputHandler.Instance.OnClickInput += OnClickInput;
+    }
+
+    private void Update()
     {
         // 게임 진행 조건: 정지 상태가 아닐 것, 메뉴가 열려 있지 않을 것
         if (!_isPaused && _gameState != GameState.Menu)
@@ -108,28 +121,42 @@ public class GameManager : SingletonBehaviour<GameManager>
             ProcessOceanRise();
         }
 
+        _isPointerOverGameObject = EventSystem.current.IsPointerOverGameObject();
+    }
+
+    private void OnDestroy()
+    {
+        InputHandler.Instance.OnPointMoveInput -= OnPointMoveInput;
+        InputHandler.Instance.OnClickInput -= OnClickInput;
+    }
+
+    private void OnPointMoveInput(InputValue value)
+    {
+        _mousePosition = value.Get<Vector2>();
+    }
+
+    private void OnClickInput()
+    {
         switch (_gameState)
         {
             case GameState.None:
-                if (Input.GetMouseButtonDown(0))
                 {
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity))
+                    if (Physics.Raycast(_mainCamera.ScreenPointToRay(_mousePosition), out RaycastHit hit, Mathf.Infinity))
                     {
-                        if (!EventSystem.current.IsPointerOverGameObject())
+                        if (!_isPointerOverGameObject)
                         {
                             Vector2Int tilePos = HexaUtility.GetTileCoordinate(hit.point);
                             UIManager.Instance.ShowTileInfo(tilePos);
                         }
                     }
-                };
-                break;
+                    break;
+                }
 
             case GameState.Build:
-                if (Input.GetMouseButtonDown(0))
                 {
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, Mathf.Infinity))
+                    if (Physics.Raycast(_mainCamera.ScreenPointToRay(_mousePosition), out RaycastHit hit, Mathf.Infinity))
                     {
-                        if (!EventSystem.current.IsPointerOverGameObject())
+                        if (!_isPointerOverGameObject)
                         {
                             Vector2Int coordinate = HexaUtility.GetTileCoordinate(hit.point);
                             Tile tile = MapManager.Instance.Tiles[coordinate.x, coordinate.y];
@@ -141,8 +168,8 @@ public class GameManager : SingletonBehaviour<GameManager>
                             }
                         }
                     }
+                    break;
                 }
-                break;
             default:
                 break;
         }

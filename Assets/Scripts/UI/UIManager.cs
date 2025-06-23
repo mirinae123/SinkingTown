@@ -148,7 +148,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     /// </summary>
     public void UpdateTileInfo(Vector2Int tile)
     {
-        if (_tileInfo.enabled && tile == _tileInfo.CurrentTile.Coordinate)
+        if (_tileInfo.enabled && tile == _tileInfo.CurrentTile?.Coordinate)
         {
             _tileInfo.UpdateTileInfo(tile);
         }
