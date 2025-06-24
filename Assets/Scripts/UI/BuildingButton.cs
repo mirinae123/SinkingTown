@@ -25,8 +25,7 @@ public class BuildingButton : MonoBehaviour
         _buildingText.ChangeKey(StructureManager.Instance.GetStructureData(_structureType).StructureNameKey);
 
         _buildingButton.onClick.AddListener(() => {
-            GameManager.Instance.GameState = GameState.Build;
-            GameManager.Instance.StructureToBuild = _structureType;
+            GameManager.Instance.ChangeGameState(GameState.Build, _structureType);
 
             UIManager.Instance.HideBuildMenu();
         });

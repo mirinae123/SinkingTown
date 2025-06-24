@@ -35,7 +35,7 @@ public class BuildMenuUI : MonoBehaviour
     public void Show()
     {
         _animator.SetBool("IsOpen", true);
-        GameManager.Instance.GameState = GameState.None;
+        GameManager.Instance.ChangeGameState(GameState.None);
 
         foreach (Button button in _buttons)
         {

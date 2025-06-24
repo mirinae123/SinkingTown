@@ -39,7 +39,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         if (_currentUIState != UIState.MainMenu && _currentUIState != UIState.Option)
         {
             _currentUIState = UIState.MainMenu;
-            GameManager.Instance.GameState = GameState.Menu;
+            GameManager.Instance.ChangeGameState(GameState.Menu);
 
             _tileInfo.Hide();
             _buildMenu.Hide();
@@ -55,7 +55,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         if (_currentUIState == UIState.MainMenu)
         {
             _currentUIState = UIState.None;
-            GameManager.Instance.GameState = GameState.None;
+            GameManager.Instance.ChangeGameState(GameState.None);
 
             _mainMenu.Hide();
         }

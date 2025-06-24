@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8129184290163656753}
   - component: {fileID: 7748807012761875964}
+  - component: {fileID: 3453831118128180192}
+  - component: {fileID: 806884439840898211}
+  - component: {fileID: 2844933973343282180}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -44,7 +47,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dc4444d2730734e809559c7931b05b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameStates:
+  - {fileID: 3453831118128180192}
+  - {fileID: 806884439840898211}
+  - {fileID: 2844933973343282180}
   _dirLightTransform: {fileID: 0}
   _dirLightColor: {fileID: 0}
   _currentWoods: 999
   _currentStones: 999
+--- !u!114 &3453831118128180192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820081311587534367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5974b1e53ae788243bdb51c7f7bcacf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &806884439840898211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820081311587534367}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3eba016bb4b7a546a2525e22aa32c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2844933973343282180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820081311587534367}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 446ce159c6688214686409b73b4de9f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
