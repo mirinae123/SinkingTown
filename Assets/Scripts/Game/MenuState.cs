@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class MenuState : MonoBehaviour
 {
-    private void Start()
+    private void OnEnable()
     {
-        
+        InputHandler.Instance.OnEscapeInput += OnEscapeInput;
     }
 
-    private void Update()
+    private void OnDisable()
     {
-        
+        InputHandler.Instance.OnEscapeInput -= OnEscapeInput;
+    }
+
+    private void OnEscapeInput()
+    {
+        UIManager.Instance.ProcessEscapeInput();
     }
 }

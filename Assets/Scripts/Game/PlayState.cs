@@ -13,9 +13,20 @@ public class PlayState : MonoBehaviour
     private void Start()
     {
         _mainCamera = Camera.main;
+    }
 
+    private void OnEnable()
+    {
         InputHandler.Instance.OnPointMoveInput += OnPointMoveInput;
         InputHandler.Instance.OnClickInput += OnClickInput;
+        InputHandler.Instance.OnEscapeInput += OnEscapeInput;
+    }
+
+    private void OnDisable()
+    {
+        InputHandler.Instance.OnPointMoveInput -= OnPointMoveInput;
+        InputHandler.Instance.OnClickInput -= OnClickInput;
+        InputHandler.Instance.OnEscapeInput -= OnEscapeInput;
     }
 
     private void Update()
@@ -31,21 +42,11 @@ public class PlayState : MonoBehaviour
 
     private void OnPointMoveInput(InputValue value)
     {
-        if (!enabled)
-        {
-            return;
-        }
-
         _mousePosition = value.Get<Vector2>();
     }
 
     private void OnClickInput()
     {
-        if (!enabled)
-        {
-            return;
-        }
-
         if (Physics.Raycast(_mainCamera.ScreenPointToRay(_mousePosition), out RaycastHit hit, Mathf.Infinity))
         {
             if (!_isPointerOverGameObject)
@@ -54,5 +55,10 @@ public class PlayState : MonoBehaviour
                 UIManager.Instance.ShowTileInfo(tilePos);
             }
         }
+    }
+
+    private void OnEscapeInput()
+    {
+        UIManager.Instance.ProcessEscapeInput();
     }
 }
