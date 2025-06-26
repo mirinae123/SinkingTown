@@ -163,6 +163,28 @@ public class UIManager : SingletonBehaviour<UIManager>
         _tileInfo.Hide();
     }
 
+    public void ProcessEscapeInput()
+    {
+        switch(_currentUIState)
+        {
+            case UIState.Build:
+                HideBuildMenu();
+                break;
+            case UIState.Tile:
+                HideTileInfo();
+                break;
+            case UIState.MainMenu:
+                HideMainMenu();
+                break;
+            case UIState.Option:
+                HideOptionMenu();
+                break;
+            default:
+                ShowMainMenu();
+                break;
+        }
+    }
+
     /// <summary>
     /// 마우스 호버 시, 호버 메뉴가 나타나는 이벤트를 추가한다.
     /// </summary>
