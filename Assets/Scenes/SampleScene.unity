@@ -973,6 +973,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 806884439840898211, guid: 4135f9d9bf39f1b498980673a30275f7, type: 3}
+      propertyPath: _validMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 32946d02e1a70b94aaa001e7cb1c135b, type: 2}
+    - target: {fileID: 806884439840898211, guid: 4135f9d9bf39f1b498980673a30275f7, type: 3}
+      propertyPath: _invalidMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 59274bb1d55476c47b9ae679f0185929, type: 2}
     - target: {fileID: 7748807012761875964, guid: 4135f9d9bf39f1b498980673a30275f7, type: 3}
       propertyPath: _dirLightColor
       value: 
