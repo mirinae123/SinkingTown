@@ -26,14 +26,14 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
     private GameObject _tileHolder;         // 모든 타일 오브젝트의 부모 (정리용)
     private GameObject _structureHolder;    // 모든 건물 오브젝트의 부모 (정리용)
-    private GameObject _rangeHolder;    // 모든 하이라이트 오브젝트의 부모
+    private GameObject _rangeHolder;        // 모든 효과 범위 오브젝트의 부모
 
     private GameObject[][,] _meshObjects = new GameObject[32][,];   // 모든 타일 오브젝트 [height][w, h]
     private GameObject[,] _structureObjects;                        // 모든 건물 오브젝트
 
     private Dictionary<Vector2Int, GameObject> _deckObjects;        // 모든 데크 오브젝트
-    private HashSet<Vector2Int> _floatingStructures;                // 건물 오브젝트 중 데크 위에 있는 것 목록
-    private Dictionary<Vector2Int, GameObject> _rangeObjects;   // 모든 하이라이트 오브젝트
+    private List<Vector2Int> _floatingStructures;                   // 건물 오브젝트 중 데크 위에 있는 것 목록
+    private Dictionary<Vector2Int, GameObject> _rangeObjects;       // 모든 효과 범위 오브젝트
 
     private StructureType[,] _sunkenStructures;                     // 물에 잠긴 건물 타입
     private GameObject[,] _sunkenStructureObjects;                  // 물에 잠긴 건물 오브젝트
@@ -83,7 +83,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         _sunkenStructureObjects = new GameObject[w, h];
 
         _deckObjects = new Dictionary<Vector2Int, GameObject>();
-        _floatingStructures = new HashSet<Vector2Int>();
+        _floatingStructures = new List<Vector2Int>();
         _rangeObjects = new Dictionary<Vector2Int, GameObject>();
 
         _tileHolder = new GameObject("Tiles");
@@ -143,7 +143,6 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         if (MapManager.Instance.Tiles[x, y].IsDecked)
         {
             worldCoordinate.y = _oceanObject.transform.position.y;
-            _floatingStructures.Add(coordinate);
         }
         else
         {
@@ -172,6 +171,8 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
             _structureObjects[x, y] = Instantiate(prefabToInstantiate, _structureHolder.transform);
             _structureObjects[x, y].name = x + "_" + y;
             _structureObjects[x, y].transform.position = worldCoordinate;
+
+            _floatingStructures.Add(coordinate);
         }
     }
 
@@ -212,6 +213,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
     /// <param name="coordiate">좌표</param>
     public void RemoveDeckStructure(Vector2Int coordiate)
     {
+        Destroy(_deckObjects[coordiate]);
         _deckObjects.Remove(coordiate);
     }
 

@@ -66,6 +66,11 @@ public class TileInfoUI : MonoBehaviour
             UIManager.Instance.HideTileInfo();
         });
 
+        _destroyButton.onClick.AddListener(() =>
+        {
+            _currentTile.DestroyStructure();
+        });
+
         UIManager.Instance.AddHoverEvent(_happinessInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_timeToProduceInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_researchInfo, "language_label", "language_label", HoverDirection.TopRight);
