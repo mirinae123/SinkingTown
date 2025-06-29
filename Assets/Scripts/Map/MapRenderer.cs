@@ -17,6 +17,8 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
     [SerializeField] private GameObject _woodsPrefab;
     [SerializeField] private GameObject _stonePrefab;
 
+    [SerializeField] private GameObject _highlightPrefab;
+
     [SerializeField] private Material _sandMaterial;
 
     private GameObject _tileHolder;         // 모든 타일 오브젝트의 부모 (정리용)
@@ -30,6 +32,8 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
     private StructureType[,] _sunkenStructures;                     // 물에 잠긴 건물 타입
     private GameObject[,] _sunkenStructureObjects;                  // 물에 잠긴 건물 오브젝트
+
+    private GameObject _highlightHolder;
 
     private GameObject _oceanObject;
 
@@ -56,6 +60,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
         _tileHolder = new GameObject("Tiles");
         _structureHolder = new GameObject("Structures");
+        _highlightHolder = new GameObject("Highlights");
 
         // 높이 i = 0부터 시작
         for (int i = 0; i < _meshObjects.Length; i++)
@@ -180,6 +185,47 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
     public void RemoveDeckStructure(Vector2Int coordiate)
     {
         _deckObjects.Remove(coordiate);
+    }
+
+    public void AddHighlight(Vector2Int coordinate, int radius)
+    {
+        foreach(Transform child in _highlightHolder.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        Tile[] neighbors = MapManager.Instance.Tiles[coordinate.x, coordinate.y].GetNeighbors(radius);
+
+        foreach (Tile neighbor in neighbors)
+        {
+            if (neighbor.Coordinate == coordinate)
+            {
+                continue;
+            }
+
+            GameObject newHighlighObject = Instantiate(_highlightPrefab, _highlightHolder.transform);
+
+            Vector3 newPosition = HexaUtility.GetWorldCoordinate(neighbor.Coordinate);
+
+            if (neighbor.IsUnderWater)
+            {
+                newPosition.y = _oceanObject.transform.position.y;
+            }
+            else
+            {
+                newPosition.y = neighbor.Height + 1.0f;
+            }
+
+            newHighlighObject.transform.position = newPosition;
+        }
+    }
+
+    public void RemoveHighlight()
+    {
+        foreach (Transform child in _highlightHolder.transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     /// <summary>
