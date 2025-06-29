@@ -26,6 +26,8 @@ public class BuildState : MonoBehaviour
 
     private void OnDisable()
     {
+        MapRenderer.Instance.RemoveHighlight();
+
         InputHandler.Instance.OnPointMoveInput -= OnPointMoveInput;
         InputHandler.Instance.OnClickInput -= OnClickInput;
         InputHandler.Instance.OnEscapeInput -= OnEscapeInput;
@@ -45,6 +47,16 @@ public class BuildState : MonoBehaviour
     private void OnPointMoveInput(InputValue value)
     {
         _mousePosition = value.Get<Vector2>();
+
+        if (Physics.Raycast(_mainCamera.ScreenPointToRay(_mousePosition), out RaycastHit hit, Mathf.Infinity))
+        {
+            if (!_isPointerOverGameObject)
+            {
+                Vector2Int coordinate = HexaUtility.GetTileCoordinate(hit.point);
+
+                MapRenderer.Instance.AddHighlight(coordinate, StructureManager.Instance.GetStructureData(_structureToBuild).Radius);
+            }
+        }
     }
 
     private void OnClickInput()
