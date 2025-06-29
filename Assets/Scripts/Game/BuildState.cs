@@ -6,11 +6,16 @@ using UnityEngine.InputSystem;
 
 public class BuildState : MonoBehaviour
 {
+    [SerializeField] Material _validMaterial;
+    [SerializeField] Material _invalidMaterial;
+
     private Camera _mainCamera;
     private Vector2 _mousePosition;
     private bool _isPointerOverGameObject = false;
 
     private StructureType _structureToBuild;
+    private GameObject _previewObject;
+    private MeshRenderer _previewMeshRenderer;
 
     private void Start()
     {
@@ -26,6 +31,12 @@ public class BuildState : MonoBehaviour
 
     private void OnDisable()
     {
+        if (_previewObject)
+        {
+            Destroy(_previewObject);
+            _previewObject = null;
+        }
+
         MapRenderer.Instance.RemoveHighlight();
 
         InputHandler.Instance.OnPointMoveInput -= OnPointMoveInput;
@@ -55,6 +66,28 @@ public class BuildState : MonoBehaviour
                 Vector2Int coordinate = HexaUtility.GetTileCoordinate(hit.point);
 
                 MapRenderer.Instance.AddHighlight(coordinate, StructureManager.Instance.GetStructureData(_structureToBuild).Radius);
+
+                Vector3 worldCoordinate = HexaUtility.GetWorldCoordinate(coordinate);
+
+                if (MapManager.Instance.Tiles[coordinate.x, coordinate.y].IsUnderWater)
+                {
+                    worldCoordinate.y = MapRenderer.Instance.OceanHeight;
+                }
+                else
+                {
+                    worldCoordinate.y = MapManager.Instance.Tiles[coordinate.x, coordinate.y].Height + 1.0f;
+                }
+
+                if (CheckStructureValidity(MapManager.Instance.Tiles[coordinate.x, coordinate.y], _structureToBuild))
+                {
+                    _previewMeshRenderer.material = _validMaterial;
+                }
+                else
+                {
+                    _previewMeshRenderer.material = _invalidMaterial;
+                }
+
+                _previewObject.transform.position = worldCoordinate;
             }
         }
     }
@@ -89,6 +122,9 @@ public class BuildState : MonoBehaviour
     public void SetStructureToBuild(StructureType structureType)
     {
         _structureToBuild = structureType;
+
+        _previewObject = Instantiate(StructureManager.Instance.GetStructureData(_structureToBuild).StructurePrefab);
+        _previewMeshRenderer = _previewObject.GetComponent<MeshRenderer>();
     }
 
     /// <summary>

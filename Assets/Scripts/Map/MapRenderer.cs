@@ -37,6 +37,11 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
     private GameObject _oceanObject;
 
+    public float OceanHeight
+    {
+        get => _oceanObject.transform.position.y;
+    }
+
     /// <summary>
     /// 맵을 렌더링한다.
     /// </summary>
