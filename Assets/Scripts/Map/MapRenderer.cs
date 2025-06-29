@@ -23,17 +23,17 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
     private GameObject _tileHolder;         // 모든 타일 오브젝트의 부모 (정리용)
     private GameObject _structureHolder;    // 모든 건물 오브젝트의 부모 (정리용)
+    private GameObject _highlightHolder;    // 모든 하이라이트 오브젝트의 부모
 
     private GameObject[][,] _meshObjects = new GameObject[32][,];   // 모든 타일 오브젝트 [height][w, h]
     private GameObject[,] _structureObjects;                        // 모든 건물 오브젝트
 
     private Dictionary<Vector2Int, GameObject> _deckObjects;        // 모든 데크 오브젝트
     private HashSet<Vector2Int> _floatingStructures;                // 건물 오브젝트 중 데크 위에 있는 것 목록
+    private Dictionary<Vector2Int, GameObject> _highlightObjects;   // 모든 하이라이트 오브젝트
 
     private StructureType[,] _sunkenStructures;                     // 물에 잠긴 건물 타입
     private GameObject[,] _sunkenStructureObjects;                  // 물에 잠긴 건물 오브젝트
-
-    private GameObject _highlightHolder;
 
     private GameObject _oceanObject;
 
@@ -62,6 +62,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
         _deckObjects = new Dictionary<Vector2Int, GameObject>();
         _floatingStructures = new HashSet<Vector2Int>();
+        _highlightObjects = new Dictionary<Vector2Int, GameObject>();
 
         _tileHolder = new GameObject("Tiles");
         _structureHolder = new GameObject("Structures");
@@ -199,6 +200,8 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
             Destroy(child.gameObject);
         }
 
+        _highlightObjects.Clear();
+
         Tile[] neighbors = MapManager.Instance.Tiles[coordinate.x, coordinate.y].GetNeighbors(radius);
 
         foreach (Tile neighbor in neighbors)
@@ -209,6 +212,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
             }
 
             GameObject newHighlighObject = Instantiate(_highlightPrefab, _highlightHolder.transform);
+            _highlightObjects[neighbor.Coordinate] = newHighlighObject;
 
             Vector3 newPosition = HexaUtility.GetWorldCoordinate(neighbor.Coordinate);
 
@@ -231,6 +235,8 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         {
             Destroy(child.gameObject);
         }
+
+        _highlightObjects.Clear();
     }
 
     /// <summary>
@@ -427,6 +433,13 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
                 Vector3 position = deck.transform.position;
                 position.y = _oceanObject.transform.position.y;
                 deck.transform.position = position;
+            }
+
+            foreach (KeyValuePair<Vector2Int, GameObject> highlight in _highlightObjects)
+            {
+                Vector3 position = highlight.Value.transform.position;
+                position.y = Mathf.Max(_oceanObject.transform.position.y, MapManager.Instance.Tiles[highlight.Key.x, highlight.Key.y].Height + 1.0f);
+                highlight.Value.transform.position = position;
             }
 
             foreach (Vector2Int floatingStructure in _floatingStructures)

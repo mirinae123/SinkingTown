@@ -93,15 +93,11 @@ public class TileInfoUI : MonoBehaviour
         {
             if (_currentTile.Structure is ConsumerStructure)
             {
-                MapRenderer.Instance.AddHighlight(_currentTile.Coordinate, _currentTile.Structure.GetEffectiveRadius());
-
                 _gaugeSlider.value = (_currentTile.Structure as ConsumerStructure).CurrentHappiness / _currentTile.Structure.StructureData.MaxHappiness;
                 _gaugeText.text = (_currentTile.Structure as ConsumerStructure).CurrentHappiness + " / " + _currentTile.Structure.StructureData.MaxHappiness;
             }
             else if (_currentTile.Structure is ProducerStructure)
             {
-                MapRenderer.Instance.AddHighlight(_currentTile.Coordinate, _currentTile.Structure.GetEffectiveRadius());
-
                 _gaugeSlider.value = (_currentTile.Structure as ProducerStructure).Elapsed / _currentTile.Structure.StructureData.TimeToProduce;
                 _gaugeText.text = (_currentTile.Structure as ProducerStructure).Elapsed + " / " + _currentTile.Structure.StructureData.TimeToProduce;
             }
