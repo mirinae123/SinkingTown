@@ -17,9 +17,12 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
     [SerializeField] private GameObject _woodsPrefab;
     [SerializeField] private GameObject _stonePrefab;
 
+    [SerializeField] private Material _sandMaterial;
+
     [SerializeField] private GameObject _highlightPrefab;
 
-    [SerializeField] private Material _sandMaterial;
+    [SerializeField] Material _validMaterial;
+    [SerializeField] Material _invalidMaterial;
 
     private GameObject _tileHolder;         // 모든 타일 오브젝트의 부모 (정리용)
     private GameObject _structureHolder;    // 모든 건물 오브젝트의 부모 (정리용)
@@ -35,11 +38,27 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
     private StructureType[,] _sunkenStructures;                     // 물에 잠긴 건물 타입
     private GameObject[,] _sunkenStructureObjects;                  // 물에 잠긴 건물 오브젝트
 
+    private StructureType _structureToBuild;
+    private GameObject _structurePreviewObject;
+    private MeshRenderer _structurePreviewMeshRenderer;
+    private Vector2Int _structurePreviewTarget;
+
     private GameObject _oceanObject;
 
     public float OceanHeight
     {
         get => _oceanObject.transform.position.y;
+    }
+
+    private void Update()
+    {
+        if (_structurePreviewObject)
+        {
+            Vector3 worldPosition = HexaUtility.GetWorldCoordinate(_structurePreviewTarget);
+            worldPosition.y = Mathf.Max(_oceanObject.transform.position.y, MapManager.Instance.Tiles[_structurePreviewTarget.x, _structurePreviewTarget.y].Height + 1.0f);
+
+            _structurePreviewObject.transform.position = worldPosition;
+        }
     }
 
     /// <summary>
@@ -239,6 +258,45 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         _highlightObjects.Clear();
     }
 
+    public void AddStructurePreview(StructureType structure)
+    {
+        if (_structurePreviewObject)
+        {
+            Destroy(_structurePreviewObject.gameObject);
+        }
+
+        _structureToBuild = structure;
+
+        _structurePreviewObject = Instantiate(StructureManager.Instance.GetStructureData(structure).StructurePrefab);
+        _structurePreviewMeshRenderer = _structurePreviewObject.GetComponent<MeshRenderer>();
+
+        Destroy(_structurePreviewObject.GetComponent<Collider>());
+
+        _structurePreviewMeshRenderer.material = _invalidMaterial;
+        _structurePreviewTarget = Vector2Int.zero;
+    }
+
+    public void SetStructurePreviewTarget(Vector2Int target, bool isValid)
+    {
+        if (_structurePreviewTarget == target)
+        {
+            return;
+        }
+
+        _structurePreviewMeshRenderer.material = isValid ? _validMaterial : _invalidMaterial;
+        _structurePreviewTarget = target;
+    }
+
+    public void RemoveStructurePreview()
+    {
+        if (_structurePreviewObject)
+        {
+            Destroy(_structurePreviewObject);
+            _structurePreviewObject = null;
+            _structurePreviewMeshRenderer = null;
+        }
+    }
+
     /// <summary>
     /// 해수면 상승 애니메이션을 재생한다.
     /// </summary>
@@ -247,6 +305,12 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         if (before < after)
         {
             StartCoroutine(CoRaiseOceanLevel(before, after));
+
+            if (_structurePreviewMeshRenderer)
+            {
+                bool isValid = StructureManager.Instance.CheckStructureValidity(MapManager.Instance.Tiles[_structurePreviewTarget.x, _structurePreviewTarget.y], _structureToBuild);
+                _structurePreviewMeshRenderer.material = isValid ? _validMaterial : _invalidMaterial;
+            }
         }
     }
 
