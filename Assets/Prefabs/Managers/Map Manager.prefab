@@ -63,7 +63,7 @@ MonoBehaviour:
   _woodsPrefab: {fileID: 7756733915824239281, guid: 82c0cd0e44db3f14da6bfa77fbea5208, type: 3}
   _stonePrefab: {fileID: 7756733915824239281, guid: e3db8079a38f9274e8f1e4d1bbd56568, type: 3}
   _sandMaterial: {fileID: 2100000, guid: 6ed93954a75e3c846adc9fef8775d171, type: 2}
-  _highlightPrefab: {fileID: 9073670328388804027, guid: 7ba4503d42777a3489c8c27eda7bf076, type: 3}
+  _rangePrefab: {fileID: 9073670328388804027, guid: 7ba4503d42777a3489c8c27eda7bf076, type: 3}
   _validMaterial: {fileID: 2100000, guid: 32946d02e1a70b94aaa001e7cb1c135b, type: 2}
   _invalidMaterial: {fileID: 2100000, guid: 59274bb1d55476c47b9ae679f0185929, type: 2}
 --- !u!114 &6610503022540407451

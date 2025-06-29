@@ -26,8 +26,8 @@ public class BuildState : MonoBehaviour
 
     private void OnDisable()
     {
-        MapRenderer.Instance.RemoveHighlight();
-        MapRenderer.Instance.RemoveStructurePreview();
+        MapRenderer.Instance.HideRangeHighlight();
+        MapRenderer.Instance.HideStructurePreview();
 
         InputHandler.Instance.OnPointMoveInput -= OnPointMoveInput;
         InputHandler.Instance.OnClickInput -= OnClickInput;
@@ -50,7 +50,7 @@ public class BuildState : MonoBehaviour
             {
                 Vector2Int coordinate = HexaUtility.GetTileCoordinate(hit.point);
 
-                MapRenderer.Instance.AddHighlight(coordinate, StructureManager.Instance.GetStructureData(_structureToBuild).Radius);
+                MapRenderer.Instance.ShowRangeHighlight(coordinate, StructureManager.Instance.GetStructureData(_structureToBuild).Radius);
                 MapRenderer.Instance.SetStructurePreviewTarget(coordinate, StructureManager.Instance.CheckStructureValidity(MapManager.Instance.Tiles[coordinate.x, coordinate.y], _structureToBuild));
             }
         }
@@ -91,6 +91,6 @@ public class BuildState : MonoBehaviour
     public void SetStructureToBuild(StructureType structureType)
     {
         _structureToBuild = structureType;
-        MapRenderer.Instance.AddStructurePreview(_structureToBuild);
+        MapRenderer.Instance.ShowStructurePreview(_structureToBuild);
     }
 }

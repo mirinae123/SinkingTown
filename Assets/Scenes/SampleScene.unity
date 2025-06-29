@@ -648,6 +648,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2687910142158843404, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
+      propertyPath: m_Name
+      value: Radius Bonus Label
+      objectReference: {fileID: 0}
     - target: {fileID: 2846474644702685880, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -663,6 +667,10 @@ PrefabInstance:
     - target: {fileID: 2846474644702685880, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2937098142474749953, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
+      propertyPath: m_Name
+      value: Radius Bonus Icon
       objectReference: {fileID: 0}
     - target: {fileID: 3097392440976543652, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
       propertyPath: m_AnchorMax.y
@@ -808,6 +816,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5722285757974210407, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
+      propertyPath: m_Name
+      value: Radius Bonus Count
+      objectReference: {fileID: 0}
     - target: {fileID: 5884622325248367905, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -839,6 +851,10 @@ PrefabInstance:
     - target: {fileID: 6829142118611910674, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7931598102944109278, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
+      propertyPath: m_Name
+      value: Radius Bonus Info
       objectReference: {fileID: 0}
     - target: {fileID: 8220226604890063019, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1147,14 +1163,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8874204822833720403, guid: 77aff98dbf9184940ae6570bc30640f0, type: 3}
-      propertyPath: _validMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: 32946d02e1a70b94aaa001e7cb1c135b, type: 2}
-    - target: {fileID: 8874204822833720403, guid: 77aff98dbf9184940ae6570bc30640f0, type: 3}
-      propertyPath: _invalidMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: 59274bb1d55476c47b9ae679f0185929, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
