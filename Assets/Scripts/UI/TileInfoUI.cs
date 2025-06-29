@@ -236,7 +236,7 @@ public class TileInfoUI : MonoBehaviour
             });
         }
 
-        MapRenderer.Instance.AddHighlight(_currentTile.Coordinate, _currentTile.Structure.GetEffectiveRadius());
+        MapRenderer.Instance.ShowRangeHighlight(_currentTile.Coordinate, _currentTile.Structure.GetEffectiveRadius());
     }
 
     /// <summary>
@@ -308,12 +308,12 @@ public class TileInfoUI : MonoBehaviour
         _efficiencyBonus.text = provided.efficiencyBonus.ToString();
         _radiusBonus.text = provided.radiusBonus.ToString();
 
-        MapRenderer.Instance.RemoveHighlight();
+        MapRenderer.Instance.HideRangeHighlight();
     }
 
     public void Hide()
     {
-        MapRenderer.Instance.RemoveHighlight();
+        MapRenderer.Instance.HideRangeHighlight();
         gameObject.SetActive(false);
     }
 }

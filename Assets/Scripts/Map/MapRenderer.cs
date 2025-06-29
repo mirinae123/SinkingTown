@@ -19,29 +19,32 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
     [SerializeField] private Material _sandMaterial;
 
-    [SerializeField] private GameObject _highlightPrefab;
+    [SerializeField] private GameObject _rangePrefab;
 
     [SerializeField] Material _validMaterial;
     [SerializeField] Material _invalidMaterial;
 
     private GameObject _tileHolder;         // 모든 타일 오브젝트의 부모 (정리용)
     private GameObject _structureHolder;    // 모든 건물 오브젝트의 부모 (정리용)
-    private GameObject _highlightHolder;    // 모든 하이라이트 오브젝트의 부모
+    private GameObject _rangeHolder;    // 모든 하이라이트 오브젝트의 부모
 
     private GameObject[][,] _meshObjects = new GameObject[32][,];   // 모든 타일 오브젝트 [height][w, h]
     private GameObject[,] _structureObjects;                        // 모든 건물 오브젝트
 
     private Dictionary<Vector2Int, GameObject> _deckObjects;        // 모든 데크 오브젝트
     private HashSet<Vector2Int> _floatingStructures;                // 건물 오브젝트 중 데크 위에 있는 것 목록
-    private Dictionary<Vector2Int, GameObject> _highlightObjects;   // 모든 하이라이트 오브젝트
+    private Dictionary<Vector2Int, GameObject> _rangeObjects;   // 모든 하이라이트 오브젝트
 
     private StructureType[,] _sunkenStructures;                     // 물에 잠긴 건물 타입
     private GameObject[,] _sunkenStructureObjects;                  // 물에 잠긴 건물 오브젝트
 
-    private StructureType _structureToBuild;
-    private GameObject _structurePreviewObject;
-    private MeshRenderer _structurePreviewMeshRenderer;
-    private Vector2Int _structurePreviewTarget;
+    private Vector2Int _rangePosition = new Vector2Int(-1, -1);
+    private int _rangeRadius = -1;
+
+    private StructureType _previewType;
+    private GameObject _previewObject;
+    private MeshRenderer _previewMeshRenderer;
+    private Vector2Int _previewTarget;
 
     private GameObject _oceanObject;
 
@@ -52,12 +55,12 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
     private void Update()
     {
-        if (_structurePreviewObject)
+        if (_previewObject)
         {
-            Vector3 worldPosition = HexaUtility.GetWorldCoordinate(_structurePreviewTarget);
-            worldPosition.y = Mathf.Max(_oceanObject.transform.position.y, MapManager.Instance.Tiles[_structurePreviewTarget.x, _structurePreviewTarget.y].Height + 1.0f);
+            Vector3 worldPosition = HexaUtility.GetWorldCoordinate(_previewTarget);
+            worldPosition.y = Mathf.Max(_oceanObject.transform.position.y, MapManager.Instance.Tiles[_previewTarget.x, _previewTarget.y].Height + 1.0f);
 
-            _structurePreviewObject.transform.position = worldPosition;
+            _previewObject.transform.position = worldPosition;
         }
     }
 
@@ -81,11 +84,11 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
         _deckObjects = new Dictionary<Vector2Int, GameObject>();
         _floatingStructures = new HashSet<Vector2Int>();
-        _highlightObjects = new Dictionary<Vector2Int, GameObject>();
+        _rangeObjects = new Dictionary<Vector2Int, GameObject>();
 
         _tileHolder = new GameObject("Tiles");
         _structureHolder = new GameObject("Structures");
-        _highlightHolder = new GameObject("Highlights");
+        _rangeHolder = new GameObject("Range");
 
         // 높이 i = 0부터 시작
         for (int i = 0; i < _meshObjects.Length; i++)
@@ -212,14 +215,24 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         _deckObjects.Remove(coordiate);
     }
 
-    public void AddHighlight(Vector2Int coordinate, int radius)
+    /// <summary>
+    /// 효과 범위를 표시한다.
+    /// </summary>
+    /// <param name="coordinate">좌표</param>
+    /// <param name="radius">범위</param>
+    public void ShowRangeHighlight(Vector2Int coordinate, int radius)
     {
-        foreach(Transform child in _highlightHolder.transform)
+        if (coordinate == _rangePosition && radius == _rangeRadius)
+        {
+            return;
+        }
+
+        foreach(Transform child in _rangeHolder.transform)
         {
             Destroy(child.gameObject);
         }
 
-        _highlightObjects.Clear();
+        _rangeObjects.Clear();
 
         Tile[] neighbors = MapManager.Instance.Tiles[coordinate.x, coordinate.y].GetNeighbors(radius);
 
@@ -230,8 +243,8 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
                 continue;
             }
 
-            GameObject newHighlighObject = Instantiate(_highlightPrefab, _highlightHolder.transform);
-            _highlightObjects[neighbor.Coordinate] = newHighlighObject;
+            GameObject newHighlighObject = Instantiate(_rangePrefab, _rangeHolder.transform);
+            _rangeObjects[neighbor.Coordinate] = newHighlighObject;
 
             Vector3 newPosition = HexaUtility.GetWorldCoordinate(neighbor.Coordinate);
 
@@ -246,54 +259,75 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
             newHighlighObject.transform.position = newPosition;
         }
+
+        _rangePosition = coordinate;
+        _rangeRadius = radius;
     }
 
-    public void RemoveHighlight()
+    /// <summary>
+    /// 효과 범위를 숨긴다.
+    /// </summary>
+    public void HideRangeHighlight()
     {
-        foreach (Transform child in _highlightHolder.transform)
+        foreach (Transform child in _rangeHolder.transform)
         {
             Destroy(child.gameObject);
         }
 
-        _highlightObjects.Clear();
+        _rangeObjects.Clear();
+
+        _rangePosition = new Vector2Int(-1, -1);
+        _rangeRadius = -1;
     }
 
-    public void AddStructurePreview(StructureType structure)
+    /// <summary>
+    /// 건물 미리보기를 표시한다.
+    /// </summary>
+    /// <param name="structure">건물</param>
+    public void ShowStructurePreview(StructureType structure)
     {
-        if (_structurePreviewObject)
+        if (_previewObject)
         {
-            Destroy(_structurePreviewObject.gameObject);
+            Destroy(_previewObject.gameObject);
         }
 
-        _structureToBuild = structure;
+        _previewType = structure;
 
-        _structurePreviewObject = Instantiate(StructureManager.Instance.GetStructureData(structure).StructurePrefab);
-        _structurePreviewMeshRenderer = _structurePreviewObject.GetComponent<MeshRenderer>();
+        _previewObject = Instantiate(StructureManager.Instance.GetStructureData(structure).StructurePrefab);
+        _previewMeshRenderer = _previewObject.GetComponent<MeshRenderer>();
 
-        Destroy(_structurePreviewObject.GetComponent<Collider>());
+        Destroy(_previewObject.GetComponent<Collider>());
 
-        _structurePreviewMeshRenderer.material = _invalidMaterial;
-        _structurePreviewTarget = Vector2Int.zero;
+        _previewMeshRenderer.material = _invalidMaterial;
+        _previewTarget = Vector2Int.zero;
     }
 
-    public void SetStructurePreviewTarget(Vector2Int target, bool isValid)
+    /// <summary>
+    /// 건물 미리보기가 표시될 위치를 지정한다.
+    /// </summary>
+    /// <param name="coordinate">목표 좌표</param>
+    /// <param name="isValid">유효 여부</param>
+    public void SetStructurePreviewTarget(Vector2Int coordinate, bool isValid)
     {
-        if (_structurePreviewTarget == target)
+        if (_previewTarget == coordinate)
         {
             return;
         }
 
-        _structurePreviewMeshRenderer.material = isValid ? _validMaterial : _invalidMaterial;
-        _structurePreviewTarget = target;
+        _previewMeshRenderer.material = isValid ? _validMaterial : _invalidMaterial;
+        _previewTarget = coordinate;
     }
 
-    public void RemoveStructurePreview()
+    /// <summary>
+    /// 건물 미리보기를 숨긴다.
+    /// </summary>
+    public void HideStructurePreview()
     {
-        if (_structurePreviewObject)
+        if (_previewObject)
         {
-            Destroy(_structurePreviewObject);
-            _structurePreviewObject = null;
-            _structurePreviewMeshRenderer = null;
+            Destroy(_previewObject);
+            _previewObject = null;
+            _previewMeshRenderer = null;
         }
     }
 
@@ -306,10 +340,10 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         {
             StartCoroutine(CoRaiseOceanLevel(before, after));
 
-            if (_structurePreviewMeshRenderer)
+            if (_previewMeshRenderer)
             {
-                bool isValid = StructureManager.Instance.CheckStructureValidity(MapManager.Instance.Tiles[_structurePreviewTarget.x, _structurePreviewTarget.y], _structureToBuild);
-                _structurePreviewMeshRenderer.material = isValid ? _validMaterial : _invalidMaterial;
+                bool isValid = StructureManager.Instance.CheckStructureValidity(MapManager.Instance.Tiles[_previewTarget.x, _previewTarget.y], _previewType);
+                _previewMeshRenderer.material = isValid ? _validMaterial : _invalidMaterial;
             }
         }
     }
@@ -499,7 +533,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
                 deck.transform.position = position;
             }
 
-            foreach (KeyValuePair<Vector2Int, GameObject> highlight in _highlightObjects)
+            foreach (KeyValuePair<Vector2Int, GameObject> highlight in _rangeObjects)
             {
                 Vector3 position = highlight.Value.transform.position;
                 position.y = Mathf.Max(_oceanObject.transform.position.y, MapManager.Instance.Tiles[highlight.Key.x, highlight.Key.y].Height + 1.0f);
