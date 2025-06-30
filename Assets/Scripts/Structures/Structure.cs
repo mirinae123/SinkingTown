@@ -59,9 +59,14 @@ public class Structure
             return StructureData.Radius;
         }
         // 일반 건물은 제공 받은 추가 범위 중 가장 큰 값을 추가 범위로 사용
-        else
+        else if (StructureData.Radius > 0)
         {
             return StructureData.Radius + _tile.Resource.radiusBonus;
+        }
+        // 효과 범위가 없는 건물은 추가 범위도 적용받지 않음
+        else
+        {
+            return 0;
         }
     }
 
