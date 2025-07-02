@@ -20,11 +20,11 @@ public class OptionMenuUI : MonoBehaviour
 
     public void Show()
     {
-        gameObject.SetActive(true);
+        transform.parent.gameObject.SetActive(true);
     }
 
     public void Hide()
     {
-        gameObject.SetActive(false);
+        transform.parent.gameObject.SetActive(false);
     }
 }

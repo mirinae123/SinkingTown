@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 /// <summary>
 /// UI 상태
 /// </summary>
-public enum UIState { None, Build, Tile, MainMenu, Option }
+public enum UIState { None, Build, Tile, MainMenu, Option, Confirm }
 
 /// <summary>
 /// UI를 관리하는 클래스
@@ -17,6 +19,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     [SerializeField] private OptionMenuUI _optionMenu;
     [SerializeField] private HoverMenuUI _hoverMenu;     
     [SerializeField] private BuildMenuUI _buildMenu;
+    [SerializeField] private ConfirmMenuUI _confirmMenu;
 
     [SerializeField] private GameObject _gameInfo;
     [SerializeField] private TileInfoUI _tileInfo;
@@ -31,20 +34,22 @@ public class UIManager : SingletonBehaviour<UIManager>
     }
     private UIState _currentUIState = UIState.None;
 
+    private UIState _previousUIState = UIState.None;
+
     /// <summary>
     /// 메인 메뉴를 표시한다.
     /// </summary>
     public void ShowMainMenu()
     {
-        if (_currentUIState != UIState.MainMenu && _currentUIState != UIState.Option)
-        {
-            _currentUIState = UIState.MainMenu;
-            GameManager.Instance.ChangeGameState(GameState.Menu);
+        _currentUIState = UIState.MainMenu;
 
-            _tileInfo.Hide();
-            _buildMenu.Hide();
-            _mainMenu.Show();
-        }
+        GameManager.Instance.ChangeGameState(GameState.Menu);
+
+        _tileInfo.Hide();
+        _buildMenu.Hide();
+        _hoverMenu.Hide();
+
+        _mainMenu.Show();
     }
 
     /// <summary>
@@ -52,13 +57,11 @@ public class UIManager : SingletonBehaviour<UIManager>
     /// </summary>
     public void HideMainMenu()
     {
-        if (_currentUIState == UIState.MainMenu)
-        {
-            _currentUIState = UIState.None;
-            GameManager.Instance.ChangeGameState(GameState.None);
+        _currentUIState = UIState.None;
 
-            _mainMenu.Hide();
-        }
+        GameManager.Instance.ChangeGameState(GameState.None);
+
+        _mainMenu.Hide();
     }
 
     /// <summary>
@@ -91,10 +94,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     /// <param name="hoverDirection">방향</param>
     public void ShowHoverMenu(string caption, string text, HoverDirection hoverDirection)
     {
-        if (_currentUIState != UIState.MainMenu && _currentUIState != UIState.Option)
-        {
-            _hoverMenu.Show(caption, text, hoverDirection);
-        }
+        _hoverMenu.Show(caption, text, hoverDirection);
     }
 
     /// <summary>
@@ -110,13 +110,10 @@ public class UIManager : SingletonBehaviour<UIManager>
     /// </summary>
     public void ShowBuildMenu()
     {
-        if (_currentUIState != UIState.MainMenu && _currentUIState != UIState.Option)
-        {
-            _currentUIState = UIState.Build;
+        _currentUIState = UIState.Build;
 
-            _tileInfo.Hide();
-            _buildMenu.Show();
-        }
+        _tileInfo.Hide();
+        _buildMenu.Show();
     }
 
     /// <summary>
@@ -130,17 +127,46 @@ public class UIManager : SingletonBehaviour<UIManager>
     }
 
     /// <summary>
+    /// 확인 메뉴를 표시한다.
+    /// </summary>
+    /// <param name="caption"></param>
+    /// <param name="description"></param>
+    /// <param name="onConfirm"></param>
+    /// <param name="onCancel"></param>
+    public void ShowConfirmMenu(string caption, string description, UnityAction onConfirm, UnityAction onCancel)
+    {
+        _previousUIState = _currentUIState;
+        _currentUIState = UIState.Confirm;
+
+        GameManager.Instance.ChangeGameState(GameState.Menu);
+
+        _confirmMenu.Show(caption, description, onConfirm, onCancel);
+    }
+
+    /// <summary>
+    /// 확인 메뉴를 숨긴다.
+    /// </summary>
+    public void HideConfirmMenu(bool isConfirmed)
+    {
+        _currentUIState = _previousUIState;
+
+        if (_currentUIState == UIState.Tile)
+        {
+            GameManager.Instance.ChangeGameState(GameState.None);
+        }
+
+        _confirmMenu.Hide(isConfirmed);
+    }
+
+    /// <summary>
     /// 타일 정보를 표시한다.
     /// </summary>
     public void ShowTileInfo(Vector2Int tile)
     {
-        if (_currentUIState != UIState.MainMenu && _currentUIState != UIState.Option)
-        {
-            _currentUIState = UIState.Tile;
+        _currentUIState = UIState.Tile;
 
-            _buildMenu.Hide();
-            _tileInfo.Show(tile);
-        }
+        _buildMenu.Hide();
+        _tileInfo.Show(tile);
     }
 
     /// <summary>
@@ -160,6 +186,8 @@ public class UIManager : SingletonBehaviour<UIManager>
     public void HideTileInfo()
     {
         _currentUIState = UIState.None;
+
+        _hoverMenu.Hide();
         _tileInfo.Hide();
     }
 
@@ -178,6 +206,9 @@ public class UIManager : SingletonBehaviour<UIManager>
                 break;
             case UIState.Option:
                 HideOptionMenu();
+                break;
+            case UIState.Confirm:
+                HideConfirmMenu(false);
                 break;
             default:
                 ShowMainMenu();
