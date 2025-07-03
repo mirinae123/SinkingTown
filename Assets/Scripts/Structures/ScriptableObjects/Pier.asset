@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a2d7f3515ce7c24594c96283012cf88, type: 3}
   m_Name: Pier
   m_EditorClassIdentifier: 
-  StructureType: 1
+  StructureType: 7
   StructureImage: {fileID: 0}
   StructureNameKey: pier_title
   StructurePrefab: {fileID: 9073670328388804027, guid: 3f863f2fae4f9654fbb348c6087ff2e3, type: 3}
