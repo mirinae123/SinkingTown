@@ -73,7 +73,7 @@ public class Structure
     /// <summary>
     /// 추가 효율을 고려한 실질 생산량을 계산한다.
     /// </summary>
-    public Resource GetEffectiveProduces()
+    public virtual Resource GetEffectiveProduces()
     {
         // 추가 효율성을 제공하는 건물은 추가 효율성의 효과를 받지 않음
         if (StructureData.Produces.efficiencyBonus != 0)
@@ -193,9 +193,9 @@ public class ConsumerStructure : Structure
 }
 
 /// <summary>
-/// 생산형 건물 클래스
+/// 능동 생산형 건물 클래스
 /// </summary>
-public class ProducerStructure : Structure
+public class ActiveProducerStructure : Structure
 {
     /// <summary>
     /// 마지막 생산으로부터 지난 시간
@@ -235,14 +235,56 @@ public class ProducerStructure : Structure
         if (satisfied && _currentState == StructureState.Disabled)
         {
             _currentState = StructureState.Enabled;
-            //_isActive = true;
             _tile.AddToProviders();
         }
         // 활성 상태에서 불만족
         else if (!satisfied && _currentState == StructureState.Enabled)
         {
             _currentState = StructureState.Disabled;
-            //_isActive = false;
+            _tile.RemoveFromProviders();
+        }
+    }
+}
+
+/// <summary>
+/// 수동 생산형 건물 클래스
+/// </summary>
+public class PassiveProducerStructure : Structure
+{
+    public override void Initialize(StructureType type, Tile tile)
+    {
+        _structureData = StructureManager.Instance.GetStructureData(type);
+        _tile = tile;
+    }
+
+    public override Resource GetEffectiveProduces()
+    {
+        switch (_structureData.StructureType)
+        {
+            case StructureType.Restaurant:
+                return new Resource(food: _tile.Resource.fish);
+            case StructureType.TextileMill:
+                return new Resource(clothe: _tile.Resource.cotton);
+            default:
+                return base.GetEffectiveProduces();
+        }
+    }
+
+    public override void OnNotified()
+    {
+        // 요구 사항 만족 여부
+        bool satisfied = !(_tile.Resource < _structureData.Needs) && (!_structureData.RequireOcean || IsOceanNearby());
+
+        // 비활성 상태에서 만족
+        if (satisfied && _currentState == StructureState.Disabled)
+        {
+            _currentState = StructureState.Enabled;
+            _tile.AddToProviders();
+        }
+        // 활성 상태에서 불만족
+        else if (!satisfied && _currentState == StructureState.Enabled)
+        {
+            _currentState = StructureState.Disabled;
             _tile.RemoveFromProviders();
         }
     }

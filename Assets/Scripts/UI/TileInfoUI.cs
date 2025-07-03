@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -101,10 +102,10 @@ public class TileInfoUI : MonoBehaviour
                 _gaugeSlider.value = (_currentTile.Structure as ConsumerStructure).CurrentHappiness / _currentTile.Structure.StructureData.MaxHappiness;
                 _gaugeText.text = (_currentTile.Structure as ConsumerStructure).CurrentHappiness + " / " + _currentTile.Structure.StructureData.MaxHappiness;
             }
-            else if (_currentTile.Structure is ProducerStructure)
+            else if (_currentTile.Structure is ActiveProducerStructure)
             {
-                _gaugeSlider.value = (_currentTile.Structure as ProducerStructure).Elapsed / _currentTile.Structure.StructureData.TimeToProduce;
-                _gaugeText.text = (_currentTile.Structure as ProducerStructure).Elapsed + " / " + _currentTile.Structure.StructureData.TimeToProduce;
+                _gaugeSlider.value = (_currentTile.Structure as ActiveProducerStructure).Elapsed / _currentTile.Structure.StructureData.TimeToProduce;
+                _gaugeText.text = (_currentTile.Structure as ActiveProducerStructure).Elapsed + " / " + _currentTile.Structure.StructureData.TimeToProduce;
             }
         }
     }
@@ -181,7 +182,7 @@ public class TileInfoUI : MonoBehaviour
             _gaugeText.gameObject.SetActive(true);
         }
         // 생산형 건물인 경우
-        else 
+        else if (_currentTile.Structure is ActiveProducerStructure)
         {
             // 시청인 경우
             if (_currentTile.Structure.StructureData.StructureType == StructureType.TownHall)
@@ -204,6 +205,17 @@ public class TileInfoUI : MonoBehaviour
 
             _gaugeSlider.gameObject.SetActive(true);
             _gaugeText.gameObject.SetActive(true);
+        }
+        else
+        {
+            _happinessInfo.gameObject.SetActive(false);
+            _timeToProduceInfo.gameObject.SetActive(false);
+            _researchInfo.gameObject.SetActive(false);
+
+            _researchButton.gameObject.SetActive(false);
+
+            _gaugeSlider.gameObject.SetActive(false);
+            _gaugeText.gameObject.SetActive(false);
         }
 
         _destroyButton.gameObject.SetActive(true);
