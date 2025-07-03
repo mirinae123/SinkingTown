@@ -37,7 +37,21 @@ public class StructureManager : SingletonBehaviour<StructureManager>
     /// <returns>건물 클래스</returns>
     public Structure GetStructure(StructureType type, Tile tile)
     {
-        Structure structure = IsConsumer(type) ? new ConsumerStructure() : new ProducerStructure();
+        Structure structure;
+
+        if (IsConsumer(type))
+        {
+            structure = new ConsumerStructure();
+        }
+        else if (IsActiveProducer(type))
+        {
+            structure = new ActiveProducerStructure();
+        }
+        else
+        {
+            structure = new PassiveProducerStructure();
+        }
+
         structure.Initialize(type, tile);
 
         return structure;
@@ -67,6 +81,24 @@ public class StructureManager : SingletonBehaviour<StructureManager>
             case StructureType.Market:
             case StructureType.School:
             case StructureType.Fortress:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    /// <summary>
+    /// 능동 생산형 건물 여부를 확인한다.
+    /// </summary>
+    /// <param name="type">건물 종류</param>
+    /// <returns>능동 생산형 건물인 경우</returns>
+    public bool IsActiveProducer(StructureType type)
+    {
+        switch (type)
+        {
+            case StructureType.LumberCamp:
+            case StructureType.Quarry:
                 return true;
 
             default:
