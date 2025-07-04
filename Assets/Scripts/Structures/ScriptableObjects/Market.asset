@@ -39,10 +39,11 @@ MonoBehaviour:
     clothe: 0
     efficiencyBonus: 0
     radiusBonus: 3
+  RequireOcean: 0
   WoodCost: 2
   StoneCost: 2
   Radius: 3
   MaxHappiness: 100
-  IncreaseSpeed: 0
-  DecreaseSpeed: 0
+  IncreaseSpeed: 10
+  DecreaseSpeed: 3.333
   TimeToProduce: 0
