@@ -44,6 +44,6 @@ MonoBehaviour:
   StoneCost: 2
   Radius: 3
   MaxHappiness: 100
-  IncreaseSpeed: 0
-  DecreaseSpeed: 0
+  IncreaseSpeed: 10
+  DecreaseSpeed: 3.333
   TimeToProduce: 0
