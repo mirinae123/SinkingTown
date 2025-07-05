@@ -72,7 +72,14 @@ public class TileInfoUI : MonoBehaviour
 
         _destroyButton.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowConfirmMenu("language_label", "language_label", _currentTile.DestroyStructure, null);
+            UIManager.Instance.ShowConfirmMenu("language_label", "language_label", () =>
+            {
+                GameManager.Instance.CurrentWoods += _currentTile.Structure.StructureData.WoodCost / 2;
+                GameManager.Instance.CurrentStones += _currentTile.Structure.StructureData.StoneCost / 2;
+
+                _currentTile.DestroyStructure();
+            },
+            null);
         });
 
         _researchButton.onClick.AddListener(() =>

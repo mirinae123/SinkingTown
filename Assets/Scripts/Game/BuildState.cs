@@ -73,6 +73,10 @@ public class BuildState : MonoBehaviour
                 if (StructureManager.Instance.CheckStructureValidity(tile, _structureToBuild))
                 {
                     tile.CreateStructure(_structureToBuild);
+
+                    GameManager.Instance.CurrentWoods -= StructureManager.Instance.GetStructureData(_structureToBuild).WoodCost;
+                    GameManager.Instance.CurrentStones -= StructureManager.Instance.GetStructureData(_structureToBuild).StoneCost;
+
                     GameManager.Instance.ChangeGameState(GameState.None);
                 }
             }
