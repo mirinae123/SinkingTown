@@ -9,6 +9,9 @@ using UnityEngine.UI;
 /// </summary>
 public class TileInfoUI : MonoBehaviour
 {
+    private const int RESEARCH_COST_WOODS = 3;
+    private const int RESEARCH_COST_STONES = 3;
+
     [SerializeField] private GameObject _structureButtonPrefab;
 
     [Header("Title")]
@@ -72,6 +75,18 @@ public class TileInfoUI : MonoBehaviour
             UIManager.Instance.ShowConfirmMenu("language_label", "language_label", _currentTile.DestroyStructure, null);
         });
 
+        _researchButton.onClick.AddListener(() =>
+        {
+            UIManager.Instance.ShowConfirmMenu("language_label", "language_label", () =>
+            {
+                GameManager.Instance.CurrentWoods -= RESEARCH_COST_WOODS;
+                GameManager.Instance.CurrentStones -= RESEARCH_COST_STONES;
+
+                GameManager.Instance.ChangeResearchPoint(1);
+            },
+            null);
+        });
+
         UIManager.Instance.AddHoverEvent(_happinessInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_timeToProduceInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_researchInfo, "language_label", "language_label", HoverDirection.TopRight);
@@ -104,6 +119,11 @@ public class TileInfoUI : MonoBehaviour
             }
             else if (_currentTile.Structure is ActiveProducerStructure)
             {
+                if (_currentTile.Structure.StructureData.StructureType == StructureType.TownHall)
+                {
+                    _researchButton.interactable = GameManager.Instance.CurrentWoods >= RESEARCH_COST_WOODS && GameManager.Instance.CurrentStones >= RESEARCH_COST_STONES;
+                }
+
                 _gaugeSlider.value = (_currentTile.Structure as ActiveProducerStructure).Elapsed / _currentTile.Structure.StructureData.TimeToProduce;
                 _gaugeText.text = (_currentTile.Structure as ActiveProducerStructure).Elapsed + " / " + _currentTile.Structure.StructureData.TimeToProduce;
             }
