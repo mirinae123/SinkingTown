@@ -46,4 +46,4 @@ MonoBehaviour:
   MaxHappiness: 100
   IncreaseSpeed: 10
   DecreaseSpeed: 3.333
-  TimeToProduce: 0
+  TimeToProduce: 30
