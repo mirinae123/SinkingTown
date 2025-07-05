@@ -221,6 +221,20 @@ public class ActiveProducerStructure : Structure
             if (_elapsed > _structureData.TimeToProduce)
             {
                 _elapsed -= _structureData.TimeToProduce;
+
+                switch (_structureData.StructureType)
+                {
+                    case StructureType.TownHall:
+                        GameManager.Instance.ChangeResearchPoint(1);
+                        break;
+                    case StructureType.LumberCamp:
+                        GameManager.Instance.CurrentWoods += 3; ;
+                        break;
+                    case StructureType.Quarry:
+                        GameManager.Instance.CurrentStones += 3;
+                        break;
+                }
+
                 Debug.Log("Produced Something");
             }
         }

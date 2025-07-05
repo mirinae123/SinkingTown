@@ -115,7 +115,7 @@ public class TileInfoUI : MonoBehaviour
             if (_currentTile.Structure is ConsumerStructure)
             {
                 _gaugeSlider.value = (_currentTile.Structure as ConsumerStructure).CurrentHappiness / _currentTile.Structure.StructureData.MaxHappiness;
-                _gaugeText.text = (_currentTile.Structure as ConsumerStructure).CurrentHappiness + " / " + _currentTile.Structure.StructureData.MaxHappiness;
+                _gaugeText.text = (int)(_currentTile.Structure as ConsumerStructure).CurrentHappiness + " / " + (int)_currentTile.Structure.StructureData.MaxHappiness;
             }
             else if (_currentTile.Structure is ActiveProducerStructure)
             {
@@ -125,7 +125,7 @@ public class TileInfoUI : MonoBehaviour
                 }
 
                 _gaugeSlider.value = (_currentTile.Structure as ActiveProducerStructure).Elapsed / _currentTile.Structure.StructureData.TimeToProduce;
-                _gaugeText.text = (_currentTile.Structure as ActiveProducerStructure).Elapsed + " / " + _currentTile.Structure.StructureData.TimeToProduce;
+                _gaugeText.text = (int)(_currentTile.Structure as ActiveProducerStructure).Elapsed + " / " + (int)_currentTile.Structure.StructureData.TimeToProduce;
             }
         }
     }
