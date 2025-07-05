@@ -14,6 +14,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 {
     private const float OCEAN_RISE_PERIOD = 300f;
     private const float DAY_SPEED = 9.6f;
+    private const int MAX_RESEARCH_POINT = 100;
 
     [SerializeField] private MonoBehaviour[] _gameStates;
 
@@ -92,6 +93,23 @@ public class GameManager : SingletonBehaviour<GameManager>
     [SerializeField] private int _currentStones = 999;
 
     /// <summary>
+    /// 현재 연구 포인트
+    /// </summary>
+    public int CurrentResearchPoint
+    {
+        get => _currentResearchPoint;
+    }
+    private int _currentResearchPoint = 0;
+
+    /// <summary>
+    /// 최대 연구 포인트
+    /// </summary>
+    public int MaxResearchPoint
+    {
+        get => MAX_RESEARCH_POINT;
+    }
+
+    /// <summary>
     /// 맵에 시청이 있는지 여부
     /// </summary>
     public bool HasTownHall
@@ -161,5 +179,14 @@ public class GameManager : SingletonBehaviour<GameManager>
         {
             (_gameStates[1] as BuildState).SetStructureToBuild((StructureType)structure);
         }
+    }
+
+    /// <summary>
+    /// 현재 연구 포인트를 amount 값만큼 변경한다.
+    /// </summary>
+    /// <param name="amount">변경할 값</param>
+    public void ChangeResearchPoint(int amount)
+    {
+        _currentResearchPoint = Mathf.Clamp(_currentResearchPoint + amount, 0, MAX_RESEARCH_POINT);
     }
 }

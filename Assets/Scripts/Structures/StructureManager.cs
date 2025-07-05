@@ -97,6 +97,7 @@ public class StructureManager : SingletonBehaviour<StructureManager>
     {
         switch (type)
         {
+            case StructureType.TownHall:
             case StructureType.LumberCamp:
             case StructureType.Quarry:
                 return true;

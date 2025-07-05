@@ -18,7 +18,8 @@ public class GameInfoUI : MonoBehaviour
     [SerializeField] private EventTrigger _timeTillRiseSliderInfo;
     [SerializeField] private EventTrigger _woodInfo;
     [SerializeField] private EventTrigger _stoneInfo;
-    [SerializeField] private EventTrigger _gameStateInfo;
+    [SerializeField] private EventTrigger _researchInfo;
+    [SerializeField] private TMP_Text _researchText;
 
     void Start()
     {
@@ -28,13 +29,14 @@ public class GameInfoUI : MonoBehaviour
         UIManager.Instance.AddHoverEvent(_timeTillRiseSliderInfo, "option_title", "language_label", HoverDirection.TopLeft);
         UIManager.Instance.AddHoverEvent(_woodInfo, "option_title", "language_label", HoverDirection.TopLeft);
         UIManager.Instance.AddHoverEvent(_stoneInfo, "option_title", "language_label", HoverDirection.TopLeft);
-        UIManager.Instance.AddHoverEvent(_gameStateInfo, "option_title", "language_label", HoverDirection.TopLeft);
+        UIManager.Instance.AddHoverEvent(_researchInfo, "option_title", "language_label", HoverDirection.TopLeft);
     }
 
     private void Update()
     {
         _currentDayText.text = "DAY " + GameManager.Instance.CurrentDay;
         _timeTillRiseSlider.value = GameManager.Instance.TimeSinceOceanRise / GameManager.Instance.OceanRisePeriod;
+        _researchText.text = (int)((float)GameManager.Instance.CurrentResearchPoint / GameManager.Instance.MaxResearchPoint * 100) + "%";
     }
 
     void OnMainMenuOpen()

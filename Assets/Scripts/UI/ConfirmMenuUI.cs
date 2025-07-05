@@ -27,6 +27,9 @@ public class ConfirmMenuUI : MonoBehaviour
         _descriptionText.ChangeKey(description);
         _descriptionText.UpdateTextLanguage();
 
+        _confirmButton.onClick.RemoveAllListeners();
+        _cancelButton.onClick.RemoveAllListeners();
+
         _confirmButton.onClick.AddListener(() => { UIManager.Instance.HideConfirmMenu(true); });
         _cancelButton.onClick.AddListener(() => { UIManager.Instance.HideConfirmMenu(false); });
 
