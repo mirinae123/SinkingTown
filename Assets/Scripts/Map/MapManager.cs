@@ -62,10 +62,23 @@ public class MapManager : SingletonBehaviour<MapManager>
     {
         foreach (Tile tile in Tiles)
         {
-            if (tile.Height == _oceanLevel && tile.Structure != null)
+            if (tile.Height == _oceanLevel)
             {
-                MapRenderer.Instance.AddSunkenStructure(tile.Coordinate, tile.Structure.StructureData.StructureType);
-                tile.DestroyStructure();
+                tile.IsFertile = false;
+
+                if (tile.NaturalResource != NaturalResourceType.None)
+                {
+                    tile.NaturalResource = NaturalResourceType.None;
+                    MapRenderer.Instance.UpdateTile(tile.Coordinate);
+
+                    UIManager.Instance.UpdateTileInfo(tile.Coordinate);
+                }
+
+                if (tile.Structure != null)
+                {
+                    MapRenderer.Instance.AddSunkenStructure(tile.Coordinate, tile.Structure.StructureData.StructureType);
+                    tile.DestroyStructure();
+                }
             }
         }
 

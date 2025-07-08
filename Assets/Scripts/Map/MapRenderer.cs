@@ -130,6 +130,8 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         int x = coordinate.x;
         int y = coordinate.y;
 
+        Tile currentTile = MapManager.Instance.Tiles[x, y];
+
         // 기존 렌더링 파괴
         if (_structureObjects[x, y])
         {
@@ -140,27 +142,27 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         // World 좌표 계산
         Vector3 worldCoordinate = HexaUtility.GetWorldCoordinate(coordinate);
 
-        if (MapManager.Instance.Tiles[x, y].IsDecked)
+        if (currentTile.IsDecked)
         {
             worldCoordinate.y = _oceanObject.transform.position.y;
         }
         else
         {
-            worldCoordinate.y = MapManager.Instance.Tiles[x, y].Height + 1;
+            worldCoordinate.y = currentTile.Height + 1;
         }
 
         // 렌더링할 프리팹 탐색
         GameObject prefabToInstantiate = null;
 
-        if (MapManager.Instance.Tiles[x, y].Structure != null)
+        if (currentTile.Structure != null)
         {
-            prefabToInstantiate = MapManager.Instance.Tiles[x, y].Structure.StructureData.StructurePrefab;
+            prefabToInstantiate = currentTile.Structure.StructureData.StructurePrefab;
         }
-        else if (MapManager.Instance.Tiles[x, y].NaturalResource == NaturalResourceType.Woods)
+        else if (currentTile.NaturalResource == NaturalResourceType.Woods)
         {
             prefabToInstantiate = _woodsPrefab;
         }
-        else if (MapManager.Instance.Tiles[x, y].NaturalResource == NaturalResourceType.Stone)
+        else if (currentTile.NaturalResource == NaturalResourceType.Stone)
         {
             prefabToInstantiate = _stonePrefab;
         }
@@ -172,7 +174,10 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
             _structureObjects[x, y].name = x + "_" + y;
             _structureObjects[x, y].transform.position = worldCoordinate;
 
-            _floatingStructures.Add(coordinate);
+            if (currentTile.IsUnderWater)
+            {
+                _floatingStructures.Add(coordinate);
+            }
         }
     }
 
