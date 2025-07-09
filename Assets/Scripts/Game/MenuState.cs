@@ -7,6 +7,7 @@ public class MenuState : MonoBehaviour
     private void OnEnable()
     {
         InputHandler.Instance.OnEscapeInput += OnEscapeInput;
+        CameraManager.Instance.LockCamera();
     }
 
     private void OnDisable()
@@ -14,6 +15,11 @@ public class MenuState : MonoBehaviour
         if (InputHandler.Instance != null)
         {
             InputHandler.Instance.OnEscapeInput -= OnEscapeInput;
+        }
+
+        if (CameraManager.Instance != null)
+        {
+            CameraManager.Instance.UnlockCamera();
         }
     }
 

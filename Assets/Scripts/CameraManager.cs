@@ -12,8 +12,8 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class CameraManager : SingletonBehaviour<CameraManager>
 {
-    [SerializeField]
-    private float _r, _pi;
+    [SerializeField] private float _r;   // 초점으로부터의 거리
+    [SerializeField] private float _pi;  // 내려다보는 각도
 
     [SerializeField]
     private float _moveSpeed, _rotationSpeed;
@@ -21,17 +21,20 @@ public class CameraManager : SingletonBehaviour<CameraManager>
     [SerializeField]
     private float _maxZoom, _minZoom;
 
-    private float _x, _z, _phi = Mathf.PI / 4;
-    private float _h, _v, _deltaX, _deltaZ;
+    private float _x, _z;               // 초점 위치
+    private float _phi = Mathf.PI / 4;  // 현재 회전각
+    private float _h, _v;               // 입력 값 저장용 변수
 
-    private float[] _rotationValues = { 45f, 135f, 225f, 315f };
-    private float _rotationDuration = .5f;
+    private float[] _rotationValues = { 45f, 135f, 225f, 315f };    // 회전에 사용할 각도 값들
+    private float _rotationDuration = 0.5f;                         // 회전에 걸리는 시간
 
     private Camera _camera;
 
     private int _currentRotation, _nextRotation;
-    private bool _isRotating;
-    private float _currentZoom; 
+    private float _currentZoom;
+
+    private bool _isRotating = false;
+    private bool _isLocked = false;
 
     private void Start()
     {
@@ -43,14 +46,14 @@ public class CameraManager : SingletonBehaviour<CameraManager>
 
     private void Update()
     {
-        if (!_isRotating)
-        {
-            _x += _deltaX * _moveSpeed * Time.deltaTime * Mathf.Sqrt(_currentZoom);
-            _z += _deltaZ * _moveSpeed * Time.deltaTime * Mathf.Sqrt(_currentZoom);
-        }
+        float deltaX = _v * Mathf.Cos(_phi) + _h * Mathf.Cos(_phi - Mathf.PI / 2.0f);
+        float deltaY = _v * Mathf.Sin(_phi) + _h * Mathf.Sin(_phi - Mathf.PI / 2.0f);
 
-        _deltaX = _v * Mathf.Cos(_phi) + _h * Mathf.Cos(_phi - Mathf.PI / 2.0f);
-        _deltaZ = _v * Mathf.Sin(_phi) + _h * Mathf.Sin(_phi - Mathf.PI / 2.0f);
+        if (!_isRotating && !_isLocked)
+        {
+            _x += deltaX * _moveSpeed * Time.deltaTime * Mathf.Sqrt(_currentZoom);
+            _z += deltaY * _moveSpeed * Time.deltaTime * Mathf.Sqrt(_currentZoom);
+        }
 
         _currentZoom = Mathf.Clamp(_currentZoom - Input.mouseScrollDelta.y * 3, _minZoom, _maxZoom);
         _camera.orthographicSize = _currentZoom;
@@ -67,6 +70,16 @@ public class CameraManager : SingletonBehaviour<CameraManager>
             InputHandler.Instance.OnRotateInput -= OnRotateInput;
         }
     }
+    
+    public void LockCamera()
+    {
+        _isLocked = true;
+    }
+
+    public void UnlockCamera()
+    {
+        _isLocked = false;
+    }
 
     private void OnMoveInput(InputValue value)
     {
@@ -78,6 +91,11 @@ public class CameraManager : SingletonBehaviour<CameraManager>
 
     private void OnRotateInput(InputValue value)
     {
+        if (_isLocked)
+        {
+            return;
+        }
+
         float input = value.Get<float>();
 
         if (!_isRotating && input != 0)
