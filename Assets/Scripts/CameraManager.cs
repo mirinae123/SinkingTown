@@ -40,6 +40,9 @@ public class CameraManager : SingletonBehaviour<CameraManager>
     {
         _camera = GetComponent<Camera>();
 
+        _x = MapManager.Instance.Tiles.GetLength(0) * 0.75f;
+        _z = MapManager.Instance.Tiles.GetLength(1) * Mathf.Sqrt(3.0f) / 2f;
+
         InputHandler.Instance.OnMoveInput += OnMoveInput;
         InputHandler.Instance.OnRotateInput += OnRotateInput;
     }
