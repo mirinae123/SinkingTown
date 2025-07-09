@@ -103,7 +103,7 @@ public class Structure
         return false;
     }
 
-    public virtual void Initialize(StructureType type, Tile tile) { }
+    public virtual void Initialize() { }
     public virtual void OnUpdate() { }
     public virtual void OnNotified() { }
 }
@@ -120,11 +120,16 @@ public class ConsumerStructure : Structure
     }
     private float _currentHappiness;
 
-    public override void Initialize(StructureType type, Tile tile)
+    public ConsumerStructure(StructureType type, Tile tile)
     {
         _structureData = StructureManager.Instance.GetStructureData(type);
         _currentHappiness = _structureData.MaxHappiness;
         _tile = tile;
+    }
+
+    public override void Initialize()
+    {
+        _tile.AddToProviders();
     }
 
     public override void OnUpdate()
@@ -206,10 +211,15 @@ public class ActiveProducerStructure : Structure
     }
     private float _elapsed;
 
-    public override void Initialize(StructureType type, Tile tile)
+    public ActiveProducerStructure(StructureType type, Tile tile)
     {
         _structureData = StructureManager.Instance.GetStructureData(type);
         _tile = tile;
+    }
+
+    public override void Initialize()
+    {
+        _tile.AddToProviders();
     }
 
     public override void OnUpdate()
@@ -265,7 +275,7 @@ public class ActiveProducerStructure : Structure
 /// </summary>
 public class PassiveProducerStructure : Structure
 {
-    public override void Initialize(StructureType type, Tile tile)
+    public PassiveProducerStructure(StructureType type, Tile tile)
     {
         _structureData = StructureManager.Instance.GetStructureData(type);
         _tile = tile;
@@ -281,6 +291,21 @@ public class PassiveProducerStructure : Structure
                 return new Resource(clothe: _tile.Resource.cotton);
             default:
                 return base.GetEffectiveProduces();
+        }
+    }
+
+    public override void Initialize()
+    {
+        bool satisfied = !(_tile.Resource < _structureData.Needs) && (!_structureData.RequireOcean || IsOceanNearby());
+
+        if (satisfied)
+        {
+            _currentState = StructureState.Enabled;
+            _tile.AddToProviders();
+        }
+        else
+        {
+            _currentState = StructureState.Disabled;
         }
     }
 

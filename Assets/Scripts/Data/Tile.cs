@@ -131,7 +131,7 @@ public class Tile
             MapRenderer.Instance.UpdateTile(_coordinate);
 
             // 주변 타일의 자원 제공자에 현재 건물을 추가
-            AddToProviders();
+            _structure.Initialize();
         }
 
         UIManager.Instance.UpdateTileInfo(_coordinate);

@@ -41,18 +41,16 @@ public class StructureManager : SingletonBehaviour<StructureManager>
 
         if (IsConsumer(type))
         {
-            structure = new ConsumerStructure();
+            structure = new ConsumerStructure(type, tile);
         }
         else if (IsActiveProducer(type))
         {
-            structure = new ActiveProducerStructure();
+            structure = new ActiveProducerStructure(type, tile);
         }
         else
         {
-            structure = new PassiveProducerStructure();
+            structure = new PassiveProducerStructure(type, tile);
         }
-
-        structure.Initialize(type, tile);
 
         return structure;
     }
