@@ -24,9 +24,12 @@ public class PlayState : MonoBehaviour
 
     private void OnDisable()
     {
-        InputHandler.Instance.OnPointMoveInput -= OnPointMoveInput;
-        InputHandler.Instance.OnClickInput -= OnClickInput;
-        InputHandler.Instance.OnEscapeInput -= OnEscapeInput;
+        if (InputHandler.Instance != null)
+        {
+            InputHandler.Instance.OnPointMoveInput -= OnPointMoveInput;
+            InputHandler.Instance.OnClickInput -= OnClickInput;
+            InputHandler.Instance.OnEscapeInput -= OnEscapeInput;
+        }
     }
 
     private void Update()

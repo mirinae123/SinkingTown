@@ -11,7 +11,10 @@ public class MenuState : MonoBehaviour
 
     private void OnDisable()
     {
-        InputHandler.Instance.OnEscapeInput -= OnEscapeInput;
+        if (InputHandler.Instance != null)
+        {
+            InputHandler.Instance.OnEscapeInput -= OnEscapeInput;
+        }
     }
 
     private void OnEscapeInput()

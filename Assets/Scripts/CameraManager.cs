@@ -56,8 +56,11 @@ public class CameraManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        InputHandler.Instance.OnMoveInput -= OnMoveInput;
-        InputHandler.Instance.OnRotateInput -= OnRotateInput;
+        if (InputHandler.Instance != null)
+        {
+            InputHandler.Instance.OnMoveInput -= OnMoveInput;
+            InputHandler.Instance.OnRotateInput -= OnRotateInput;
+        }
     }
 
     private void OnMoveInput(InputValue value)

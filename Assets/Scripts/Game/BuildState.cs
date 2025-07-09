@@ -29,9 +29,12 @@ public class BuildState : MonoBehaviour
         MapRenderer.Instance.HideRangeHighlight();
         MapRenderer.Instance.HideStructurePreview();
 
-        InputHandler.Instance.OnPointMoveInput -= OnPointMoveInput;
-        InputHandler.Instance.OnClickInput -= OnClickInput;
-        InputHandler.Instance.OnEscapeInput -= OnEscapeInput;
+        if (InputHandler.Instance != null)
+        {
+            InputHandler.Instance.OnPointMoveInput -= OnPointMoveInput;
+            InputHandler.Instance.OnClickInput -= OnClickInput;
+            InputHandler.Instance.OnEscapeInput -= OnEscapeInput;
+        }
     }
 
     private void Update()
