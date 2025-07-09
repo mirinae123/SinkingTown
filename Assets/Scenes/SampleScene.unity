@@ -346,12 +346,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 194658e941230964db54bd11b7676ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  r: 60
-  pi: 30
-  movSpeed: 7
-  rotSpeed: 5
-  maxZoom: 20
-  minZoom: 2
+  _r: 60
+  _pi: 30
+  _moveSpeed: 7
+  _rotationSpeed: 5
+  _maxZoom: 20
+  _minZoom: 2
 --- !u!114 &963194231
 MonoBehaviour:
   m_ObjectHideFlags: 0
