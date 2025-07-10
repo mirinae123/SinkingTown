@@ -22,6 +22,7 @@ public class CameraManager : SingletonBehaviour<CameraManager>
     private float _maxZoom, _minZoom;
 
     private float _x, _z;               // 초점 위치
+    private float _followX, _followZ;
     private float _phi = Mathf.PI / 4;  // 현재 회전각
     private float _h, _v;               // 입력 값 저장용 변수
 
@@ -43,6 +44,9 @@ public class CameraManager : SingletonBehaviour<CameraManager>
         _x = MapManager.Instance.Tiles.GetLength(0) * 0.75f;
         _z = MapManager.Instance.Tiles.GetLength(1) * Mathf.Sqrt(3.0f) / 2f;
 
+        _followX = _x;
+        _followZ = _z;
+
         InputHandler.Instance.OnMoveInput += OnMoveInput;
         InputHandler.Instance.OnRotateInput += OnRotateInput;
     }
@@ -58,11 +62,14 @@ public class CameraManager : SingletonBehaviour<CameraManager>
             _z += deltaY * _moveSpeed * Time.deltaTime * Mathf.Sqrt(_currentZoom);
         }
 
+        _followX = Mathf.Lerp(_followX, _x, Time.deltaTime * 12.0f);
+        _followZ = Mathf.Lerp(_followZ, _z, Time.deltaTime * 12.0f);
+
         _currentZoom = Mathf.Clamp(_currentZoom - Input.mouseScrollDelta.y * 3, _minZoom, _maxZoom);
         _camera.orthographicSize = _currentZoom;
 
-        transform.position = new Vector3(_x + _r * Mathf.Cos(_phi), -_r * Mathf.Sin(_pi), _z + _r * Mathf.Sin(_phi));
-        transform.LookAt(new Vector3(_x, 0, _z));
+        transform.position = new Vector3(_followX + _r * Mathf.Cos(_phi), -_r * Mathf.Sin(_pi), _followZ + _r * Mathf.Sin(_phi));
+        transform.LookAt(new Vector3(_followX, 0, _followZ));
     }
 
     private void OnDestroy()
@@ -118,7 +125,7 @@ public class CameraManager : SingletonBehaviour<CameraManager>
 
         while (elapsed < _rotationDuration)
         {
-            _phi = Mathf.LerpAngle(_rotationValues[_currentRotation], _rotationValues[_nextRotation], elapsed / _rotationDuration) * Mathf.Deg2Rad;
+            _phi = Mathf.LerpAngle(_rotationValues[_currentRotation], _rotationValues[_nextRotation], EaseInOut(0.0f, 1.0f, elapsed / _rotationDuration)) * Mathf.Deg2Rad;
             elapsed += Time.deltaTime;
 
             yield return null;
@@ -126,5 +133,12 @@ public class CameraManager : SingletonBehaviour<CameraManager>
 
         _currentRotation = _nextRotation;
         _isRotating = false;
+    }
+
+    private float EaseInOut(float a, float b, float t)
+    {
+        t = -(Mathf.Cos(Mathf.PI * t) - 1.0f) / 2.0f;
+
+        return a * (1.0f - t) + b * t;
     }
 }
