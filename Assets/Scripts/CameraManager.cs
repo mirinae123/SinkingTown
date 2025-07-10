@@ -24,7 +24,8 @@ public class CameraManager : SingletonBehaviour<CameraManager>
     private float _x, _z;               // 초점 위치
     private float _followX, _followZ;
     private float _phi = Mathf.PI / 4;  // 현재 회전각
-    private float _h, _v;               // 입력 값 저장용 변수
+    private float _h, _v;               // 키보드 입력 값 저장용 변수
+    private float _s;                   // 스크롤 입력 값 저장용 변수
 
     private float[] _rotationValues = { 45f, 135f, 225f, 315f };    // 회전에 사용할 각도 값들
     private float _rotationDuration = 0.5f;                         // 회전에 걸리는 시간
@@ -47,7 +48,10 @@ public class CameraManager : SingletonBehaviour<CameraManager>
         _followX = _x;
         _followZ = _z;
 
+        _currentZoom = 11.0f;
+
         InputHandler.Instance.OnMoveInput += OnMoveInput;
+        InputHandler.Instance.OnScrollInput += OnScrollInput;
         InputHandler.Instance.OnRotateInput += OnRotateInput;
     }
 
@@ -65,7 +69,7 @@ public class CameraManager : SingletonBehaviour<CameraManager>
         _followX = Mathf.Lerp(_followX, _x, Time.deltaTime * 12.0f);
         _followZ = Mathf.Lerp(_followZ, _z, Time.deltaTime * 12.0f);
 
-        _currentZoom = Mathf.Clamp(_currentZoom - Input.mouseScrollDelta.y * 3, _minZoom, _maxZoom);
+        _currentZoom = Mathf.Clamp(_currentZoom - _s * 3, _minZoom, _maxZoom);
         _camera.orthographicSize = _currentZoom;
 
         transform.position = new Vector3(_followX + _r * Mathf.Cos(_phi), -_r * Mathf.Sin(_pi), _followZ + _r * Mathf.Sin(_phi));
@@ -77,6 +81,7 @@ public class CameraManager : SingletonBehaviour<CameraManager>
         if (InputHandler.Instance != null)
         {
             InputHandler.Instance.OnMoveInput -= OnMoveInput;
+            InputHandler.Instance.OnScrollInput -= OnScrollInput;
             InputHandler.Instance.OnRotateInput -= OnRotateInput;
         }
     }
@@ -97,6 +102,13 @@ public class CameraManager : SingletonBehaviour<CameraManager>
 
         _h = -input[0];
         _v = -input[1];
+    }
+
+    private void OnScrollInput(InputValue value)
+    {
+        Vector2 input = value.Get<Vector2>();
+
+        _s = input[1] / 120;
     }
 
     private void OnRotateInput(InputValue value)

@@ -9,6 +9,7 @@ public class InputHandler : SingletonBehaviour<InputHandler>
     public UnityAction<InputValue> OnMoveInput;
     public UnityAction<InputValue> OnRotateInput;
     public UnityAction<InputValue> OnPointMoveInput;
+    public UnityAction<InputValue> OnScrollInput;
     public UnityAction OnClickInput;
     public UnityAction OnEscapeInput;
 
@@ -25,6 +26,11 @@ public class InputHandler : SingletonBehaviour<InputHandler>
     private void OnPointMove(InputValue inputValue)
     {
         OnPointMoveInput?.Invoke(inputValue);
+    }
+
+    private void OnScroll(InputValue inputValue)
+    {
+        OnScrollInput?.Invoke(inputValue);
     }
 
     private void OnClick()
