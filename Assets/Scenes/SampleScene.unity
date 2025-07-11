@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
   - component: {fileID: 705507996}
+  - component: {fileID: 705507997}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -240,6 +241,27 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!95 &705507997
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6e675fb977e76f545a090f18b237e34e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1011,6 +1033,14 @@ PrefabInstance:
       propertyPath: _dirLightColor
       value: 
       objectReference: {fileID: 705507994}
+    - target: {fileID: 7748807012761875964, guid: 4135f9d9bf39f1b498980673a30275f7, type: 3}
+      propertyPath: _dayNightAnimator
+      value: 
+      objectReference: {fileID: 705507997}
+    - target: {fileID: 7748807012761875964, guid: 4135f9d9bf39f1b498980673a30275f7, type: 3}
+      propertyPath: _dayNightAnimation
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7748807012761875964, guid: 4135f9d9bf39f1b498980673a30275f7, type: 3}
       propertyPath: _dirLightTransform
       value: 

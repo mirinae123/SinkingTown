@@ -13,13 +13,12 @@ public enum GameState { None, Build, Menu }
 public class GameManager : SingletonBehaviour<GameManager>
 {
     private const float OCEAN_RISE_PERIOD = 300f;
-    private const float DAY_SPEED = 9.6f;
+    private const float DAY_SPEED = 2.4f;
     private const int MAX_RESEARCH_POINT = 100;
 
     [SerializeField] private MonoBehaviour[] _gameStates;
 
-    [SerializeField] private Transform _dirLightTransform;
-    [SerializeField] private Light _dirLightColor;
+    [SerializeField] private Animator _dayNightAnimator;
 
     private float _elapsedTime = 0f;
     private float _riseCooldown = OCEAN_RISE_PERIOD;
@@ -122,17 +121,12 @@ public class GameManager : SingletonBehaviour<GameManager>
     private void Start()
     {
         _mainCamera = Camera.main;
+
+        _elapsedTime = 200.0f;
     }
 
     private void Update()
     {
-        // 게임 진행 조건: 정지 상태가 아닐 것, 메뉴가 열려 있지 않을 것
-        if (!_isPaused && _gameState != GameState.Menu)
-        {
-            UpdateTime();
-            ProcessOceanRise();
-        }
-
         _isPointerOverGameObject = EventSystem.current.IsPointerOverGameObject();
     }
 
@@ -142,10 +136,9 @@ public class GameManager : SingletonBehaviour<GameManager>
     public void UpdateTime()
     {
         _elapsedTime += Time.deltaTime;
+        _currentDay = Mathf.RoundToInt(_elapsedTime * DAY_SPEED) / 1440 + 1;
 
-        _currentDay = (Mathf.RoundToInt(_elapsedTime * DAY_SPEED) + 200) / 1440 + 1;
-        float dayTime = (Mathf.RoundToInt(_elapsedTime * DAY_SPEED) + 200) % 1440;
-        float sunRotation = Mathf.Lerp(0, 360, dayTime / 1440f);
+        _dayNightAnimator.Play("Cycle", 0, (Mathf.RoundToInt(_elapsedTime * DAY_SPEED) % 1440) / 1440.0f);
     }
 
     /// <summary>
