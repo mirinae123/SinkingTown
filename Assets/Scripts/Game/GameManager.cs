@@ -135,6 +135,11 @@ public class GameManager : SingletonBehaviour<GameManager>
     /// </summary>
     public void UpdateTime()
     {
+        if (_isPaused)
+        {
+            return;
+        }
+
         _elapsedTime += Time.deltaTime;
         _currentDay = Mathf.RoundToInt(_elapsedTime * DAY_SPEED) / 1440 + 1;
 
@@ -146,6 +151,11 @@ public class GameManager : SingletonBehaviour<GameManager>
     /// </summary>
     public void ProcessOceanRise()
     {
+        if (_isPaused)
+        {
+            return;
+        }
+
         _riseCooldown -= Time.deltaTime;
 
         if (_riseCooldown < 0.0f)
@@ -164,6 +174,8 @@ public class GameManager : SingletonBehaviour<GameManager>
     /// <param name="structure">Build 상태인 경우 대상 건물</param>
     public void ChangeGameState(GameState gameState, StructureType? structure = null)
     {
+        _gameState = gameState;
+
         _gameStates[0].enabled = (int)gameState == 0 ? true : false;
         _gameStates[1].enabled = (int)gameState == 1 ? true : false;
         _gameStates[2].enabled = (int)gameState == 2 ? true : false;
