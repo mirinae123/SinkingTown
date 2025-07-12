@@ -27,9 +27,12 @@ public class GameInfoUI : MonoBehaviour
     [SerializeField] private TMP_Text _researchText;
     [SerializeField] private EventTrigger _researchInfo;
 
+    [SerializeField] private Button _pauseButton;
+
     void Start()
     {
         _mainMenuButton.onClick.AddListener(() => { OnMainMenuOpen(); });
+        _pauseButton.onClick.AddListener(() => { GameManager.Instance.IsPaused = !GameManager.Instance.IsPaused; });
 
         UIManager.Instance.AddHoverEvent(_currentDayInfo, "option_title", "language_label", HoverDirection.TopLeft);
         UIManager.Instance.AddHoverEvent(_timeTillRiseSliderInfo, "option_title", "language_label", HoverDirection.TopLeft);

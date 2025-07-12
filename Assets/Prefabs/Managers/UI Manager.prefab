@@ -11912,7 +11912,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7923277162799115181}
   m_HandleRect: {fileID: 4892613928390725156}
   m_Direction: 0
-  m_Value: -0.00000009536743
+  m_Value: -0.00000009536744
   m_Size: 0
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -13600,6 +13600,7 @@ MonoBehaviour:
   _stoneInfo: {fileID: 93108637350195475}
   _researchText: {fileID: 4048562789785410286}
   _researchInfo: {fileID: 5380247459934615478}
+  _pauseButton: {fileID: 5760729265541767829}
 --- !u!1 &7221446371420249465
 GameObject:
   m_ObjectHideFlags: 0

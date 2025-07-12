@@ -43,15 +43,14 @@ public class MapManager : SingletonBehaviour<MapManager>
 
     private void Update()
     {
+        if (GameManager.Instance.IsPaused || GameManager.Instance.GameState == GameState.Menu)
+        {
+            return;
+        }
+
         foreach (Tile tile in Tiles)
         {
             if (tile.Structure != null) tile.Structure.OnUpdate();
-        }
-
-        // !TEST
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            RaiseOceanLevel();
         }
     }
 
