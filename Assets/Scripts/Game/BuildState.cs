@@ -58,8 +58,11 @@ public class BuildState : MonoBehaviour
             {
                 Vector2Int coordinate = HexaUtility.GetTileCoordinate(hit.point);
 
-                MapRenderer.Instance.ShowRangeHighlight(coordinate, StructureManager.Instance.GetStructureData(_structureToBuild).Radius);
-                MapRenderer.Instance.SetStructurePreviewTarget(coordinate, StructureManager.Instance.CheckStructureValidity(MapManager.Instance.Tiles[coordinate.x, coordinate.y], _structureToBuild));
+                if (MapManager.Instance.CheckCoordinateValidity(coordinate))
+                {
+                    MapRenderer.Instance.ShowRangeHighlight(coordinate, StructureManager.Instance.GetStructureData(_structureToBuild).Radius);
+                    MapRenderer.Instance.SetStructurePreviewTarget(coordinate, StructureManager.Instance.CheckStructureValidity(MapManager.Instance.Tiles[coordinate.x, coordinate.y], _structureToBuild));
+                }
             }
         }
     }
@@ -76,16 +79,20 @@ public class BuildState : MonoBehaviour
             if (!_isPointerOverGameObject)
             {
                 Vector2Int coordinate = HexaUtility.GetTileCoordinate(hit.point);
-                Tile tile = MapManager.Instance.Tiles[coordinate.x, coordinate.y];
 
-                if (StructureManager.Instance.CheckStructureValidity(tile, _structureToBuild))
+                if (MapManager.Instance.CheckCoordinateValidity(coordinate))
                 {
-                    tile.CreateStructure(_structureToBuild);
+                    Tile tile = MapManager.Instance.Tiles[coordinate.x, coordinate.y];
 
-                    GameManager.Instance.CurrentWoods -= StructureManager.Instance.GetStructureData(_structureToBuild).WoodCost;
-                    GameManager.Instance.CurrentStones -= StructureManager.Instance.GetStructureData(_structureToBuild).StoneCost;
+                    if (StructureManager.Instance.CheckStructureValidity(tile, _structureToBuild))
+                    {
+                        tile.CreateStructure(_structureToBuild);
 
-                    GameManager.Instance.ChangeGameState(GameState.None);
+                        GameManager.Instance.CurrentWoods -= StructureManager.Instance.GetStructureData(_structureToBuild).WoodCost;
+                        GameManager.Instance.CurrentStones -= StructureManager.Instance.GetStructureData(_structureToBuild).StoneCost;
+
+                        GameManager.Instance.ChangeGameState(GameState.None);
+                    }
                 }
             }
         }

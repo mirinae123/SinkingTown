@@ -54,8 +54,12 @@ public class PlayState : MonoBehaviour
         {
             if (!_isPointerOverGameObject)
             {
-                Vector2Int tilePos = HexaUtility.GetTileCoordinate(hit.point);
-                UIManager.Instance.ShowTileInfo(tilePos);
+                Vector2Int coordinate = HexaUtility.GetTileCoordinate(hit.point);
+
+                if (MapManager.Instance.CheckCoordinateValidity(coordinate))
+                {
+                    UIManager.Instance.ShowTileInfo(coordinate);
+                }
             }
         }
     }

@@ -89,6 +89,11 @@ public class MapManager : SingletonBehaviour<MapManager>
         MapRenderer.Instance.RaiseOceanLevel(_oceanLevel, ++_oceanLevel);
     }
 
+    public bool CheckCoordinateValidity(Vector2Int coordinate)
+    {
+        return 0 <= coordinate.x && coordinate.x < _tiles.GetLength(0) && 0 <= coordinate.y && coordinate.y < _tiles.GetLength(1);
+    }
+
     // !TEST
     void OnDrawGizmos()
     {
