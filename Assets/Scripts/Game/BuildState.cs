@@ -45,6 +45,11 @@ public class BuildState : MonoBehaviour
             GameManager.Instance.ProcessOceanRise();
         }
 
+        if (!enabled)
+        {
+            return;
+        }
+
         _isPointerOverGameObject = EventSystem.current.IsPointerOverGameObject();
 
         if (Physics.Raycast(_mainCamera.ScreenPointToRay(_mousePosition), out RaycastHit hit, Mathf.Infinity))

@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// UI 상태
 /// </summary>
-public enum UIState { None, Build, Tile, MainMenu, Option, Confirm }
+public enum UIState { None, Build, Tile, MainMenu, Option, Confirm, End }
 
 /// <summary>
 /// UI를 관리하는 클래스
@@ -23,6 +23,8 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     [SerializeField] private GameObject _gameInfo;
     [SerializeField] private TileInfoUI _tileInfo;
+
+    [SerializeField] private EndMenuUI _endMenu;
 
     /// <summary>
     /// 현재 UI 상태
@@ -191,6 +193,30 @@ public class UIManager : SingletonBehaviour<UIManager>
         _tileInfo.Hide();
     }
 
+    /// <summary>
+    /// 클리어 메뉴를 표시한다.
+    /// </summary>
+    /// <param name="hasCleared">클리어 여부</param>
+    public void ShowEndMenu(bool hasCleared)
+    {
+        _previousUIState = _currentUIState;
+        _currentUIState = UIState.End;
+
+        GameManager.Instance.ChangeGameState(GameState.Menu);
+        _endMenu.Show(hasCleared);
+    }
+
+    /// <summary>
+    /// 클리어 메뉴를 숨긴다.
+    /// </summary>
+    public void HideEndMenu()
+    {
+        _currentUIState = _previousUIState;
+
+        GameManager.Instance.ChangeGameState(GameState.None);
+        _endMenu.Hide();
+    }
+
     public void ProcessEscapeInput()
     {
         switch(_currentUIState)
@@ -209,6 +235,9 @@ public class UIManager : SingletonBehaviour<UIManager>
                 break;
             case UIState.Confirm:
                 HideConfirmMenu(false);
+                break;
+            case UIState.End:
+                HideEndMenu();
                 break;
             default:
                 ShowMainMenu();
