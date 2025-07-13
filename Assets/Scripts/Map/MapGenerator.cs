@@ -6,7 +6,13 @@ using UnityEngine;
 public class MapGenerator : SingletonBehaviour<MapGenerator>
 {
     private int _initOceanLevel = 6;
+
     private int _maxHeight = 21;
+    public int MaxHeight
+    {
+        get => _maxHeight;
+        set => _maxHeight = value;
+    }
 
     /// <summary>
     /// 설산 기준. 높이가 이것보다 높은 타일은 설산으로 간주한다.

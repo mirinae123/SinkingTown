@@ -81,6 +81,11 @@ public class MapManager : SingletonBehaviour<MapManager>
             }
         }
 
+        if (_oceanLevel == MapGenerator.Instance.MaxHeight)
+        {
+            GameManager.Instance.EndGame(false);
+        }
+
         MapRenderer.Instance.RaiseOceanLevel(_oceanLevel, ++_oceanLevel);
     }
 

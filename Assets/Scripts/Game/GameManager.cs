@@ -24,8 +24,11 @@ public class GameManager : SingletonBehaviour<GameManager>
     private float _riseCooldown = OCEAN_RISE_PERIOD;
 
     private Camera _mainCamera;
+
     private Vector2 _mousePosition;
     private bool _isPointerOverGameObject = false;
+
+    private bool _hasEnded = false;
 
     /// <summary>
     /// 현재 게임 상태
@@ -141,7 +144,7 @@ public class GameManager : SingletonBehaviour<GameManager>
         }
 
         _elapsedTime += Time.deltaTime;
-        _currentDay = Mathf.RoundToInt(_elapsedTime * DAY_SPEED) / 1440 + 1;
+        _currentDay = (Mathf.RoundToInt(_elapsedTime * DAY_SPEED) / 1440) % 99 + 1;
 
         _dayNightAnimator.Play("Cycle", 0, (Mathf.RoundToInt(_elapsedTime * DAY_SPEED) % 1440) / 1440.0f);
     }
@@ -151,7 +154,7 @@ public class GameManager : SingletonBehaviour<GameManager>
     /// </summary>
     public void ProcessOceanRise()
     {
-        if (_isPaused)
+        if (_isPaused || MapManager.Instance.OceanLevel == MapGenerator.Instance.MaxHeight)
         {
             return;
         }
@@ -193,5 +196,21 @@ public class GameManager : SingletonBehaviour<GameManager>
     public void ChangeResearchPoint(int amount)
     {
         _currentResearchPoint = Mathf.Clamp(_currentResearchPoint + amount, 0, MAX_RESEARCH_POINT);
+
+        if (_currentResearchPoint == MAX_RESEARCH_POINT)
+        {
+            EndGame(true);
+        }
+    }
+
+    public void EndGame(bool hasCleared)
+    {
+        if (_hasEnded)
+        {
+            return;
+        }
+
+        _hasEnded = true;
+        UIManager.Instance.ShowEndMenu(hasCleared);
     }
 }
