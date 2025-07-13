@@ -60,18 +60,23 @@ public class CameraManager : SingletonBehaviour<CameraManager>
         float deltaX = _v * Mathf.Cos(_phi) + _h * Mathf.Cos(_phi - Mathf.PI / 2.0f);
         float deltaY = _v * Mathf.Sin(_phi) + _h * Mathf.Sin(_phi - Mathf.PI / 2.0f);
 
-        if (!_isRotating && !_isLocked)
+        if (!_isLocked)
         {
-            _x += deltaX * _moveSpeed * Time.deltaTime * Mathf.Sqrt(_currentZoom);
-            _z += deltaY * _moveSpeed * Time.deltaTime * Mathf.Sqrt(_currentZoom);
+            if (!_isRotating)
+            {
+                _x += deltaX * _moveSpeed * Time.deltaTime * Mathf.Sqrt(_currentZoom);
+                _x = Mathf.Clamp(_x, 0.0f, MapManager.Instance.Tiles.GetLength(0) * 1.5f);
+
+                _z += deltaY * _moveSpeed * Time.deltaTime * Mathf.Sqrt(_currentZoom);
+                _z = Mathf.Clamp(_z, 0.0f, MapManager.Instance.Tiles.GetLength(1) * Mathf.Sqrt(3.0f));
+            }
+
+            _currentZoom = Mathf.Clamp(_currentZoom - _s * 3, _minZoom, _maxZoom);
+            _camera.orthographicSize = _currentZoom;
         }
 
         _followX = Mathf.Lerp(_followX, _x, Time.deltaTime * 12.0f);
         _followZ = Mathf.Lerp(_followZ, _z, Time.deltaTime * 12.0f);
-
-        _currentZoom = Mathf.Clamp(_currentZoom - _s * 3, _minZoom, _maxZoom);
-        _camera.orthographicSize = _currentZoom;
-
         transform.position = new Vector3(_followX + _r * Mathf.Cos(_phi), -_r * Mathf.Sin(_pi), _followZ + _r * Mathf.Sin(_phi));
         transform.LookAt(new Vector3(_followX, 0, _followZ));
     }
