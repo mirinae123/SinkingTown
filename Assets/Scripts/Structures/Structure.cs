@@ -94,7 +94,7 @@ public class Structure
     {
         foreach (Tile neighbor in _tile.GetNeighbors(1))
         {
-            if (neighbor.Height == MapManager.Instance.OceanLevel - 1 && !neighbor.IsDecked)
+            if (neighbor.IsUnderWater && !neighbor.IsDecked)
             {
                 return true;
             }
@@ -275,6 +275,8 @@ public class ActiveProducerStructure : Structure
 /// </summary>
 public class PassiveProducerStructure : Structure
 {
+    private float _lastProduced = 0;
+
     public PassiveProducerStructure(StructureType type, Tile tile)
     {
         _structureData = StructureManager.Instance.GetStructureData(type);
@@ -314,11 +316,32 @@ public class PassiveProducerStructure : Structure
         // 요구 사항 만족 여부
         bool satisfied = !(_tile.Resource < _structureData.Needs) && (!_structureData.RequireOcean || IsOceanNearby());
 
-        // 비활성 상태에서 만족
-        if (satisfied && _currentState == StructureState.Disabled)
+        if (satisfied)
         {
-            _currentState = StructureState.Enabled;
-            _tile.AddToProviders();
+            // 비활성 상태에서 만족
+            if (_currentState == StructureState.Disabled)
+            {
+                _currentState = StructureState.Enabled;
+                _tile.AddToProviders();
+            }
+            // 식당에 공급되는 물고기 값이 변한 경우
+            else if (_structureData.StructureType == StructureType.Restaurant &&
+                _tile.Resource.fish != _lastProduced)
+            {
+                _lastProduced = _tile.Resource.fish;
+
+                _tile.RemoveFromProviders();
+                _tile.AddToProviders();
+            }
+            // 방직소에 공급되는 목화 값이 변한 경우
+            else if (_structureData.StructureType == StructureType.TextileMill &&
+                _tile.Resource.cotton != _lastProduced)
+            {
+                _lastProduced = _tile.Resource.cotton;
+
+                _tile.RemoveFromProviders();
+                _tile.AddToProviders();
+            }
         }
         // 활성 상태에서 불만족
         else if (!satisfied && _currentState == StructureState.Enabled)
