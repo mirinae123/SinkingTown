@@ -17,6 +17,9 @@ public class BuildingButton : MonoBehaviour
     [SerializeField] private Image _buildingImage;
     [SerializeField] private LocalizedText _buildingText;
 
+    private int _woodCost;
+    private int _stoneCost;
+
     void Start()
     {
         UIManager.Instance.AddHoverEvent(_buttonEvent, "option_title", "language_label", HoverDirection.BottomLeft);
@@ -29,13 +32,16 @@ public class BuildingButton : MonoBehaviour
 
             UIManager.Instance.HideBuildMenu();
         });
+
+        StructureData structureData = StructureManager.Instance.GetStructureData(_structureType);
+        _woodCost = structureData.WoodCost;
+        _stoneCost = structureData.StoneCost;
     }
 
     void Update()
     {
         // 건설 자원이 충분할 때만 활성화한다.
-        if (StructureManager.Instance.GetStructureData(_structureType).WoodCost <= GameManager.Instance.CurrentWoods &&
-            StructureManager.Instance.GetStructureData(_structureType).StoneCost <= GameManager.Instance.CurrentStones)
+        if (_woodCost <= GameManager.Instance.CurrentWoods && _stoneCost <= GameManager.Instance.CurrentStones)
         {
             _buildingButton.interactable = true;
         }

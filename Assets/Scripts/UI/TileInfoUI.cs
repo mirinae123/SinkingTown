@@ -36,16 +36,14 @@ public class TileInfoUI : MonoBehaviour
     [SerializeField] private EventTrigger _foodInfo;
     [SerializeField] private EventTrigger _cottonInfo;
     [SerializeField] private EventTrigger _clotheInfo;
-    [SerializeField] private EventTrigger _efficiencyBonusInfo;
-    [SerializeField] private EventTrigger _radiusBonusInfo;
+    [SerializeField] private EventTrigger _rangeBonusInfo;
 
     [SerializeField] private TMP_Text _populationCount;
     [SerializeField] private TMP_Text _fishCount;
     [SerializeField] private TMP_Text _foodCount;
     [SerializeField] private TMP_Text _cottonCount;
     [SerializeField] private TMP_Text _clotheCount;
-    [SerializeField] private TMP_Text _efficiencyBonus;
-    [SerializeField] private TMP_Text _radiusBonus;
+    [SerializeField] private TMP_Text _rangeBonus;
 
     [Header("Provides to")]
     [SerializeField] private EventTrigger _providesToInfo;
@@ -115,8 +113,7 @@ public class TileInfoUI : MonoBehaviour
         UIManager.Instance.AddHoverEvent(_foodInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_cottonInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_clotheInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_efficiencyBonusInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_radiusBonusInfo, "language_label", "language_label", HoverDirection.TopRight);
+        UIManager.Instance.AddHoverEvent(_rangeBonusInfo, "language_label", "language_label", HoverDirection.TopRight);
 
         UIManager.Instance.AddHoverEvent(_providesToInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_providedFromInfo, "language_label", "language_label", HoverDirection.TopRight);
@@ -275,8 +272,7 @@ public class TileInfoUI : MonoBehaviour
         _foodCount.text = provided.food + " / " + needs.food;
         _cottonCount.text = provided.cotton + " / " + needs.cotton;
         _clotheCount.text = provided.clothe + " / " + needs.clothe;
-        _efficiencyBonus.text = provided.efficiencyBonus.ToString();
-        _radiusBonus.text = provided.radiusBonus.ToString();
+        _rangeBonus.text = provided.rangeBonus.ToString();
 
         // 이웃 타일에 대한 정보 갱신
         Tile[] neighbors = _currentTile.GetNeighbors(_currentTile.Structure.GetEffectiveRadius());
@@ -350,8 +346,7 @@ public class TileInfoUI : MonoBehaviour
         _foodCount.text = provided.food + " / 0";
         _cottonCount.text = provided.cotton + " / 0";
         _clotheCount.text = provided.clothe + " / 0";
-        _efficiencyBonus.text = provided.efficiencyBonus.ToString();
-        _radiusBonus.text = provided.radiusBonus.ToString();
+        _rangeBonus.text = provided.rangeBonus.ToString();
 
         MapRenderer.Instance.HideRangeHighlight();
     }

@@ -163,17 +163,11 @@ public class Tile
     {
         // 새로운 자원 제공량 계산
         Resource newResource = new Resource();
-        int maxRadius = 0;
 
         foreach (var structure in _providers)
         {
-            if (structure.StructureData.Produces.radiusBonus > maxRadius)
-                maxRadius = structure.StructureData.Produces.radiusBonus;
-
             newResource += structure.GetEffectiveProduces();
         }
-
-        newResource.radiusBonus = maxRadius;
 
         // 현재 타일에 건물이 없는 경우
         if (_structure == null)
@@ -186,24 +180,12 @@ public class Tile
         // 현재 타일에 건물이 있는 경우
         else
         {
-            // 추가 효율이 변한 경우
-            if (newResource.efficiencyBonus != _resource.efficiencyBonus)
-            {
-                _resource = newResource;
-
-                // 주변 타일에 변경 사실을 알림
-                Tile[] neighbors = GetNeighbors(_structure.GetEffectiveRadius());
-                foreach (var neighbor in neighbors)
-                {
-                    neighbor.OnNotified();
-                }
-            }
             // 추가 범위가 변한 경우
-            else if (newResource.radiusBonus != _resource.radiusBonus)
+            if (newResource.rangeBonus != _resource.rangeBonus)
             {
                 // 영향을 받는 이웃 타일에 해당 사실을 알림
                 Tile[] oldNeighbors = GetNeighbors(_structure.GetEffectiveRadius());
-                _resource.radiusBonus = maxRadius;
+                _resource.rangeBonus = newResource.rangeBonus;
                 Tile[] newNeighbors = GetNeighbors(_structure.GetEffectiveRadius());
 
                 if (oldNeighbors.Length > newNeighbors.Length)

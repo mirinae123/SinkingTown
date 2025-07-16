@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -14,7 +15,7 @@ public enum StructureState { Enabled, Increasing, Decreasing, Disabled }
 /// <summary>
 /// 건물 종류
 /// </summary>
-public enum StructureType { TownHall, House, Apartment, Market, School, LumberCamp, Quarry, Pier, Dock, Farm, HydroponicsFarm, Restaurant, TextileMill, Fortress, Deck }
+public enum StructureType { TownHall, House, Market, LumberCamp, Quarry, Pier, Farm, Restaurant, TextileMill, Fortress, Deck }
 
 /// <summary>
 /// 기본 건물 클래스
@@ -54,14 +55,14 @@ public class Structure
     public int GetEffectiveRadius()
     {
         // 추가 범위를 제공하는 건물은 추가 범위 효과를 받지 않음
-        if (StructureData.Produces.radiusBonus != 0)
+        if (StructureData.Produces.rangeBonus)
         {
             return StructureData.Radius;
         }
         // 일반 건물은 제공 받은 추가 범위 중 가장 큰 값을 추가 범위로 사용
         else if (StructureData.Radius > 0)
         {
-            return StructureData.Radius + _tile.Resource.radiusBonus;
+            return StructureData.Radius + (_tile.Resource.rangeBonus ? 1 : 0);
         }
         // 효과 범위가 없는 건물은 추가 범위도 적용받지 않음
         else
@@ -71,20 +72,11 @@ public class Structure
     }
 
     /// <summary>
-    /// 추가 효율을 고려한 실질 생산량을 계산한다.
+    /// 실질 생산량을 계산한다.
     /// </summary>
     public virtual Resource GetEffectiveProduces()
     {
-        // 추가 효율성을 제공하는 건물은 추가 효율성의 효과를 받지 않음
-        if (StructureData.Produces.efficiencyBonus != 0)
-        {
-            return StructureData.Produces;
-        }
-        // 추가 효율성을 고려해 생산량 수정
-        else
-        {
-            return StructureData.Produces * (1f + _tile.Resource.efficiencyBonus);
-        }
+        return StructureData.Produces;
     }
 
     /// <summary>
