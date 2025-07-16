@@ -402,25 +402,17 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
                 {
                     if (MapManager.Instance.Tiles[x, y].Height > MapGenerator.Instance.SnowThreshold)
                     {
-                        sideIndex = 7;
+                        sideIndex = 5;
                     }
                     else
                     {
-                        sideIndex = 6;
+                        sideIndex = 4;
                     }
                 }
-                else
+                else if (MapManager.Instance.Tiles[x, y].Height > MapGenerator.Instance.SnowThreshold)
                 {
-                    if (MapManager.Instance.Tiles[x, y].Height > MapGenerator.Instance.SnowThreshold)
-                    {
-                        topIndex = 4;
-                        sideIndex = 5;
-                    }
-                    else if (MapManager.Instance.Tiles[x, y].IsFertile)
-                    {
-                        topIndex = 2;
-                        sideIndex = 3;
-                    }
+                    topIndex = 2;
+                    sideIndex = 3;
                 }
 
                 for (int t = 0; t < 6; t++)

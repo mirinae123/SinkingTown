@@ -87,10 +87,6 @@ public class MapGenerator : SingletonBehaviour<MapGenerator>
                     continue;
                 }
 
-                // 비옥한 땅 여부 결정
-                bool isFertile = Mathf.PerlinNoise((float)i / w * c + fertileOffset, (float)j / h * c + fertileOffset) > .65f;
-                tiles[i, j].IsFertile = isFertile;
-
                 // 천연 자원 배치
                 float resourceProb = Random.Range(0f, 1f);
 

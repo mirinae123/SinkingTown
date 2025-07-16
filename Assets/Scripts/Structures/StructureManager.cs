@@ -138,7 +138,7 @@ public class StructureManager : SingletonBehaviour<StructureManager>
                 }
                 return false;
             case StructureType.Farm:
-                return !tile.IsDecked && tile.IsFertile;
+                return !tile.IsDecked;
             case StructureType.HydroponicsFarm:
                 return tile.IsDecked;
             case StructureType.LumberCamp:
