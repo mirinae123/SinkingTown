@@ -15,7 +15,7 @@ MonoBehaviour:
   StructureType: 9
   StructureImage: {fileID: 0}
   StructureNameKey: farm_title
-  StructurePrefab: {fileID: 9073670328388804027, guid: 3f863f2fae4f9654fbb348c6087ff2e3, type: 3}
+  StructurePrefab: {fileID: 9073670328388804027, guid: 20ce9ffd9cde51048b94b1647e524758, type: 3}
   BuildingStructurePrefab: {fileID: 0}
   DisabledStructurePrefab: {fileID: 0}
   SunkenStructurePrefab: {fileID: 9073670328388804027, guid: b9680d7c6ee0d6545a65b86157fb3f2f, type: 3}
@@ -35,7 +35,7 @@ MonoBehaviour:
     food: 0
     wood: 0
     stone: 0
-    cotton: 3
+    cotton: 1
     clothe: 0
     efficiencyBonus: 0
     radiusBonus: 0

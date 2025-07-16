@@ -22,11 +22,11 @@ MonoBehaviour:
   Needs:
     population: 0
     fish: 0
-    food: 1
+    food: 2
     wood: 0
     stone: 0
     cotton: 0
-    clothe: 1
+    clothe: 2
     efficiencyBonus: 0
     radiusBonus: 0
   Produces:
@@ -42,8 +42,8 @@ MonoBehaviour:
   RequireOcean: 0
   WoodCost: 2
   StoneCost: 0
-  Radius: 1
+  Radius: 2
   MaxHappiness: 100
   IncreaseSpeed: 10
-  DecreaseSpeed: 3.333
+  DecreaseSpeed: 5
   TimeToProduce: 0
