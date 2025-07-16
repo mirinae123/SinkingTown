@@ -11,52 +11,47 @@ public struct Resource
     /// <summary>
     /// 인구
     /// </summary>
-    public float population;
+    public int population;
 
     /// <summary>
     /// 물고기
     /// </summary>
-    public float fish;
+    public int fish;
 
     /// <summary>
     /// 식량
     /// </summary>
-    public float food;
+    public int food;
 
     /// <summary>
     /// 목재
     /// </summary>
-    public float wood;
+    public int wood;
 
     /// <summary>
     /// 석재
     /// </summary>
-    public float stone;
+    public int stone;
 
     /// <summary>
     /// 면화
     /// </summary>
-    public float cotton;
+    public int cotton;
 
     /// <summary>
     /// 의복
     /// </summary>
-    public float clothe;
-
-    /// <summary>
-    /// 추가 효율
-    /// </summary>
-    public float efficiencyBonus;
+    public int clothe;
 
     /// <summary>
     /// 추가 범위
     /// </summary>
-    public int radiusBonus;
+    public bool rangeBonus;
 
     /// <summary>
     /// 생성자
     /// </summary>
-    public Resource(float population = 0, float fish = 0, float food = 0, float wood = 0, float stone = 0, float cotton = 0, float clothe = 0, float efficiencyBonus = 0, int radiusBonus = 0)
+    public Resource(int population = 0, int fish = 0, int food = 0, int wood = 0, int stone = 0, int cotton = 0, int clothe = 0, int efficiencyBonus = 0, bool rangeBonus = false)
     {
         this.population = population;
 
@@ -69,8 +64,7 @@ public struct Resource
         this.cotton = cotton;
         this.clothe = clothe;
 
-        this.efficiencyBonus = efficiencyBonus;
-        this.radiusBonus = radiusBonus;
+        this.rangeBonus = rangeBonus;
     }
 
     /// <summary>
@@ -89,8 +83,7 @@ public struct Resource
         this.cotton = a.cotton;
         this.clothe = a.clothe;
 
-        this.efficiencyBonus = a.efficiencyBonus;
-        this.radiusBonus = a.radiusBonus;
+        this.rangeBonus = a.rangeBonus;
     }
 
     /// <summary>
@@ -98,10 +91,9 @@ public struct Resource
     /// </summary>
     public static bool IsNeeded(Resource needs, Resource provided)
     {
-        return needs.population > 0 && provided.population > 0 ||needs.fish > 0 && provided.fish > 0 ||
-               needs.food > 0 && provided.food > 0 || needs.cotton > 0 && provided.cotton > 0 ||
-               needs.clothe > 0 && provided.clothe > 0 || needs.wood > 0 && provided.wood > 0 ||
-               needs.stone > 0 && provided.stone > 0 || provided.efficiencyBonus > 0 || provided.radiusBonus > 0;
+        return (needs.population > 0 && provided.population > 0) || (needs.fish > 0 && provided.fish > 0) ||
+               (needs.food > 0 && provided.food > 0) || (needs.cotton > 0 && provided.cotton > 0) ||
+               (needs.clothe > 0 && provided.clothe > 0) || provided.rangeBonus;
     }
 
     /// <summary>
@@ -117,57 +109,7 @@ public struct Resource
                                 stone: a.stone + b.stone > 0 ? a.stone + b.stone : 0,
                                 cotton: a.cotton + b.cotton > 0 ? a.cotton + b.cotton : 0,
                                 clothe: a.clothe + b.clothe > 0 ? a.clothe + b.clothe : 0,
-                                efficiencyBonus: a.efficiencyBonus + b.efficiencyBonus > 0 ? a.efficiencyBonus + b.efficiencyBonus : 0,
-                                0);
-    }
-
-    /// <summary>
-    /// 빼기 연산 오버로딩
-    /// </summary>
-    public static Resource operator -(Resource a, Resource b)
-    {
-        return new Resource(population: a.population - b.population > 0 ? a.population - b.population : 0,
-                                fish: a.fish - b.fish > 0 ? a.fish - b.fish : 0,
-                                food: a.food - b.food > 0 ? a.food - b.food : 0,
-                                wood: a.wood - b.wood > 0 ? a.wood - b.wood : 0,
-                                stone: a.stone - b.stone > 0 ? a.stone - b.stone : 0,
-                                cotton: a.cotton - b.cotton > 0 ? a.cotton - b.cotton : 0,
-                                clothe: a.clothe - b.clothe > 0 ? a.clothe - b.clothe : 0,
-                                efficiencyBonus: a.efficiencyBonus - b.efficiencyBonus > 0 ? a.efficiencyBonus - b.efficiencyBonus : 0,
-                                0);
-    }
-
-    /// <summary>
-    /// 음수 기호 오버로딩
-    /// </summary>
-    public static Resource operator -(Resource a)
-    {
-        return new Resource(population: -a.population,
-                                fish: -a.fish,
-                                food: -a.food,
-                                wood: -a.wood,
-                                stone: -a.stone,
-                                cotton: -a.cotton,
-                                clothe: -a.clothe,
-                                efficiencyBonus: -a.efficiencyBonus,
-                                radiusBonus: -a.radiusBonus);
-    }
-
-    /// <summary>
-    /// float 값과의 곱셈 오버로딩
-    /// 생산량에 효율을 곱해 실질 생산량을 구할 때 쓰임
-    /// </summary>
-    public static Resource operator *(Resource a, float efficiency)
-    {
-        return new Resource(population: a.population * efficiency,
-                                fish: a.fish * efficiency,
-                                food: a.food * efficiency,
-                                wood: a.wood * efficiency,
-                                stone: a.stone * efficiency,
-                                cotton: a.cotton * efficiency,
-                                clothe: a.clothe * efficiency,
-                                efficiencyBonus: a.efficiencyBonus,
-                                radiusBonus: a.radiusBonus);
+                                rangeBonus: a.rangeBonus | b.rangeBonus);
     }
 
     /// <summary>

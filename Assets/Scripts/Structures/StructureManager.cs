@@ -75,9 +75,7 @@ public class StructureManager : SingletonBehaviour<StructureManager>
         switch (type)
         {
             case StructureType.House:
-            case StructureType.Apartment:
             case StructureType.Market:
-            case StructureType.School:
             case StructureType.Fortress:
                 return true;
 
@@ -128,7 +126,6 @@ public class StructureManager : SingletonBehaviour<StructureManager>
             case StructureType.Deck:
                 return false;
             case StructureType.Pier:
-            case StructureType.Dock:
                 foreach (Tile neighbor in tile.GetNeighbors(1))
                 {
                     if (neighbor.IsUnderWater && !neighbor.IsDecked)
@@ -139,8 +136,6 @@ public class StructureManager : SingletonBehaviour<StructureManager>
                 return false;
             case StructureType.Farm:
                 return !tile.IsDecked;
-            case StructureType.HydroponicsFarm:
-                return tile.IsDecked;
             case StructureType.LumberCamp:
                 return !tile.IsDecked && tile.NaturalResource == NaturalResourceType.Woods;
             case StructureType.Quarry:

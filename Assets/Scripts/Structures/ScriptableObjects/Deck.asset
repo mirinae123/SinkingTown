@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a2d7f3515ce7c24594c96283012cf88, type: 3}
   m_Name: Deck
   m_EditorClassIdentifier: 
-  StructureType: 14
+  StructureType: 10
   StructureImage: {fileID: 0}
   StructureNameKey: deck_title
   StructurePrefab: {fileID: 9073670328388804027, guid: 5388a7f36f000ff4fb43b8d2af64b498, type: 3}
@@ -27,8 +27,7 @@ MonoBehaviour:
     stone: 0
     cotton: 0
     clothe: 0
-    efficiencyBonus: 0
-    radiusBonus: 0
+    rangeBonus: 0
   Produces:
     population: 0
     fish: 0
@@ -37,8 +36,7 @@ MonoBehaviour:
     stone: 0
     cotton: 0
     clothe: 0
-    efficiencyBonus: 0
-    radiusBonus: 0
+    rangeBonus: 0
   RequireOcean: 0
   WoodCost: 4
   StoneCost: 4

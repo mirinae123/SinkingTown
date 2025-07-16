@@ -91,33 +91,4 @@ public class MapManager : SingletonBehaviour<MapManager>
     {
         return 0 <= coordinate.x && coordinate.x < _tiles.GetLength(0) && 0 <= coordinate.y && coordinate.y < _tiles.GetLength(1);
     }
-
-    // !TEST
-    void OnDrawGizmos()
-    {
-        bool display = true;
-        if (!display) return;
-
-        if (Tiles == null) return;
-
-        GUIStyle style = new GUIStyle();
-        style.normal.textColor = new Color(0, 0, 0, .2f);
-        style.alignment = TextAnchor.MiddleCenter;
-
-        Vector3? target = null;
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity))
-        {
-            target = hit.point;
-        }
-
-        if (target == null) return;
-
-        foreach (Tile td in Tiles)
-        {
-            if (Vector3.Distance((Vector3)target, HexaUtility.GetWorldCoordinate(td.Coordinate)) > 10f) continue;
-            float height = td.Height <= _oceanLevel ? (_oceanLevel + 1) * 0.5f + 0.75f : td.Height * 0.5f + 0.75f;
-            Handles.Label(HexaUtility.GetWorldCoordinate(td.Coordinate) + Vector3.up * height, string.Format("{0}/{1}-{2}/{3}-{4}\n{5}-{6}/{7}-{8}", td.Resource.population, td.Resource.fish, td.Resource.food, td.Resource.wood, td.Resource.stone, td.Resource.cotton, td.Resource.clothe, td.Resource.efficiencyBonus, td.Resource.radiusBonus), style);
-        }
-    }
 }
