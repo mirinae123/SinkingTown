@@ -87,18 +87,6 @@
 			"text": "돌 타일"
 		},
 		{
-			"key": "fertile_tile_title",
-			"text": "비옥한 타일"
-		},
-		{
-			"key": "fertile_woods_tile_title",
-			"text": "비옥한 숲 타일"
-		},
-		{
-			"key": "fertile_stone_tile_title",
-			"text": "비옥한 돌 타일"
-		},
-		{
 			"key": "resource_info_label",
 			"text": "자원 정보"
 		},

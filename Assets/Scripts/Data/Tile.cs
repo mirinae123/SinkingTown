@@ -33,16 +33,6 @@ public class Tile
     private int _height;
 
     /// <summary>
-    /// 비옥한 땅 여부
-    /// </summary>
-    public bool IsFertile
-    {
-        get => _isFertile;
-        set => _isFertile = value;
-    }
-    private bool _isFertile;
-
-    /// <summary>
     /// 타일에 제공되는 자원
     /// </summary>
     public Resource Resource

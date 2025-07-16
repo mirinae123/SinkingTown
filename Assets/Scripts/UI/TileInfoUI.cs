@@ -313,24 +313,6 @@ public class TileInfoUI : MonoBehaviour
             _destroyButton.gameObject.SetActive(true);
             _titleText.ChangeKey(StructureManager.Instance.GetStructureData(StructureType.Deck).StructureNameKey);
         }
-        // 비옥한 땅인 경우
-        else if (_currentTile.IsFertile)
-        {
-            _destroyButton.gameObject.SetActive(false);
-
-            if (_currentTile.NaturalResource == NaturalResourceType.Woods)
-            {
-                _titleText.ChangeKey("fertile_woods_tile_title");
-            }
-            else if (_currentTile.NaturalResource == NaturalResourceType.Stone)
-            {
-                _titleText.ChangeKey("fertile_stone_tile_title");
-            }
-            else
-            {
-                _titleText.ChangeKey("fertile_tile_title");
-            }
-        }
         // 그 외 경우
         else
         {

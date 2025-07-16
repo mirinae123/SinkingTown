@@ -63,8 +63,6 @@ public class MapManager : SingletonBehaviour<MapManager>
         {
             if (tile.Height == _oceanLevel)
             {
-                tile.IsFertile = false;
-
                 if (tile.NaturalResource != NaturalResourceType.None)
                 {
                     tile.NaturalResource = NaturalResourceType.None;
