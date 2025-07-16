@@ -51,10 +51,9 @@ MonoBehaviour:
   - {fileID: 3453831118128180192}
   - {fileID: 806884439840898211}
   - {fileID: 2844933973343282180}
-  _dirLightTransform: {fileID: 0}
-  _dirLightColor: {fileID: 0}
-  _currentWoods: 999
-  _currentStones: 999
+  _dayNightAnimator: {fileID: 0}
+  _currentWoods: 25
+  _currentStones: 5
 --- !u!114 &3453831118128180192
 MonoBehaviour:
   m_ObjectHideFlags: 0
