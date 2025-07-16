@@ -23,9 +23,9 @@ public class MapGenerator : SingletonBehaviour<MapGenerator>
     }
     private int _snowThreshold = 18;
 
-    private float _woodsSpawnProb = 0.2f;
-    private float _stoneSpawnProb = 0.1f;
-    private float _envSpawnModifier = 0.1f;
+    private float _woodsSpawnProb = 0.3f;
+    private float _stoneSpawnProb = 0.2f;
+    private float _envSpawnModifier = 0.5f;
 
     /// <summary>
     /// 가로 w, 세로 h, 복잡도 c를 가진 맵을 생성한다.

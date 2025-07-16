@@ -12,8 +12,8 @@ public enum GameState { None, Build, Menu }
 /// </summary>
 public class GameManager : SingletonBehaviour<GameManager>
 {
-    private const float OCEAN_RISE_PERIOD = 300f;
-    private const float DAY_SPEED = 2.4f;
+    private const float OCEAN_RISE_PERIOD = 180.0f;
+    private const float DAY_SPEED = 4.8f;
     private const int MAX_RESEARCH_POINT = 100;
 
     [SerializeField] private MonoBehaviour[] _gameStates;

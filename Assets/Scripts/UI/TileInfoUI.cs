@@ -9,8 +9,8 @@ using UnityEngine.UI;
 /// </summary>
 public class TileInfoUI : MonoBehaviour
 {
-    private const int RESEARCH_COST_WOODS = 3;
-    private const int RESEARCH_COST_STONES = 3;
+    private const int RESEARCH_COST_WOODS = 10;
+    private const int RESEARCH_COST_STONES = 10;
 
     [SerializeField] private GameObject _structureButtonPrefab;
 
@@ -97,7 +97,7 @@ public class TileInfoUI : MonoBehaviour
                 GameManager.Instance.CurrentWoods -= RESEARCH_COST_WOODS;
                 GameManager.Instance.CurrentStones -= RESEARCH_COST_STONES;
 
-                GameManager.Instance.ChangeResearchPoint(1);
+                GameManager.Instance.ChangeResearchPoint(4);
             },
             null);
         });
@@ -203,6 +203,17 @@ public class TileInfoUI : MonoBehaviour
     {
         _titleText.ChangeKey(_currentTile.Structure.StructureData.StructureNameKey);
         _titleText.UpdateTextLanguage();
+
+        // !TEST: 건물 상태 확인용
+        if (_currentTile.Structure.CurrentState == StructureState.Enabled ||
+            _currentTile.Structure.CurrentState == StructureState.Increasing)
+        {
+            _structureImage.color = Color.green;
+        }
+        else
+        {
+            _structureImage.color = Color.red;
+        }
 
         // 소비형 건물인 경우
         if (_currentTile.Structure is ConsumerStructure)
