@@ -15,7 +15,7 @@ MonoBehaviour:
   StructureType: 12
   StructureImage: {fileID: 0}
   StructureNameKey: textile_mill_title
-  StructurePrefab: {fileID: 9073670328388804027, guid: 3f863f2fae4f9654fbb348c6087ff2e3, type: 3}
+  StructurePrefab: {fileID: 9073670328388804027, guid: cf87a3ed6664d0742ae0f926e8e85d06, type: 3}
   BuildingStructurePrefab: {fileID: 0}
   DisabledStructurePrefab: {fileID: 0}
   SunkenStructurePrefab: {fileID: 9073670328388804027, guid: b9680d7c6ee0d6545a65b86157fb3f2f, type: 3}

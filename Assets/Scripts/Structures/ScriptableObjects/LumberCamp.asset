@@ -15,7 +15,7 @@ MonoBehaviour:
   StructureType: 5
   StructureImage: {fileID: 0}
   StructureNameKey: lumber_camp_title
-  StructurePrefab: {fileID: 9073670328388804027, guid: 3f863f2fae4f9654fbb348c6087ff2e3, type: 3}
+  StructurePrefab: {fileID: 9073670328388804027, guid: 2346b0deb54982744b9b629d8bc7fcea, type: 3}
   BuildingStructurePrefab: {fileID: 0}
   DisabledStructurePrefab: {fileID: 0}
   SunkenStructurePrefab: {fileID: 9073670328388804027, guid: b9680d7c6ee0d6545a65b86157fb3f2f, type: 3}
@@ -46,4 +46,4 @@ MonoBehaviour:
   MaxHappiness: 0
   IncreaseSpeed: 0
   DecreaseSpeed: 0
-  TimeToProduce: 3
+  TimeToProduce: 60

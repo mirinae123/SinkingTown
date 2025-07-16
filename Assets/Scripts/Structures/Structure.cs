@@ -235,13 +235,13 @@ public class ActiveProducerStructure : Structure
                 switch (_structureData.StructureType)
                 {
                     case StructureType.TownHall:
-                        GameManager.Instance.ChangeResearchPoint(1);
+                        GameManager.Instance.ChangeResearchPoint(2);
                         break;
                     case StructureType.LumberCamp:
-                        GameManager.Instance.CurrentWoods += 3; ;
+                        GameManager.Instance.CurrentWoods += 2; ;
                         break;
                     case StructureType.Quarry:
-                        GameManager.Instance.CurrentStones += 3;
+                        GameManager.Instance.CurrentStones += 1;
                         break;
                 }
 
@@ -264,6 +264,8 @@ public class ActiveProducerStructure : Structure
         // 활성 상태에서 불만족
         else if (!satisfied && _currentState == StructureState.Enabled)
         {
+            _elapsed = 0.0f;
+
             _currentState = StructureState.Disabled;
             _tile.RemoveFromProviders();
         }
