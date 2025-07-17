@@ -43,7 +43,14 @@ public class BuildingButton : MonoBehaviour
         // 건설 자원이 충분할 때만 활성화한다.
         if (_woodCost <= GameManager.Instance.CurrentWoods && _stoneCost <= GameManager.Instance.CurrentStones)
         {
-            _buildingButton.interactable = true;
+            if (_structureType == StructureType.TownHall)
+            {
+                _buildingButton.interactable = !GameManager.Instance.HasTownHall;
+            }
+            else
+            {
+                _buildingButton.interactable = true;
+            }
         }
         else
         {

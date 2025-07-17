@@ -117,6 +117,11 @@ public class Tile
         // 그 외 건물을 생성하는 경우
         else
         {
+            if (structure == StructureType.TownHall)
+            {
+                GameManager.Instance.HasTownHall = true;
+            }
+
             _structure = StructureManager.Instance.GetStructure(structure, this);
             MapRenderer.Instance.UpdateTile(_coordinate);
 
@@ -146,6 +151,11 @@ public class Tile
         // 현재 타일에 건물이 있는 경우
         else if (_structure != null)
         {
+            if (_structure.StructureData.StructureType == StructureType.TownHall)
+            {
+                GameManager.Instance.HasTownHall = false;
+            }
+
             // 주변 타일의 자원 제공자에서 현재 건물을 제거
             RemoveFromProviders();
 
