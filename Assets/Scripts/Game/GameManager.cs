@@ -15,18 +15,15 @@ public class GameManager : SingletonBehaviour<GameManager>
     private const float OCEAN_RISE_PERIOD = 180.0f;
     private const float DAY_SPEED = 4.8f;
     private const int MAX_RESEARCH_POINT = 100;
+    private const float RESEARCH_COOLDOWN = 60.0f;
 
     [SerializeField] private MonoBehaviour[] _gameStates;
 
     [SerializeField] private Animator _dayNightAnimator;
 
-    private float _elapsedTime = 0f;
+    private float _elapsedTime = 480.0f / DAY_SPEED;
     private float _riseCooldown = OCEAN_RISE_PERIOD;
-
-    private Camera _mainCamera;
-
-    private Vector2 _mousePosition;
-    private bool _isPointerOverGameObject = false;
+    private float _researchCooldown = 0.0f;
 
     private bool _hasEnded = false;
 
@@ -121,17 +118,11 @@ public class GameManager : SingletonBehaviour<GameManager>
     }
     private bool _hasTownHall = false;
 
-    private void Start()
+    public bool IsResearchable
     {
-        _mainCamera = Camera.main;
-
-        _elapsedTime = 200.0f;
+        get => _isResearchable;
     }
-
-    private void Update()
-    {
-        _isPointerOverGameObject = EventSystem.current.IsPointerOverGameObject();
-    }
+    private bool _isResearchable = true;
 
     /// <summary>
     /// 시간을 갱신한다.
@@ -147,6 +138,16 @@ public class GameManager : SingletonBehaviour<GameManager>
         _currentDay = (Mathf.RoundToInt(_elapsedTime * DAY_SPEED) / 1440) % 99 + 1;
 
         _dayNightAnimator.Play("Cycle", 0, (Mathf.RoundToInt(_elapsedTime * DAY_SPEED) % 1440) / 1440.0f);
+
+        if (!_isResearchable)
+        {
+            _researchCooldown += Time.deltaTime;
+
+            if (_researchCooldown >= RESEARCH_COOLDOWN)
+            {
+                _isResearchable = true;
+            }
+        }
     }
 
     /// <summary>
@@ -201,6 +202,12 @@ public class GameManager : SingletonBehaviour<GameManager>
         {
             EndGame(true);
         }
+    }
+
+    public void StartResearchCooldown()
+    {
+        _isResearchable = false;
+        _researchCooldown = 0.0f;
     }
 
     public void EndGame(bool hasCleared)

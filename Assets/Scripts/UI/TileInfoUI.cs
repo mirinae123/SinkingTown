@@ -96,6 +96,7 @@ public class TileInfoUI : MonoBehaviour
                 GameManager.Instance.CurrentStones -= RESEARCH_COST_STONES;
 
                 GameManager.Instance.ChangeResearchPoint(4);
+                GameManager.Instance.StartResearchCooldown();
             },
             null);
         });
@@ -133,7 +134,8 @@ public class TileInfoUI : MonoBehaviour
             {
                 if (_currentTile.Structure.StructureData.StructureType == StructureType.TownHall)
                 {
-                    _researchButton.interactable = GameManager.Instance.CurrentWoods >= RESEARCH_COST_WOODS && GameManager.Instance.CurrentStones >= RESEARCH_COST_STONES;
+                    bool costCheck = GameManager.Instance.CurrentWoods >= RESEARCH_COST_WOODS && GameManager.Instance.CurrentStones >= RESEARCH_COST_STONES;
+                    _researchButton.interactable = costCheck && GameManager.Instance.IsResearchable;
                 }
 
                 _gaugeSlider.value = (_currentTile.Structure as ActiveProducerStructure).Elapsed / _currentTile.Structure.StructureData.TimeToProduce;
