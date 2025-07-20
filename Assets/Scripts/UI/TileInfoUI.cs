@@ -72,17 +72,6 @@ public class TileInfoUI : MonoBehaviour
         {
             UIManager.Instance.ShowConfirmMenu("language_label", "language_label", () =>
             {
-                if (_currentTile.Structure != null)
-                {
-                    GameManager.Instance.CurrentWoods += _currentTile.Structure.StructureData.WoodCost / 2;
-                    GameManager.Instance.CurrentStones += _currentTile.Structure.StructureData.StoneCost / 2;
-                }
-                else
-                {
-                    GameManager.Instance.CurrentWoods += StructureManager.Instance.GetStructureData(StructureType.Deck).WoodCost / 2;
-                    GameManager.Instance.CurrentStones += StructureManager.Instance.GetStructureData(StructureType.Deck).StoneCost / 2;
-                }
-
                 _currentTile.DestroyStructure();
             },
             null);
