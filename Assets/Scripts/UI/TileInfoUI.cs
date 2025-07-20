@@ -272,7 +272,7 @@ public class TileInfoUI : MonoBehaviour
         {
             if (neighbor.Structure == null) continue;
             if (neighbor == _currentTile) continue;
-            if (!Resource.IsNeeded(neighbor.Structure.StructureData.Needs, _currentTile.Structure.StructureData.Produces)) continue;
+            if (!Resource.IsNeeded(neighbor.Structure.StructureData.Needs, _currentTile.Structure.GetEffectiveProduces())) continue;
 
             GameObject structureButton = Instantiate(_structureButtonPrefab);
             structureButton.transform.SetParent(_providesToContent.transform, false);
