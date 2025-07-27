@@ -52,33 +52,22 @@ public class HexaUtility
     /// <returns>이웃 좌표들</returns>
     public static Vector2Int[] GetNeighbors(Vector2Int i, int n)
     {
-        List<Vector2Int> neighbors = new List<Vector2Int>();
-        neighbors.Add(i);
+        List<Vector2Int> results = new List<Vector2Int>();
+        Vector3Int center = OddQToCube(i);
 
-        int currentDistance = 0;
-        int searchLow = 0, searchHigh = 0;
-
-        while (currentDistance < n)
+        for (int q = -n; q <= n; q++)
         {
-            int count = 0;
-            for (; searchLow <= searchHigh; searchLow++)
+            for (int r = -n; r <= n; r++)
             {
-                for (int k = 0; k < 6; k++)
+                int s = -q - r;
+                if (s >= -n && s <= n)
                 {
-                    Vector2Int neighbor = GetNeighbor(neighbors[searchLow], (TileNeighbor)k);
-                    if (!neighbors.Contains(neighbor))
-                    {
-                        neighbors.Add(neighbor);
-                        count++;
-                    }
+                    Vector3Int neighbor = new Vector3Int(center.x + q, center.y + r, center.z + s);
+                    results.Add(CubeToOddQ(neighbor));
                 }
             }
-            searchHigh += count;
-
-            currentDistance++;
         }
-
-        return neighbors.ToArray();
+        return results.ToArray();
     }
 
     /// <summary>
@@ -89,34 +78,10 @@ public class HexaUtility
     /// <returns>거리 </returns>
     public static int GetDistance(Vector2Int a, Vector2Int b)
     {
-        if (a == b) return 0;
+        Vector3Int ta = OddQToCube(a);
+        Vector3Int tb = OddQToCube(b);
 
-        int distance = 0;
-
-        List<Vector2Int> neighbors = new List<Vector2Int>();
-        neighbors.Add(a);
-
-        int temp = -1;
-
-        while (true)
-        {
-            temp += 1;
-
-            for (int k = 0; k < 6; k++)
-            {
-                distance++;
-
-                Vector2Int neighbor = GetNeighbor(neighbors[temp], (TileNeighbor)k);
-                if (neighbor == b)
-                {
-                    return distance;
-                }
-                else if (!neighbors.Contains(neighbor))
-                {
-                    neighbors.Add(neighbor);
-                }
-            }
-        }
+        return Mathf.Max(Mathf.Abs(ta.x - tb.x), Mathf.Abs(ta.y - tb.y), Mathf.Abs(ta.z - tb.z));
     }
 
     /// <summary>
@@ -171,4 +136,26 @@ public class HexaUtility
 
         return retCoord;
     }
+
+    /// <summary>
+    /// OddQ 형식의 좌표를 Cube 형식으로 변환한다.
+    /// </summary>
+    public static Vector3Int OddQToCube(Vector2Int i)
+    {
+        int q = i.x;
+        int r = i.y - (i.x - (i.x & 1)) / 2;
+        int s = -q - r;
+        return new Vector3Int(q, r, s);
+    }
+
+    /// <summary>
+    /// Cube 형식의 좌표를 OddQ 형식으로 변환한다.
+    /// </summary>
+    public static Vector2Int CubeToOddQ(Vector3Int i)
+    {
+        int col = i.x;
+        int row = i.y + (i.x - (i.x & 1)) / 2;
+        return new Vector2Int(col, row);
+    }
+
 }
