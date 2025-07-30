@@ -14,8 +14,18 @@ public class PirateController : MonoBehaviour
 
     private const int COLLISION_FACTOR = 32;
 
-    private const float ATTACK_INTERVAL = 5.0f;
+    private const float ATTACK_INTERVAL = 2.0f;
     private const float MAX_HEALTH = 30.0f;
+
+    private const float SPAWN_ANIMATION_DURATION = 3.0f;
+    private const float DESPAWN_ANIMATION_DELAY = 3.0f;
+    private const float DESPAWN_ANIMATION_DURATION = 3.0f;
+    private const float DESTROY_ANIMATION_DURATION = 3.0f;
+
+    private const float CANNONBALL_DURATION = 1.5f;
+    private const float CANNONBALL_GRAVITY = 16.0f;
+
+    [SerializeField] GameObject _cannonballPrefab;
 
     /// <summary>
     /// 현재 위치 좌표
@@ -252,18 +262,15 @@ public class PirateController : MonoBehaviour
     {
         float elapsed = 0.0f;
 
-        Color startColor = _meshRenderer.material.color;
-        Color endColor = startColor;
-        startColor.a = 0.0f;
+        // Start Animation
 
         while (true)
         {
             if (!GameManager.Instance.IsPaused && GameManager.Instance.GameState != GameState.Menu)
             {
                 elapsed += Time.deltaTime;
-                _meshRenderer.material.color = Color.Lerp(startColor, endColor, elapsed / 3.0f);
 
-                if (elapsed > 3.0f)
+                if (elapsed > SPAWN_ANIMATION_DURATION)
                 {
                     break;
                 }
@@ -271,6 +278,8 @@ public class PirateController : MonoBehaviour
 
             yield return null;
         }
+
+        // End Animation
     }
 
     /// <summary>
@@ -278,7 +287,46 @@ public class PirateController : MonoBehaviour
     /// </summary>
     private IEnumerator CoAttack()
     {
-        yield return null;
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = new Vector3();
+
+        // 공격 위치 탐색
+        foreach (Vector2Int neighbor in HexaUtility.GetNeighbors(_currentCoordinate, 6))
+        {
+            if (MapManager.Instance.CheckCoordinateValidity(neighbor) && !MapManager.Instance.Tiles[neighbor.x, neighbor.y].IsUnderWater)
+            {
+                endPosition = HexaUtility.GetWorldCoordinate(neighbor);
+                endPosition.y = MapManager.Instance.Tiles[neighbor.x, neighbor.y].Height;
+                break;
+            }
+        }
+
+        GameObject cannonball = Instantiate(_cannonballPrefab);
+        cannonball.transform.position = transform.position;
+
+        // 최초 속도 계산: v0 = (x1 - x0) / t + a * t / 2;
+        Vector3 velocity = (endPosition - startPosition) / CANNONBALL_DURATION + Vector3.up * CANNONBALL_GRAVITY * CANNONBALL_DURATION / 2.0f;
+        float elapsed = 0.0f;
+
+        while (true)
+        {
+            if (!GameManager.Instance.IsPaused && GameManager.Instance.GameState != GameState.Menu)
+            {
+                elapsed += Time.deltaTime;
+
+                cannonball.transform.Translate(velocity * Time.deltaTime);
+                velocity -= Vector3.up * CANNONBALL_GRAVITY * Time.deltaTime;
+
+                if (elapsed > CANNONBALL_DURATION)
+                {
+                    break;
+                }
+            }
+
+            yield return null;
+        }
+
+        Destroy(cannonball);
     }
 
     /// <summary>
@@ -286,7 +334,45 @@ public class PirateController : MonoBehaviour
     /// </summary>
     private IEnumerator CoDespawnPirate()
     {
-        yield return null;
+        float elapsed = 0.0f;
+
+        while (true)
+        {
+            if (!GameManager.Instance.IsPaused && GameManager.Instance.GameState != GameState.Menu)
+            {
+                elapsed += Time.deltaTime;
+
+                if (elapsed > DESPAWN_ANIMATION_DELAY)
+                {
+                    break;
+                }
+            }
+
+            yield return null;
+        }
+
+        elapsed -= 3.0f;
+
+        // Start Animation
+
+        while (true)
+        {
+            if (!GameManager.Instance.IsPaused && GameManager.Instance.GameState != GameState.Menu)
+            {
+                elapsed += Time.deltaTime;
+
+                if (elapsed > DESPAWN_ANIMATION_DURATION)
+                {
+                    break;
+                }
+            }
+
+            yield return null;
+        }
+
+        // End Animation
+
+        PirateManager.Instance.DespawnPirate(this);
     }
 
     /// <summary>
@@ -294,6 +380,25 @@ public class PirateController : MonoBehaviour
     /// </summary>
     private IEnumerator CoDestroyPirate()
     {
-        yield return null;
+        float elapsed = 0.0f;
+
+        // Start Animation
+
+        while (true)
+        {
+            if (!GameManager.Instance.IsPaused && GameManager.Instance.GameState != GameState.Menu)
+            {
+                elapsed += Time.deltaTime;
+
+                if (elapsed > DESTROY_ANIMATION_DURATION)
+                {
+                    break;
+                }
+            }
+
+            yield return null;
+        }
+
+        // End Animation
     }
 }
