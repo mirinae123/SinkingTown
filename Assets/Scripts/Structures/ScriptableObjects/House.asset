@@ -27,8 +27,7 @@ MonoBehaviour:
     stone: 0
     cotton: 0
     clothe: 2
-    efficiencyBonus: 0
-    radiusBonus: 0
+    rangeBonus: 0
   Produces:
     population: 1
     fish: 0
@@ -37,8 +36,7 @@ MonoBehaviour:
     stone: 0
     cotton: 0
     clothe: 0
-    efficiencyBonus: 0
-    radiusBonus: 0
+    rangeBonus: 0
   RequireOcean: 0
   WoodCost: 2
   StoneCost: 0

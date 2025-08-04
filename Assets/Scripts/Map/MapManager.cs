@@ -39,6 +39,8 @@ public class MapManager : SingletonBehaviour<MapManager>
 
         _tiles = GetComponent<MapGenerator>().GenerateMap(128, 128, 6f);
         GetComponent<MapRenderer>().RenderMap();
+
+        PirateManager.Instance.UpdatePenalties();
     }
 
     private void Update()
@@ -85,6 +87,7 @@ public class MapManager : SingletonBehaviour<MapManager>
         }
 
         MapRenderer.Instance.RaiseOceanLevel(_oceanLevel, ++_oceanLevel);
+        PirateManager.Instance.UpdatePenalties();
     }
 
     public bool CheckCoordinateValidity(Vector2Int coordinate)

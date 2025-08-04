@@ -40,8 +40,8 @@ MonoBehaviour:
   RequireOcean: 0
   WoodCost: 2
   StoneCost: 0
-  Radius: 3
-  MaxHappiness: 100
-  IncreaseSpeed: 10
-  DecreaseSpeed: 5
-  TimeToProduce: 0
+  Radius: 6
+  MaxHappiness: 0
+  IncreaseSpeed: 0
+  DecreaseSpeed: 0
+  TimeToProduce: 3

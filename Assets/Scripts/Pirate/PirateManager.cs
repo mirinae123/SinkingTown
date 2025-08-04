@@ -9,6 +9,7 @@ public class PirateManager : SingletonBehaviour<PirateManager>
     private const int PENALTY_RANGE = 3;    // 육지와 가까운 타일을 인식할 범위
 
     [SerializeField] private GameObject _piratePrefab;
+    [SerializeField] private GameObject _cannonballPrefab;
 
     /// <summary>
     /// 현재 게임에 존재하는 모든 해적
@@ -36,7 +37,6 @@ public class PirateManager : SingletonBehaviour<PirateManager>
         // TEST
         if (Input.GetKeyDown(KeyCode.P))
         {
-            UpdatePenalties();
             SpawnPirate();
         }
     }
@@ -185,7 +185,7 @@ public class PirateManager : SingletonBehaviour<PirateManager>
     /// <summary>
     /// 이동 비용 페널티 정보를 갱신한다.
     /// </summary>
-    private void UpdatePenalties()
+    public void UpdatePenalties()
     {
         int w = MapManager.Instance.Tiles.GetLength(0);
         int h = MapManager.Instance.Tiles.GetLength(1);
@@ -207,5 +207,19 @@ public class PirateManager : SingletonBehaviour<PirateManager>
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 대포알을 스폰한다.
+    /// </summary>
+    /// <param name="startPosition">시작 위치</param>
+    /// <param name="endPosition">종료 위치</param>
+    /// <param name="duration">지속 시간</param>
+    public void SpawnCannonball(Vector3 startPosition, Vector3 endPosition, PirateController targetPirate = null)
+    {
+        GameObject cannonball = Instantiate(_cannonballPrefab);
+        cannonball.transform.position = startPosition;
+
+        cannonball.GetComponent<CannonballController>().Initialize(startPosition, endPosition, targetPirate);
     }
 }
