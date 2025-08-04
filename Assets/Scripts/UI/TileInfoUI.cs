@@ -21,6 +21,7 @@ public class TileInfoUI : MonoBehaviour
     [SerializeField] private EventTrigger _happinessInfo;
     [SerializeField] private EventTrigger _timeToProduceInfo;
     [SerializeField] private EventTrigger _researchInfo;
+    [SerializeField] private EventTrigger _fortressInfo;
     [SerializeField] private Slider _gaugeSlider;
     [SerializeField] private TMP_Text _gaugeText;
 
@@ -93,6 +94,7 @@ public class TileInfoUI : MonoBehaviour
         UIManager.Instance.AddHoverEvent(_happinessInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_timeToProduceInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_researchInfo, "language_label", "language_label", HoverDirection.TopRight);
+        UIManager.Instance.AddHoverEvent(_fortressInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_researchButtonInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_destroyButtonInfo, "language_label", "language_label", HoverDirection.TopRight);
 
@@ -224,8 +226,19 @@ public class TileInfoUI : MonoBehaviour
                 _happinessInfo.gameObject.SetActive(false);
                 _timeToProduceInfo.gameObject.SetActive(false);
                 _researchInfo.gameObject.SetActive(true);
+                _fortressInfo.gameObject.SetActive(false);
 
                 _researchButton.gameObject.SetActive(true);
+            }
+            // 요새인 경우
+            else if (_currentTile.Structure.StructureData.StructureType == StructureType.Fortress)
+            {
+                _happinessInfo.gameObject.SetActive(false);
+                _timeToProduceInfo.gameObject.SetActive(false);
+                _researchInfo.gameObject.SetActive(false);
+                _fortressInfo.gameObject.SetActive(true);
+
+                _researchButton.gameObject.SetActive(false);
             }
             // 그 외 건물
             else
@@ -233,6 +246,7 @@ public class TileInfoUI : MonoBehaviour
                 _happinessInfo.gameObject.SetActive(false);
                 _timeToProduceInfo.gameObject.SetActive(true);
                 _researchInfo.gameObject.SetActive(false);
+                _fortressInfo.gameObject.SetActive(false);
 
                 _researchButton.gameObject.SetActive(false);
             }

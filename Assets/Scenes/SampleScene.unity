@@ -835,6 +835,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4892613928390725156, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4949818667534268066, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
       propertyPath: m_Name
       value: UI Manager
@@ -893,7 +897,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8470437041877012436, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.00012207031
+      value: -0.00012207031
       objectReference: {fileID: 0}
     - target: {fileID: 9122111369357036391, guid: e96acf8e83f2d2344a7f3c788007329a, type: 3}
       propertyPath: m_Pivot.x

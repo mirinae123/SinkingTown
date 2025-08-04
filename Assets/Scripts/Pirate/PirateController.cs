@@ -15,17 +15,12 @@ public class PirateController : MonoBehaviour
     private const int COLLISION_FACTOR = 32;
 
     private const float ATTACK_INTERVAL = 2.0f;
-    private const float MAX_HEALTH = 30.0f;
+    private const int MAX_HEALTH = 3;
 
     private const float SPAWN_ANIMATION_DURATION = 3.0f;
     private const float DESPAWN_ANIMATION_DELAY = 3.0f;
     private const float DESPAWN_ANIMATION_DURATION = 3.0f;
     private const float DESTROY_ANIMATION_DURATION = 3.0f;
-
-    private const float CANNONBALL_DURATION = 1.5f;
-    private const float CANNONBALL_GRAVITY = 16.0f;
-
-    [SerializeField] GameObject _cannonballPrefab;
 
     /// <summary>
     /// 현재 위치 좌표
@@ -45,13 +40,21 @@ public class PirateController : MonoBehaviour
     }
     private Vector2Int _targetCoordinate;
 
-    private float _currentHealth = MAX_HEALTH;
+    /// <summary>
+    /// 해적이 공격받고 있는지 여부
+    /// </summary>
+    public bool IsUnderAttack
+    {
+        get => _attackingFortressCount > 0;
+    }
+
+    private int _attackingFortressCount = 0;
+
+    private int _currentHealth = MAX_HEALTH;
     private float _elapsed = 0.0f;
 
     private PirateState _currentState;
     private Queue<Vector2Int> _path = new Queue<Vector2Int>();
-
-    private MeshRenderer _meshRenderer;
 
     private void Update()
     {
@@ -61,9 +64,10 @@ public class PirateController : MonoBehaviour
         }
 
         // 체력이 0이 된 경우 파괴
-        if (_currentState < PirateState.Despawn && _currentHealth <= 0.0f)
+        if (_currentState < PirateState.Despawn && _currentHealth <= 0)
         {
             _currentState = PirateState.Destroy;
+            _path.Clear();
 
             StartCoroutine(CoDestroyPirate());
         }
@@ -130,7 +134,21 @@ public class PirateController : MonoBehaviour
                         _elapsed -= ATTACK_INTERVAL;
                         _currentState++;
 
-                        StartCoroutine(CoAttack());
+                        // 공격 위치 탐색
+                        Vector3 startPosition = transform.position;
+                        Vector3 endPosition = new Vector3();
+
+                        foreach (Vector2Int neighbor in HexaUtility.GetNeighbors(_currentCoordinate, 6))
+                        {
+                            if (MapManager.Instance.CheckCoordinateValidity(neighbor) && !MapManager.Instance.Tiles[neighbor.x, neighbor.y].IsUnderWater)
+                            {
+                                endPosition = HexaUtility.GetWorldCoordinate(neighbor);
+                                endPosition.y = MapManager.Instance.Tiles[neighbor.x, neighbor.y].Height;
+                                break;
+                            }
+                        }
+
+                        PirateManager.Instance.SpawnCannonball(startPosition, endPosition);
                     }
 
                     // 공격을 마친 경우
@@ -158,8 +176,6 @@ public class PirateController : MonoBehaviour
 
         _currentState = PirateState.Move;
 
-        _meshRenderer = GetComponent<MeshRenderer>();
-
         GetPath();
 
         if (_path.Count > 0)
@@ -182,6 +198,41 @@ public class PirateController : MonoBehaviour
         {
             StartCoroutine(CoSpawnPirate());
         }
+    }
+
+    /// <summary>
+    /// 경로 상에서 나중에 접근할 예정인 타일을 반환한다.
+    /// </summary>
+    /// <param name="futureIndex">경로 인덱스 (0: 바로 다음 타일)</param>
+    public Vector2Int GetFutureCoordinate(int futureIndex)
+    {
+        Vector2Int[] futureCoordinates = _path.ToArray();
+
+        if (_path.Count == 0)
+        {
+            return _currentCoordinate;
+        }
+        else
+        {
+            return futureCoordinates[Mathf.Min(futureIndex, futureCoordinates.Length - 1)];
+        }
+    }
+
+    /// <summary>
+    /// 현재 해적을 상대로 공격을 시작한다.
+    /// </summary>
+    public void StartAttackPirate()
+    {
+        _attackingFortressCount++;
+    }
+
+    /// <summary>
+    /// 현재 해적을 상대로 공격을 중단한다.
+    /// </summary>
+    public void EndAttackPirate()
+    {
+        _attackingFortressCount--;
+        _currentHealth--;
     }
 
     /// <summary>
@@ -283,53 +334,6 @@ public class PirateController : MonoBehaviour
     }
 
     /// <summary>
-    /// 공격 애니메이션을 재생한다.
-    /// </summary>
-    private IEnumerator CoAttack()
-    {
-        Vector3 startPosition = transform.position;
-        Vector3 endPosition = new Vector3();
-
-        // 공격 위치 탐색
-        foreach (Vector2Int neighbor in HexaUtility.GetNeighbors(_currentCoordinate, 6))
-        {
-            if (MapManager.Instance.CheckCoordinateValidity(neighbor) && !MapManager.Instance.Tiles[neighbor.x, neighbor.y].IsUnderWater)
-            {
-                endPosition = HexaUtility.GetWorldCoordinate(neighbor);
-                endPosition.y = MapManager.Instance.Tiles[neighbor.x, neighbor.y].Height;
-                break;
-            }
-        }
-
-        GameObject cannonball = Instantiate(_cannonballPrefab);
-        cannonball.transform.position = transform.position;
-
-        // 최초 속도 계산: v0 = (x1 - x0) / t + a * t / 2;
-        Vector3 velocity = (endPosition - startPosition) / CANNONBALL_DURATION + Vector3.up * CANNONBALL_GRAVITY * CANNONBALL_DURATION / 2.0f;
-        float elapsed = 0.0f;
-
-        while (true)
-        {
-            if (!GameManager.Instance.IsPaused && GameManager.Instance.GameState != GameState.Menu)
-            {
-                elapsed += Time.deltaTime;
-
-                cannonball.transform.Translate(velocity * Time.deltaTime);
-                velocity -= Vector3.up * CANNONBALL_GRAVITY * Time.deltaTime;
-
-                if (elapsed > CANNONBALL_DURATION)
-                {
-                    break;
-                }
-            }
-
-            yield return null;
-        }
-
-        Destroy(cannonball);
-    }
-
-    /// <summary>
     /// 디스폰 애니메이션을 재생한다.
     /// </summary>
     private IEnumerator CoDespawnPirate()
@@ -400,5 +404,7 @@ public class PirateController : MonoBehaviour
         }
 
         // End Animation
+
+        PirateManager.Instance.DespawnPirate(this);
     }
 }

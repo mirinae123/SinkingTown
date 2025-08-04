@@ -76,7 +76,6 @@ public class StructureManager : SingletonBehaviour<StructureManager>
         {
             case StructureType.House:
             case StructureType.Market:
-            case StructureType.Fortress:
                 return true;
 
             default:
@@ -96,6 +95,7 @@ public class StructureManager : SingletonBehaviour<StructureManager>
             case StructureType.TownHall:
             case StructureType.LumberCamp:
             case StructureType.Quarry:
+            case StructureType.Fortress:
                 return true;
 
             default:

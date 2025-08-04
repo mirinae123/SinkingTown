@@ -216,13 +216,16 @@ public class ActiveProducerStructure : Structure
 
     public override void OnUpdate()
     {
-        if (_currentState != StructureState.Disabled)
+        if (_currentState == StructureState.Enabled)
         {
             _elapsed += Time.deltaTime;
 
             if (_elapsed > _structureData.TimeToProduce)
             {
-                _elapsed -= _structureData.TimeToProduce;
+                if (_structureData.StructureType != StructureType.Fortress)
+                {
+                    _elapsed -= _structureData.TimeToProduce;
+                }
 
                 switch (_structureData.StructureType)
                 {
@@ -235,9 +238,17 @@ public class ActiveProducerStructure : Structure
                     case StructureType.Quarry:
                         GameManager.Instance.CurrentStones += 1;
                         break;
+                    case StructureType.Fortress:
+                        if (AttackPirate())
+                        {
+                            _elapsed -= _structureData.TimeToProduce;
+                        }
+                        else
+                        {
+                            _elapsed = _structureData.TimeToProduce;
+                        }
+                        break;
                 }
-
-                Debug.Log("Produced Something");
             }
         }
     }
@@ -260,6 +271,55 @@ public class ActiveProducerStructure : Structure
 
             _currentState = StructureState.Disabled;
             _tile.RemoveFromProviders();
+        }
+    }
+
+    /// <summary>
+    /// 범위 안에 들어온 해적을 공격한다. 다른 요새로부터 공격을 받고 있지 않은 해적을 우선시한다.
+    /// </summary>
+    /// <returns>공격 여부</returns>
+    private bool AttackPirate()
+    {
+        PirateController targetPirate = null;
+        PirateController pirateAlreadyUnderAttack = null;
+
+        foreach(PirateController pirate in PirateManager.Instance.Pirates)
+        {
+            if (HexaUtility.GetDistance(_tile.Coordinate, pirate.CurrentCoordinate) <= _structureData.Radius)
+            {
+                if (pirate.IsUnderAttack)
+                {
+                    pirateAlreadyUnderAttack = pirate;
+                }
+                else
+                {
+                    targetPirate = pirate;
+                }
+            }
+        }
+        
+        if (targetPirate == null)
+        {
+            targetPirate = pirateAlreadyUnderAttack;
+        }
+
+        if (targetPirate == null)
+        {
+            return false;
+        }
+        else
+        {
+            Vector3 fortressPosition = HexaUtility.GetWorldCoordinate(_tile.Coordinate);
+            fortressPosition.y = MapManager.Instance.OceanLevel;
+
+            Vector3 piratePosition = (HexaUtility.GetWorldCoordinate(targetPirate.GetFutureCoordinate(0)) + HexaUtility.GetWorldCoordinate(targetPirate.GetFutureCoordinate(1))) / 2.0f;
+            piratePosition.y = MapRenderer.Instance.OceanHeight;
+
+            targetPirate.StartAttackPirate();
+
+            PirateManager.Instance.SpawnCannonball(fortressPosition, piratePosition, targetPirate);
+
+            return true;
         }
     }
 }
