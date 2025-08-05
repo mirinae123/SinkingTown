@@ -75,13 +75,59 @@ public class HexaUtility
     /// </summary>
     /// <param name="a">좌표 1</param>
     /// <param name="b">좌표 2</param>
-    /// <returns>거리 </returns>
+    /// <returns>거리</returns>
     public static int GetDistance(Vector2Int a, Vector2Int b)
     {
         Vector3Int ta = OddQToCube(a);
         Vector3Int tb = OddQToCube(b);
 
         return Mathf.Max(Mathf.Abs(ta.x - tb.x), Mathf.Abs(ta.y - tb.y), Mathf.Abs(ta.z - tb.z));
+    }
+
+    /// <summary>
+    /// 두 좌표를 연결하는 직선 경로를 계산한다.
+    /// </summary>
+    /// <param name="a">좌표 1</param>
+    /// <param name="b">좌표 2</param>
+    /// <returns>직선 경로에 포함되는 타일</returns>
+    public static Vector2Int[] GetLine(Vector2Int a, Vector2Int b)
+    {
+        int n = GetDistance(a, b);
+
+        Vector3Int ta = OddQToCube(a);
+        Vector3Int tb = OddQToCube(b);
+
+        List<Vector2Int> results = new List<Vector2Int>();
+
+        for (int i = 0; i <= n; i++)
+        {
+            Vector3 floatingCube = new Vector3(Mathf.Lerp(ta.x, tb.x, (float)i / (float)n), Mathf.Lerp(ta.y, tb.y, (float)i / (float)n), Mathf.Lerp(ta.z, tb.z, (float)i / (float)n));
+
+            float q = Mathf.Round(floatingCube.x);
+            float r = Mathf.Round(floatingCube.y);
+            float s = Mathf.Round(floatingCube.z);
+
+            float dq = Mathf.Abs(q - floatingCube.x);
+            float dr = Mathf.Abs(r - floatingCube.y);
+            float ds = Mathf.Abs(s - floatingCube.z);
+
+            if (dq > dr && dq > ds)
+            {
+                q = -r - s;
+            }
+            else if (dr > ds)
+            {
+                r = -q - s;
+            }
+            else
+            {
+                s = -q - r;
+            }
+
+            results.Add(CubeToOddQ(new Vector3Int((int)q, (int)r, (int)s)));
+        }
+
+        return results.ToArray();
     }
 
     /// <summary>
