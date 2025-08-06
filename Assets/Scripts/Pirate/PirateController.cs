@@ -136,17 +136,47 @@ public class PirateController : MonoBehaviour
 
                         // 공격 위치 탐색
                         Vector3 startPosition = transform.position;
+                        Vector2Int endCoordinate = new Vector2Int();
                         Vector3 endPosition = new Vector3();
 
-                        foreach (Vector2Int neighbor in HexaUtility.GetNeighbors(_currentCoordinate, 6))
+                        List<Vector2Int> neighborsWithStructure = new List<Vector2Int>();
+                        List<Vector2Int> neighborsWithoutStructure = new List<Vector2Int>();
+                        List<Vector2Int> neighborsUnderWater = new List<Vector2Int>();
+
+                        foreach (Vector2Int neighbor in HexaUtility.GetNeighbors(_currentCoordinate, 4))
                         {
-                            if (MapManager.Instance.CheckCoordinateValidity(neighbor) && !MapManager.Instance.Tiles[neighbor.x, neighbor.y].IsUnderWater)
+                            if (MapManager.Instance.CheckCoordinateValidity(neighbor))
                             {
-                                endPosition = HexaUtility.GetWorldCoordinate(neighbor);
-                                endPosition.y = MapManager.Instance.Tiles[neighbor.x, neighbor.y].Height;
-                                break;
+                                if (MapManager.Instance.Tiles[neighbor.x, neighbor.y].Structure != null)
+                                {
+                                    neighborsWithStructure.Add(neighbor);
+                                }
+                                else if (!MapManager.Instance.Tiles[neighbor.x, neighbor.y].IsUnderWater)
+                                {
+                                    neighborsWithoutStructure.Add(neighbor);
+                                }
+                                else
+                                {
+                                    neighborsUnderWater.Add(neighbor);
+                                }
                             }
                         }
+
+                        if (neighborsWithStructure.Count > 0)
+                        {
+                            endCoordinate = neighborsWithStructure[Random.Range(0, neighborsWithStructure.Count)];
+                        }
+                        else if (neighborsWithoutStructure.Count > 0)
+                        {
+                            endCoordinate = neighborsWithoutStructure[Random.Range(0, neighborsWithoutStructure.Count)];
+                        }
+                        else
+                        {
+                            endCoordinate = neighborsUnderWater[Random.Range(0, neighborsUnderWater.Count)];
+                        }
+
+                        endPosition = HexaUtility.GetWorldCoordinate(endCoordinate);
+                        endPosition.y = Mathf.Max(MapManager.Instance.Tiles[endCoordinate.x, endCoordinate.y].Height, MapRenderer.Instance.OceanHeight);
 
                         PirateManager.Instance.SpawnCannonball(startPosition, endPosition);
                     }
