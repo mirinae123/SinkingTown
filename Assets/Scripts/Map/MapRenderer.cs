@@ -511,39 +511,42 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
         while (elapsed < OCEAN_RISE_DURATION)
         {
-            elapsed += Time.deltaTime;
-
-            _oceanObject.transform.position = Vector3.Lerp(origianlPosition, newOceanPosition, elapsed / OCEAN_RISE_DURATION);
-
-            for (int i = 0; i < materials.Length; i++)
+            if (!GameManager.Instance.IsPaused && GameManager.Instance.GameState != GameState.Menu)
             {
-                materials[i].Lerp(materials[i], _sandMaterial, elapsed / OCEAN_RISE_DURATION);
-            }
+                elapsed += Time.deltaTime;
 
-            for (int i = 0; i < meshRenderers.Length; i++)
-            {
-                meshRenderers[i].materials = materials;
-            }
+                _oceanObject.transform.position = Vector3.Lerp(origianlPosition, newOceanPosition, elapsed / OCEAN_RISE_DURATION);
 
-            foreach (GameObject deck in _deckObjects.Values)
-            {
-                Vector3 position = deck.transform.position;
-                position.y = _oceanObject.transform.position.y;
-                deck.transform.position = position;
-            }
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    materials[i].Lerp(materials[i], _sandMaterial, elapsed / OCEAN_RISE_DURATION);
+                }
 
-            foreach (KeyValuePair<Vector2Int, GameObject> highlight in _rangeObjects)
-            {
-                Vector3 position = highlight.Value.transform.position;
-                position.y = Mathf.Max(_oceanObject.transform.position.y, MapManager.Instance.Tiles[highlight.Key.x, highlight.Key.y].Height + 1.0f);
-                highlight.Value.transform.position = position;
-            }
+                for (int i = 0; i < meshRenderers.Length; i++)
+                {
+                    meshRenderers[i].materials = materials;
+                }
 
-            foreach (Vector2Int floatingStructure in _floatingStructures)
-            {
-                Vector3 position = _structureObjects[floatingStructure.x, floatingStructure.y].transform.position;
-                position.y = _oceanObject.transform.position.y;
-                _structureObjects[floatingStructure.x, floatingStructure.y].transform.position = position;
+                foreach (GameObject deck in _deckObjects.Values)
+                {
+                    Vector3 position = deck.transform.position;
+                    position.y = _oceanObject.transform.position.y;
+                    deck.transform.position = position;
+                }
+
+                foreach (KeyValuePair<Vector2Int, GameObject> highlight in _rangeObjects)
+                {
+                    Vector3 position = highlight.Value.transform.position;
+                    position.y = Mathf.Max(_oceanObject.transform.position.y, MapManager.Instance.Tiles[highlight.Key.x, highlight.Key.y].Height + 1.0f);
+                    highlight.Value.transform.position = position;
+                }
+
+                foreach (Vector2Int floatingStructure in _floatingStructures)
+                {
+                    Vector3 position = _structureObjects[floatingStructure.x, floatingStructure.y].transform.position;
+                    position.y = _oceanObject.transform.position.y;
+                    _structureObjects[floatingStructure.x, floatingStructure.y].transform.position = position;
+                }
             }
 
             yield return null;

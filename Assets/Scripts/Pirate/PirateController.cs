@@ -63,6 +63,11 @@ public class PirateController : MonoBehaviour
             return;
         }
 
+        // 해수면의 위치에 따라 해적의 위치도 변경
+        Vector3 newPosition = transform.position;
+        newPosition.y = MapRenderer.Instance.OceanHeight;
+        transform.position = newPosition;
+
         // 체력이 0이 된 경우 파괴
         if (_currentState < PirateState.Despawn && _currentHealth <= 0)
         {
