@@ -12,6 +12,11 @@ public class PirateManager : SingletonBehaviour<PirateManager>
     [SerializeField] private GameObject _cannonballPrefab;
 
     /// <summary>
+    /// 현재 해적이 공격하고 있는 타일
+    /// </summary>
+    private HashSet<Vector2Int> _targets = new HashSet<Vector2Int>();
+
+    /// <summary>
     /// 현재 게임에 존재하는 모든 해적
     /// </summary>
     public IReadOnlyList<PirateController> Pirates
@@ -44,10 +49,37 @@ public class PirateManager : SingletonBehaviour<PirateManager>
     /// <summary>
     /// 해적을 생성한다.
     /// </summary>
-    public void SpawnPirate()
+    public bool SpawnPirate()
     {
+        // 해적 목표 지정
+        List<Vector2Int> targetCandidates = new List<Vector2Int>();
+
+        foreach (Tile tile in MapManager.Instance.Tiles)
+        {
+            if (tile.Structure != null)
+            {
+                Vector2Int[] neighbors = HexaUtility.GetNeighbors(tile.Coordinate, 3);
+
+                foreach (Vector2Int neighbor in neighbors)
+                {
+                    if (!_targets.Contains(neighbor) && MapManager.Instance.CheckCoordinateValidity(neighbor) && MapManager.Instance.Tiles[neighbor.x, neighbor.y].IsUnderWater && CheckOceanAccessibility(neighbor))
+                    {
+                        targetCandidates.Add(neighbor);
+                    }
+                }
+            }
+        }
+
+        if (targetCandidates.Count == 0)
+        {
+            Debug.LogError("Couldn't find an attack target!");
+            return false;
+        }
+
+        Vector2Int targetCoordinate = targetCandidates[Random.Range(0, targetCandidates.Count)];
+
         // 시작 위치 지정
-        Vector2Int spawnPosition = Vector2Int.zero;
+        Vector2Int startCoordinate = Vector2Int.zero;
 
         do
         {
@@ -56,24 +88,24 @@ public class PirateManager : SingletonBehaviour<PirateManager>
             switch (direction)
             {
                 case 0:
-                    spawnPosition.x = 0;
-                    spawnPosition.y = Random.Range(0, MapManager.Instance.Tiles.GetLength(1));
+                    startCoordinate.x = 0;
+                    startCoordinate.y = Random.Range(0, MapManager.Instance.Tiles.GetLength(1));
                     break;
                 case 1:
-                    spawnPosition.x = MapManager.Instance.Tiles.GetLength(0);
-                    spawnPosition.y = Random.Range(0, MapManager.Instance.Tiles.GetLength(1));
+                    startCoordinate.x = MapManager.Instance.Tiles.GetLength(0);
+                    startCoordinate.y = Random.Range(0, MapManager.Instance.Tiles.GetLength(1));
                     break;
                 case 2:
-                    spawnPosition.x = Random.Range(0, MapManager.Instance.Tiles.GetLength(0));
-                    spawnPosition.y = 0;
+                    startCoordinate.x = Random.Range(0, MapManager.Instance.Tiles.GetLength(0));
+                    startCoordinate.y = 0;
                     break;
                 case 3:
-                    spawnPosition.x = Random.Range(0, MapManager.Instance.Tiles.GetLength(0));
-                    spawnPosition.y = MapManager.Instance.Tiles.GetLength(1);
+                    startCoordinate.x = Random.Range(0, MapManager.Instance.Tiles.GetLength(0));
+                    startCoordinate.y = MapManager.Instance.Tiles.GetLength(1);
                     break;
             }
         }
-        while (!CheckFreeCoordinate(spawnPosition));
+        while (!CheckFreeCoordinate(startCoordinate));
 
         // 해적 오브젝트 생성
         GameObject pirateObject = Instantiate(_piratePrefab);
@@ -81,27 +113,10 @@ public class PirateManager : SingletonBehaviour<PirateManager>
         PirateController pirateController = pirateObject.GetComponent<PirateController>();
         _pirates.Add(pirateController);
 
-        // 해적 목표 지정
-        Vector2Int[] neighbors = HexaUtility.GetNeighbors(new Vector2Int(MapManager.Instance.Tiles.GetLength(0) / 2, MapManager.Instance.Tiles.GetLength(1) / 2), 30);
+        pirateController.Initialize(startCoordinate, targetCoordinate);
+        _targets.Add(targetCoordinate);
 
-        int n = neighbors.Length;
-
-        while (n > 1)
-        {
-            n--;
-
-            int k = Random.Range(0, n + 1);
-            (neighbors[k], neighbors[n]) = (neighbors[n], neighbors[k]);
-        }
-
-        foreach (Vector2Int neighbor in neighbors)
-        {
-            if (MapManager.Instance.Tiles[neighbor.x, neighbor.y].IsUnderWater && CheckOceanAccessibility(neighbor))
-            {
-                pirateController.Initialize(spawnPosition, neighbor);
-                break;
-            }
-        }
+        return true;
     }
 
     /// <summary>
@@ -111,6 +126,8 @@ public class PirateManager : SingletonBehaviour<PirateManager>
     public void DespawnPirate(PirateController pirateController)
     {
         _pirates.Remove(pirateController);
+        _targets.Remove(pirateController.TargetCoordinate);
+
         Destroy(pirateController.gameObject);
     }
 
