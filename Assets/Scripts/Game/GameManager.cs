@@ -17,6 +17,9 @@ public class GameManager : SingletonBehaviour<GameManager>
     private const int MAX_RESEARCH_POINT = 100;
     private const float RESEARCH_COOLDOWN = 60.0f;
 
+    private const float PIRATE_SPAWN_PERIOD = 180.0f;
+    private const int MAX_PIRATE_SPAWN_COUNT = 2;
+
     [SerializeField] private MonoBehaviour[] _gameStates;
 
     [SerializeField] private Animator _dayNightAnimator;
@@ -24,6 +27,10 @@ public class GameManager : SingletonBehaviour<GameManager>
     private float _elapsedTime = 480.0f / DAY_SPEED;
     private float _riseCooldown = OCEAN_RISE_PERIOD;
     private float _researchCooldown = 0.0f;
+
+    private float _pirateSpawnCooldown = OCEAN_RISE_PERIOD;
+    private int _pirateSpawnProbabilityIndex = 0;
+    private int[] _pirateSpawnProbabilities = { 20, 60, 100 };
 
     private bool _hasEnded = false;
 
@@ -139,6 +146,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
         _dayNightAnimator.Play("Cycle", 0, (Mathf.RoundToInt(_elapsedTime * DAY_SPEED) % 1440) / 1440.0f);
 
+        // 연구 쿨타임 처리
         if (!_isResearchable)
         {
             _researchCooldown += Time.deltaTime;
@@ -146,6 +154,30 @@ public class GameManager : SingletonBehaviour<GameManager>
             if (_researchCooldown >= RESEARCH_COOLDOWN)
             {
                 _isResearchable = true;
+            }
+        }
+
+        // 해적 스폰 처리
+        _pirateSpawnCooldown -= Time.deltaTime;
+
+        if (_pirateSpawnCooldown < 0.0f)
+        {
+            _pirateSpawnCooldown += PIRATE_SPAWN_PERIOD;
+
+            if (Random.Range(1, 101) < _pirateSpawnProbabilities[_pirateSpawnProbabilityIndex])
+            {
+                int spawnCount = Random.Range(0, MAX_PIRATE_SPAWN_COUNT) + 1;
+
+                for (int i = 0; i < spawnCount; i++)
+                {
+                    PirateManager.Instance.SpawnPirate();
+                }
+
+                _pirateSpawnProbabilityIndex = 0;
+            }
+            else
+            {
+                _pirateSpawnProbabilityIndex = Mathf.Min(_pirateSpawnProbabilityIndex + 1, _pirateSpawnProbabilities.Length - 1);
             }
         }
     }
