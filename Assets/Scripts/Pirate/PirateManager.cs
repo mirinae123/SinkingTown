@@ -34,18 +34,6 @@ public class PirateManager : SingletonBehaviour<PirateManager>
     }
     private int[,] _penalties;
 
-    private void Update()
-    {
-        //QualitySettings.vSyncCount = 0;
-        //Application.targetFrameRate = 30;
-
-        // TEST
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            SpawnPirate();
-        }
-    }
-
     /// <summary>
     /// 해적을 생성한다.
     /// </summary>
