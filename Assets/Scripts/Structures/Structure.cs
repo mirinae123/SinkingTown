@@ -285,6 +285,11 @@ public class ActiveProducerStructure : Structure
 
         foreach(PirateController pirate in PirateManager.Instance.Pirates)
         {
+            if (pirate.CurrentState == PirateState.Despawn || pirate.CurrentState == PirateState.Destroy)
+            {
+                continue;
+            }
+
             if (HexaUtility.GetDistance(_tile.Coordinate, pirate.CurrentCoordinate) <= _structureData.Radius)
             {
                 if (pirate.IsUnderAttack)

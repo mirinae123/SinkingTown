@@ -48,12 +48,20 @@ public class PirateController : MonoBehaviour
         get => _attackingFortressCount > 0;
     }
 
+    /// <summary>
+    /// 해적의 현재 상태
+    /// </summary>
+    public PirateState CurrentState
+    {
+        get => _currentState;
+    }
+    private PirateState _currentState;
+
     private int _attackingFortressCount = 0;
 
     private int _currentHealth = MAX_HEALTH;
     private float _elapsed = 0.0f;
 
-    private PirateState _currentState;
     private Queue<Vector2Int> _path = new Queue<Vector2Int>();
 
     private void Update()
