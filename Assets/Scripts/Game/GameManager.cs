@@ -24,7 +24,6 @@ public class GameManager : SingletonBehaviour<GameManager>
 
     [SerializeField] private Animator _dayNightAnimator;
 
-    private float _elapsedTime = 480.0f / DAY_SPEED;
     private float _riseCooldown = OCEAN_RISE_PERIOD;
     private float _researchCooldown = 0.0f;
 
@@ -59,6 +58,15 @@ public class GameManager : SingletonBehaviour<GameManager>
         get => _currentDay;
     }
     private int _currentDay = 1;
+
+    /// <summary>
+    /// 오늘 하루를 기준으로 현재 시간
+    /// </summary>
+    public float CurrentTime
+    {
+        get => _currentTime;
+    }
+    private float _currentTime = 480.0f;
 
     /// <summary>
     /// 해수면 상승으로부터 지난 시간
@@ -141,10 +149,15 @@ public class GameManager : SingletonBehaviour<GameManager>
             return;
         }
 
-        _elapsedTime += Time.deltaTime;
-        _currentDay = (Mathf.RoundToInt(_elapsedTime * DAY_SPEED) / 1440) % 99 + 1;
+        _currentTime += Time.deltaTime * DAY_SPEED;
 
-        _dayNightAnimator.Play("Cycle", 0, (Mathf.RoundToInt(_elapsedTime * DAY_SPEED) % 1440) / 1440.0f);
+        if (_currentTime > 1440.0f)
+        {
+            _currentTime -= 1440.0f;
+            _currentDay = _currentDay % 99 + 1;
+        }
+
+        _dayNightAnimator.Play("Cycle", 0, _currentTime / 1440.0f);
 
         // 연구 쿨타임 처리
         if (!_isResearchable)
