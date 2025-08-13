@@ -40,10 +40,8 @@ public class MapGenerator : SingletonBehaviour<MapGenerator>
 
         Tile[,] tiles = new Tile[w, h];
 
-        Random.InitState((int)System.DateTime.Now.Ticks);
-
-        float mapOffset = Random.Range(-50, 50);
-        float fertileOffset = Random.Range(-50, 50);
+        float offsetX = Random.Range(-50, 50);
+        float offsetY = Random.Range(-50, 50);
 
         int min = 1000;
         int max = -1000;
@@ -53,8 +51,8 @@ public class MapGenerator : SingletonBehaviour<MapGenerator>
         {
             for (int j = 0; j < h; j++)
             {
-                int height = (int)((Mathf.PerlinNoise((float)i / w * c + mapOffset, (float)j / h * c + mapOffset) +
-                    Mathf.PerlinNoise((float)i / w * c * 2f + mapOffset, (float)j / h * c * 2f + mapOffset)) * _maxHeight * 2);
+                int height = (int)((Mathf.PerlinNoise((float)i / w * c + offsetX, (float)j / h * c + offsetY) +
+                    Mathf.PerlinNoise((float)i / w * c * 2f + offsetX, (float)j / h * c * 2f + offsetY)) * _maxHeight * 2);
 
                 float t = w * w / 4f + h * h / 4f;
                 t -= (i - w / 2f) * (i - w / 2f) + (j - h / 2f) * (j - h / 2f);

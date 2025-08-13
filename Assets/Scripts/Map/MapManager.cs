@@ -35,7 +35,7 @@ public class MapManager : SingletonBehaviour<MapManager>
 
     private void Start()
     {
-        Random.InitState(0);
+        RandomUtility.Seed = (int)System.DateTime.Now.Ticks;
 
         _tiles = GetComponent<MapGenerator>().GenerateMap(128, 128, 6f);
         GetComponent<MapRenderer>().RenderMap();
