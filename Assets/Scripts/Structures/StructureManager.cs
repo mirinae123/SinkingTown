@@ -17,10 +17,20 @@ public class StructureManager : SingletonBehaviour<StructureManager>
 {
     [SerializeField] private StructurePair[] _structurePairs;
 
+    /// <summary>
+    /// 모든 건물 오브젝트의 부모 (정리용)
+    /// </summary>
+    public GameObject StructureHolder
+    {
+        get => _structureHolder;
+    }
+    private GameObject _structureHolder;
+
     private Dictionary<StructureType, StructureData> _structureData;
 
-    private void OnValidate()
+    private void Start()
     {
+        _structureHolder = new GameObject("Structures");
         _structureData = new Dictionary<StructureType, StructureData>();
 
         foreach (StructurePair pair in _structurePairs)

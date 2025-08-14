@@ -15,10 +15,18 @@ MonoBehaviour:
   StructureType: 9
   StructureImage: {fileID: 0}
   StructureNameKey: fortress_title
-  StructurePrefab: {fileID: 9073670328388804027, guid: f9f017a777c80e1479c4bcd7fb45bbee, type: 3}
-  BuildingStructurePrefab: {fileID: 0}
-  DisabledStructurePrefab: {fileID: 0}
-  SunkenStructurePrefab: {fileID: 9073670328388804027, guid: b9680d7c6ee0d6545a65b86157fb3f2f, type: 3}
+  DayStructurePrefab:
+  - {fileID: 9073670328388804027, guid: f9f017a777c80e1479c4bcd7fb45bbee, type: 3}
+  NightStructurePrefab:
+  - {fileID: 9073670328388804027, guid: f9f017a777c80e1479c4bcd7fb45bbee, type: 3}
+  BuildingStructurePrefab:
+  - {fileID: 0}
+  DisabledStructurePrefab:
+  - {fileID: 0}
+  SunkenStructurePrefab:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   Needs:
     population: 2
     fish: 0

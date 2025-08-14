@@ -15,10 +15,18 @@ MonoBehaviour:
   StructureType: 1
   StructureImage: {fileID: 0}
   StructureNameKey: house_title
-  StructurePrefab: {fileID: 9073670328388804027, guid: 3f863f2fae4f9654fbb348c6087ff2e3, type: 3}
-  BuildingStructurePrefab: {fileID: 0}
-  DisabledStructurePrefab: {fileID: 0}
-  SunkenStructurePrefab: {fileID: 9073670328388804027, guid: b9680d7c6ee0d6545a65b86157fb3f2f, type: 3}
+  DayStructurePrefab:
+  - {fileID: 9073670328388804027, guid: 3f863f2fae4f9654fbb348c6087ff2e3, type: 3}
+  NightStructurePrefab:
+  - {fileID: 9073670328388804027, guid: 3f863f2fae4f9654fbb348c6087ff2e3, type: 3}
+  BuildingStructurePrefab:
+  - {fileID: 0}
+  DisabledStructurePrefab:
+  - {fileID: 0}
+  SunkenStructurePrefab:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   Needs:
     population: 0
     fish: 0
