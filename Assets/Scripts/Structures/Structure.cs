@@ -42,7 +42,7 @@ public class Structure
     }
     protected Tile _tile;
 
-    private GameObject _structureObject;
+    protected GameObject _structureObject;
 
     /// <summary>
     /// 추가 범위를 고려한 효과 범위를 계산한다.
@@ -92,7 +92,16 @@ public class Structure
 
     public virtual void Initialize() { }
 
-    public virtual void OnUpdate() { }
+    public virtual void OnUpdate() {
+        if (_tile.IsUnderWater)
+        {
+            Vector3 position = _structureObject.transform.position;
+            position.y = MapRenderer.Instance.OceanHeight;
+
+            _structureObject.transform.position = position;
+        }
+    }
+
     public virtual void OnNotified() { }
 
     public virtual void OnRenderStart()
@@ -139,6 +148,8 @@ public class ConsumerStructure : Structure
 
     public override void OnUpdate()
     {
+        base.OnUpdate();
+
         // 만족도가 증가 중인 경우
         if (_currentState == StructureState.Increasing)
         {
@@ -225,6 +236,8 @@ public class ActiveProducerStructure : Structure
 
     public override void OnUpdate()
     {
+        base.OnUpdate();
+
         if (_currentState == StructureState.Enabled)
         {
             _elapsed += Time.deltaTime;
