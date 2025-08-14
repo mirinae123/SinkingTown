@@ -182,12 +182,12 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         Tile currentTile = MapManager.Instance.Tiles[x, y];
         StructureData structureData = StructureManager.Instance.GetStructureData(structureType);
 
-        Vector3 worldCoordinate = HexaUtility.GetWorldCoordinate(coordinate);
-        worldCoordinate.y = currentTile.Height + 1;
+        Vector3 position = HexaUtility.GetWorldCoordinate(coordinate);
+        position.y = currentTile.Height + 1.0f;
 
         _sunkenStructures[x, y] = structureType;
-        _sunkenStructureObjects[x, y] = structureData.SunkenStructurePrefab[currentTile.RandomIndex % structureData.SunkenStructurePrefab.Length];
-        _sunkenStructureObjects[x, y].transform.position = worldCoordinate;
+        _sunkenStructureObjects[x, y] = Instantiate(structureData.SunkenStructurePrefab[currentTile.RandomIndex % structureData.SunkenStructurePrefab.Length]);
+        _sunkenStructureObjects[x, y].transform.position = position;
     }
 
     /// <summary>
