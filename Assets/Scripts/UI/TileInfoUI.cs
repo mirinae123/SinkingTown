@@ -195,8 +195,7 @@ public class TileInfoUI : MonoBehaviour
         _titleText.UpdateTextLanguage();
 
         // !TEST: 건물 상태 확인용
-        if (_currentTile.Structure.CurrentState == StructureState.Enabled ||
-            _currentTile.Structure.CurrentState == StructureState.Increasing)
+        if (_currentTile.Structure.IsEnabled)
         {
             _structureImage.color = Color.green;
         }

@@ -1,11 +1,6 @@
 using UnityEngine;
 
 /// <summary>
-/// 건물의 현재 상태
-/// </summary>
-public enum StructureState { Enabled, Increasing, Decreasing, Disabled }
-
-/// <summary>
 /// 건물 종류
 /// </summary>
 public enum StructureType { TownHall, House, Market, LumberCamp, Quarry, Pier, Farm, Restaurant, TextileMill, Fortress, Deck }
@@ -27,11 +22,11 @@ public class Structure
     /// <summary>
     /// 건물 상태
     /// </summary>
-    public StructureState CurrentState
+    public bool IsEnabled
     {
-        get => _currentState;
+        get => _isEnabled;
     }
-    protected StructureState _currentState;
+    protected bool _isEnabled;
 
     /// <summary>
     /// 현재 타일
@@ -134,11 +129,17 @@ public class ConsumerStructure : Structure
     }
     private float _currentHappiness;
 
+    private bool _isIncreasing;
+
     public ConsumerStructure(StructureType type, Tile tile)
     {
         _structureData = StructureManager.Instance.GetStructureData(type);
-        _currentHappiness = _structureData.MaxHappiness;
         _tile = tile;
+
+        _currentHappiness = _structureData.MaxHappiness;
+
+        _isEnabled = true;
+        _isIncreasing = true;
     }
 
     public override void Initialize()
@@ -151,7 +152,7 @@ public class ConsumerStructure : Structure
         base.OnUpdate();
 
         // 만족도가 증가 중인 경우
-        if (_currentState == StructureState.Increasing)
+        if (_isIncreasing && _currentHappiness < _structureData.MaxHappiness)
         {
             _currentHappiness += _structureData.IncreaseSpeed * Time.deltaTime;
 
@@ -159,22 +160,22 @@ public class ConsumerStructure : Structure
             if (_currentHappiness >= _structureData.MaxHappiness)
             {
                 _currentHappiness = _structureData.MaxHappiness;
-                _currentState = StructureState.Enabled;
+                _isEnabled = true;
 
                 _tile.AddToProviders();
             }
 
         }
         // 만족도가 감소 중인 경우
-        else if (_currentState == StructureState.Decreasing)
+        else if (!_isIncreasing && _currentHappiness > 0.0f)
         {
             _currentHappiness -= _structureData.DecreaseSpeed * Time.deltaTime;
 
             // 만족도가 최소치까지 준 경우
-            if (_currentHappiness <= 0)
+            if (_currentHappiness <= 0.0f)
             {
-                _currentHappiness = 0;
-                _currentState = StructureState.Disabled;
+                _currentHappiness = 0.0f;
+                _isEnabled = false;
 
                 _tile.RemoveFromProviders();
             }
@@ -183,29 +184,7 @@ public class ConsumerStructure : Structure
 
     public override void OnNotified()
     {
-        // 요구 사항 만족 여부
-        bool satisfied = !(_tile.Resource < _structureData.Needs) && (!_structureData.RequireOcean || IsOceanNearby());
-
-        // 활성 상태에서 불만족
-        if (_currentState == StructureState.Enabled && !satisfied)
-        {
-            _currentState = StructureState.Decreasing;
-        }
-        // 비활성 상태에서 만족
-        else if (_currentState == StructureState.Disabled && satisfied)
-        {
-            _currentState = StructureState.Increasing;
-        }
-        // 증가 상태에서 불만족
-        else if (_currentState == StructureState.Increasing && !satisfied)
-        {
-            _currentState = StructureState.Decreasing;
-        }
-        // 감소 상태에서 만족
-        else if (_currentState == StructureState.Decreasing && satisfied)
-        {
-            _currentState = StructureState.Increasing;
-        }
+        _isIncreasing = !(_tile.Resource < _structureData.Needs) && (!_structureData.RequireOcean || IsOceanNearby());
     }
 }
 
@@ -238,7 +217,7 @@ public class ActiveProducerStructure : Structure
     {
         base.OnUpdate();
 
-        if (_currentState == StructureState.Enabled)
+        if (_isEnabled)
         {
             _elapsed += Time.deltaTime;
 
@@ -281,17 +260,17 @@ public class ActiveProducerStructure : Structure
         bool satisfied = !(_tile.Resource < _structureData.Needs) && (!_structureData.RequireOcean || IsOceanNearby());
 
         // 비활성 상태에서 만족
-        if (satisfied && _currentState == StructureState.Disabled)
+        if (satisfied && !_isEnabled)
         {
-            _currentState = StructureState.Enabled;
+            _isEnabled = true;
             _tile.AddToProviders();
         }
         // 활성 상태에서 불만족
-        else if (!satisfied && _currentState == StructureState.Enabled)
+        else if (!satisfied && _isEnabled)
         {
             _elapsed = 0.0f;
 
-            _currentState = StructureState.Disabled;
+            _isEnabled = false;
             _tile.RemoveFromProviders();
         }
     }
@@ -383,12 +362,12 @@ public class PassiveProducerStructure : Structure
 
         if (satisfied)
         {
-            _currentState = StructureState.Enabled;
+            _isEnabled = true;
             _tile.AddToProviders();
         }
         else
         {
-            _currentState = StructureState.Disabled;
+            _isEnabled = false;
         }
     }
 
@@ -400,9 +379,9 @@ public class PassiveProducerStructure : Structure
         if (satisfied)
         {
             // 비활성 상태에서 만족
-            if (_currentState == StructureState.Disabled)
+            if (!_isEnabled)
             {
-                _currentState = StructureState.Enabled;
+                _isEnabled = true;
                 _tile.AddToProviders();
             }
             // 식당에 공급되는 물고기 값이 변한 경우
@@ -425,9 +404,9 @@ public class PassiveProducerStructure : Structure
             }
         }
         // 활성 상태에서 불만족
-        else if (!satisfied && _currentState == StructureState.Enabled)
+        else if (!satisfied && _isEnabled)
         {
-            _currentState = StructureState.Disabled;
+            _isEnabled = false;
             _tile.RemoveFromProviders();
         }
     }
