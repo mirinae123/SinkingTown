@@ -86,6 +86,12 @@ public class Tile
     }
     private List<Structure> _providers = new List<Structure>();
 
+    public int RandomIndex
+    {
+        get => _randomIndex;
+    }
+    private int _randomIndex;
+
     /// <summary>
     /// 생성자
     /// </summary>
@@ -95,6 +101,8 @@ public class Tile
     {
         _coordinate = coordinate;
         _height = height;
+
+        _randomIndex = RandomUtility.GetRandomNoise(_coordinate.x, _coordinate.y, 1024);
     }
 
     /// <summary>
@@ -127,6 +135,7 @@ public class Tile
 
             // 주변 타일의 자원 제공자에 현재 건물을 추가
             _structure.Initialize();
+            _structure.OnRenderStart();
         }
 
         UIManager.Instance.UpdateTileInfo(_coordinate);
@@ -159,7 +168,9 @@ public class Tile
             // 주변 타일의 자원 제공자에서 현재 건물을 제거
             RemoveFromProviders();
 
+            _structure.OnRenderEnd();
             _structure = null;
+
             MapRenderer.Instance.UpdateTile(_coordinate);
         }
 

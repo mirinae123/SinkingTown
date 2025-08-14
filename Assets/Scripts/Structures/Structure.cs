@@ -1,11 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using Unity.Collections.LowLevel.Unsafe;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem.XR.Haptics;
 
 /// <summary>
 /// 건물의 현재 상태
@@ -48,6 +41,8 @@ public class Structure
         get => _tile;
     }
     protected Tile _tile;
+
+    private GameObject _structureObject;
 
     /// <summary>
     /// 추가 범위를 고려한 효과 범위를 계산한다.
@@ -96,8 +91,26 @@ public class Structure
     }
 
     public virtual void Initialize() { }
+
     public virtual void OnUpdate() { }
     public virtual void OnNotified() { }
+
+    public virtual void OnRenderStart()
+    {
+        Vector3 position = HexaUtility.GetWorldCoordinate(_tile.Coordinate);
+        position.y = Mathf.Max(_tile.Height + 1.0f, MapRenderer.Instance.OceanHeight);
+
+        _structureObject = GameObject.Instantiate(_structureData.DayStructurePrefab[_tile.RandomIndex % _structureData.DayStructurePrefab.Length], StructureManager.Instance.StructureHolder.transform);
+        _structureObject.transform.position = position;
+    }
+
+    public virtual void OnRenderEnd()
+    {
+        if (_structureObject)
+        {
+            GameObject.Destroy(_structureObject);
+        }
+    }
 }
 
 /// <summary>
@@ -137,8 +150,6 @@ public class ConsumerStructure : Structure
                 _currentHappiness = _structureData.MaxHappiness;
                 _currentState = StructureState.Enabled;
 
-                //_isActive = true;
-
                 _tile.AddToProviders();
             }
 
@@ -153,8 +164,6 @@ public class ConsumerStructure : Structure
             {
                 _currentHappiness = 0;
                 _currentState = StructureState.Disabled;
-
-                //_isActive = false;
 
                 _tile.RemoveFromProviders();
             }

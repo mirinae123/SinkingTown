@@ -11,10 +11,11 @@ public class StructureData : ScriptableObject
     public Sprite StructureImage;           // 건물 이미지
     public string StructureNameKey;         // 건물 이름 키
 
-    public GameObject StructurePrefab;          // 건물 프리팹
-    public GameObject BuildingStructurePrefab;  // 건설 중인 건물 프리팹
-    public GameObject DisabledStructurePrefab;  // 비활성화된 건물 프리팹
-    public GameObject SunkenStructurePrefab;    // 물에 잠긴 건물 프리팹
+    public GameObject[] DayStructurePrefab;         // 낮 건물 프리팹
+    public GameObject[] NightStructurePrefab;       // 밤 건물 프리팹
+    public GameObject[] BuildingStructurePrefab;    // 건설 중인 건물 프리팹
+    public GameObject[] DisabledStructurePrefab;    // 비활성화된 건물 프리팹
+    public GameObject[] SunkenStructurePrefab;      // 물에 잠긴 건물 프리팹
 
     public Resource Needs;      // 요구량
     public Resource Produces;   // 생산량
