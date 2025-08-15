@@ -19,14 +19,10 @@ MonoBehaviour:
   - {fileID: 9073670328388804027, guid: cbc271c5e239a2242b172dd08e69d517, type: 3}
   NightStructurePrefab:
   - {fileID: 9073670328388804027, guid: cbc271c5e239a2242b172dd08e69d517, type: 3}
-  BuildingStructurePrefab:
-  - {fileID: 0}
   DisabledStructurePrefab:
-  - {fileID: 0}
+  - {fileID: 9073670328388804027, guid: a46c7eaf31617894995e6b5013693633, type: 3}
   SunkenStructurePrefab:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 9073670328388804027, guid: b9680d7c6ee0d6545a65b86157fb3f2f, type: 3}
   Needs:
     population: 2
     fish: 0

@@ -13,7 +13,6 @@ public class StructureData : ScriptableObject
 
     public GameObject[] DayStructurePrefab;         // 낮 건물 프리팹
     public GameObject[] NightStructurePrefab;       // 밤 건물 프리팹
-    public GameObject[] BuildingStructurePrefab;    // 건설 중인 건물 프리팹
     public GameObject[] DisabledStructurePrefab;    // 비활성화된 건물 프리팹
     public GameObject[] SunkenStructurePrefab;      // 물에 잠긴 건물 프리팹
 

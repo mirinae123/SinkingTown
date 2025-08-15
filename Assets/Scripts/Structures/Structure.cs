@@ -99,12 +99,25 @@ public class Structure
 
     public virtual void OnNotified() { }
 
-    public virtual void OnRenderStart()
+    public virtual void OnRenderUpdate()
     {
+        if (_structureObject)
+        {
+            GameObject.Destroy(_structureObject);
+        }
+
         Vector3 position = HexaUtility.GetWorldCoordinate(_tile.Coordinate);
         position.y = Mathf.Max(_tile.Height + 1.0f, MapRenderer.Instance.OceanHeight);
 
-        _structureObject = GameObject.Instantiate(_structureData.DayStructurePrefab[_tile.RandomIndex % _structureData.DayStructurePrefab.Length], StructureManager.Instance.StructureHolder.transform);
+        if (_isEnabled)
+        {
+            _structureObject = GameObject.Instantiate(_structureData.DayStructurePrefab[_tile.RandomIndex % _structureData.DayStructurePrefab.Length], StructureManager.Instance.StructureHolder.transform);
+        }
+        else
+        {
+            _structureObject = GameObject.Instantiate(_structureData.DisabledStructurePrefab[_tile.RandomIndex % _structureData.DisabledStructurePrefab.Length], StructureManager.Instance.StructureHolder.transform);
+        }
+
         _structureObject.transform.position = position;
     }
 
@@ -163,6 +176,8 @@ public class ConsumerStructure : Structure
                 _isEnabled = true;
 
                 _tile.AddToProviders();
+
+                OnRenderUpdate();
             }
 
         }
@@ -178,6 +193,8 @@ public class ConsumerStructure : Structure
                 _isEnabled = false;
 
                 _tile.RemoveFromProviders();
+
+                OnRenderUpdate();
             }
         }
     }
@@ -264,6 +281,8 @@ public class ActiveProducerStructure : Structure
         {
             _isEnabled = true;
             _tile.AddToProviders();
+
+            OnRenderUpdate();
         }
         // 활성 상태에서 불만족
         else if (!satisfied && _isEnabled)
@@ -272,6 +291,8 @@ public class ActiveProducerStructure : Structure
 
             _isEnabled = false;
             _tile.RemoveFromProviders();
+
+            OnRenderUpdate();
         }
     }
 
@@ -383,6 +404,8 @@ public class PassiveProducerStructure : Structure
             {
                 _isEnabled = true;
                 _tile.AddToProviders();
+
+                OnRenderUpdate();
             }
             // 식당에 공급되는 물고기 값이 변한 경우
             else if (_structureData.StructureType == StructureType.Restaurant &&
@@ -408,6 +431,8 @@ public class PassiveProducerStructure : Structure
         {
             _isEnabled = false;
             _tile.RemoveFromProviders();
+
+            OnRenderUpdate();
         }
     }
 }
