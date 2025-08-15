@@ -39,6 +39,22 @@ public class Structure
 
     protected GameObject _structureObject;
 
+    protected float _daytimeStart;  // 낮의 시작
+    protected float _daytimeEnd;    // 낮의 끝
+
+    protected bool _isDaytime;      // 낮 여부
+
+    public Structure(StructureType type, Tile tile)
+    {
+        _structureData = StructureManager.Instance.GetStructureData(type);
+        _tile = tile;
+
+        _daytimeStart = 360.0f + tile.RandomIndex / 64.0f;
+        _daytimeEnd = 1110.0f - tile.RandomIndex / 64.0f;
+
+        _isDaytime = _daytimeStart < GameManager.Instance.CurrentTime && GameManager.Instance.CurrentTime < _daytimeEnd;
+    }
+
     /// <summary>
     /// 추가 범위를 고려한 효과 범위를 계산한다.
     /// </summary>
@@ -88,6 +104,16 @@ public class Structure
     public virtual void Initialize() { }
 
     public virtual void OnUpdate() {
+        // 낮 여부 확인
+        bool checkDaytime = _daytimeStart < GameManager.Instance.CurrentTime && GameManager.Instance.CurrentTime < _daytimeEnd;
+
+        if (_isDaytime != checkDaytime)
+        {
+            _isDaytime = checkDaytime;
+            OnRenderUpdate();
+        }
+
+        // 해수면 상승 처리
         if (_tile.IsUnderWater)
         {
             Vector3 position = _structureObject.transform.position;
@@ -111,7 +137,14 @@ public class Structure
 
         if (_isEnabled)
         {
-            _structureObject = GameObject.Instantiate(_structureData.DayStructurePrefab[_tile.RandomIndex % _structureData.DayStructurePrefab.Length], StructureManager.Instance.StructureHolder.transform);
+            if (_isDaytime)
+            {
+                _structureObject = GameObject.Instantiate(_structureData.DayStructurePrefab[_tile.RandomIndex % _structureData.DayStructurePrefab.Length], StructureManager.Instance.StructureHolder.transform);
+            }
+            else
+            {
+                _structureObject = GameObject.Instantiate(_structureData.NightStructurePrefab[_tile.RandomIndex % _structureData.NightStructurePrefab.Length], StructureManager.Instance.StructureHolder.transform);
+            }
         }
         else
         {
@@ -144,11 +177,8 @@ public class ConsumerStructure : Structure
 
     private bool _isIncreasing;
 
-    public ConsumerStructure(StructureType type, Tile tile)
+    public ConsumerStructure(StructureType type, Tile tile) : base(type, tile)
     {
-        _structureData = StructureManager.Instance.GetStructureData(type);
-        _tile = tile;
-
         _currentHappiness = _structureData.MaxHappiness;
 
         _isEnabled = true;
@@ -219,11 +249,7 @@ public class ActiveProducerStructure : Structure
     }
     private float _elapsed;
 
-    public ActiveProducerStructure(StructureType type, Tile tile)
-    {
-        _structureData = StructureManager.Instance.GetStructureData(type);
-        _tile = tile;
-    }
+    public ActiveProducerStructure(StructureType type, Tile tile) : base(type, tile) { }
 
     public override void Initialize()
     {
@@ -358,11 +384,7 @@ public class PassiveProducerStructure : Structure
 {
     private float _lastProduced = 0;
 
-    public PassiveProducerStructure(StructureType type, Tile tile)
-    {
-        _structureData = StructureManager.Instance.GetStructureData(type);
-        _tile = tile;
-    }
+    public PassiveProducerStructure(StructureType type, Tile tile) : base(type, tile) { }
 
     public override Resource GetEffectiveProduces()
     {
