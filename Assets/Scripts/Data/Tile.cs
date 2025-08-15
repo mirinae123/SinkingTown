@@ -135,7 +135,7 @@ public class Tile
 
             // 주변 타일의 자원 제공자에 현재 건물을 추가
             _structure.Initialize();
-            _structure.OnRenderStart();
+            _structure.OnRenderUpdate();
         }
 
         UIManager.Instance.UpdateTileInfo(_coordinate);
