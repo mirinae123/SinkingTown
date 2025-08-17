@@ -58,7 +58,7 @@ public class PlayState : MonoBehaviour
 
                 if (MapManager.Instance.CheckCoordinateValidity(coordinate))
                 {
-                    UIManager.Instance.ShowTileInfo(coordinate);
+                    UIManager.Instance.ShowPanel(PanelType.Tile, coordinate);
                 }
             }
         }
@@ -66,6 +66,6 @@ public class PlayState : MonoBehaviour
 
     private void OnEscapeInput()
     {
-        UIManager.Instance.ProcessEscapeInput();
+        UIManager.Instance.HidePanel();
     }
 }

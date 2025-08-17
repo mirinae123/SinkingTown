@@ -5,7 +5,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 클리어 메뉴 클래스
 /// </summary>
-public class EndMenuUI : MonoBehaviour
+public class EndUI : BaseUI
 {
     [SerializeField] LocalizedText _captionText;
 
@@ -21,17 +21,21 @@ public class EndMenuUI : MonoBehaviour
 
     private void Start()
     {
+        UIManager.Instance.RegisterPanel(PanelType.End, this);
+
         _quitIcon.onClick.AddListener(() =>
         {
-            UIManager.Instance.HideEndMenu();
+            UIManager.Instance.HidePanel();
         });
+
+        transform.parent.gameObject.SetActive(false);
     }
 
-    public void Show(bool hasCleared)
+    public override void Show(params object[] values)
     {
         transform.parent.gameObject.SetActive(true);
 
-        if (hasCleared)
+        if ((bool)values[0])
         {
             _captionText.ChangeKey("option_title");
 
@@ -53,7 +57,7 @@ public class EndMenuUI : MonoBehaviour
         }
     }
 
-    public void Hide()
+    public override void Hide()
     {
         transform.parent.gameObject.SetActive(false);
     }

@@ -231,7 +231,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
             return;
         }
 
-        foreach(Transform child in _rangeHolder.transform)
+        foreach (Transform child in _rangeHolder.transform)
         {
             Destroy(child.gameObject);
         }

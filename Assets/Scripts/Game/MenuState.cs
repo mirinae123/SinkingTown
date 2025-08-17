@@ -25,6 +25,6 @@ public class MenuState : MonoBehaviour
 
     private void OnEscapeInput()
     {
-        UIManager.Instance.ProcessEscapeInput();
+        UIManager.Instance.HidePanel();
     }
 }

@@ -1,13 +1,13 @@
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
 /// 타일 정보 클래스
 /// </summary>
-public class TileInfoUI : MonoBehaviour
+public class TileInfoUI : BaseUI
 {
     private const int RESEARCH_COST_WOODS = 10;
     private const int RESEARCH_COST_STONES = 10;
@@ -64,31 +64,33 @@ public class TileInfoUI : MonoBehaviour
 
     void Start()
     {
+        UIManager.Instance.RegisterPanel(PanelType.Tile, this);
+
         _quitIcon.onClick.AddListener(() =>
         {
-            UIManager.Instance.HideTileInfo();
+            UIManager.Instance.HidePanel();
         });
 
         _destroyButton.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowConfirmMenu("language_label", "language_label", () =>
+            UIManager.Instance.ShowPanel(PanelType.Confirm, "language_label", "language_label", (UnityAction)(() =>
             {
                 _currentTile.DestroyStructure();
-            },
-            null);
+            }
+            ), null);
         });
 
         _researchButton.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowConfirmMenu("language_label", "language_label", () =>
+            UIManager.Instance.ShowPanel(PanelType.Confirm, "language_label", "language_label", (UnityAction)(() =>
             {
                 GameManager.Instance.CurrentWoods -= RESEARCH_COST_WOODS;
                 GameManager.Instance.CurrentStones -= RESEARCH_COST_STONES;
 
                 GameManager.Instance.ChangeResearchPoint(4);
                 GameManager.Instance.StartResearchCooldown();
-            },
-            null);
+            }
+            ), null);
         });
 
         UIManager.Instance.AddHoverEvent(_happinessInfo, "language_label", "language_label", HoverDirection.TopRight);
@@ -109,6 +111,8 @@ public class TileInfoUI : MonoBehaviour
 
         UIManager.Instance.AddHoverEvent(_providesToInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_providedFromInfo, "language_label", "language_label", HoverDirection.TopRight);
+
+        gameObject.SetActive(false);
     }
 
     private void Update()
@@ -135,9 +139,14 @@ public class TileInfoUI : MonoBehaviour
         }
     }
 
-    public void Show(Vector2Int tile)
+    public override void Show(params object[] values)
     {
-        UpdateTileInfo(tile);
+        if (values.Length > 0)
+        {
+            _currentTile = MapManager.Instance.Tiles[((Vector2Int)values[0]).x, ((Vector2Int)values[0]).y];
+        }
+
+        UpdateTileInfo();
         gameObject.SetActive(true);
     }
 
@@ -145,10 +154,8 @@ public class TileInfoUI : MonoBehaviour
     /// 타일 정보를 갱신한다.
     /// </summary>
     /// <param name="tile">타일</param>
-    public void UpdateTileInfo(Vector2Int tile)
+    public void UpdateTileInfo()
     {
-        _currentTile = MapManager.Instance.Tiles[tile.x, tile.y];
-
         foreach (Transform child in _providesToContent.transform)
         {
             Destroy(child.gameObject);
@@ -181,7 +188,7 @@ public class TileInfoUI : MonoBehaviour
 
             structureButton.GetComponent<Button>().onClick.AddListener(() =>
             {
-                UpdateTileInfo(provider.Tile.Coordinate);
+                Show(provider.Tile.Coordinate);
             });
         }
     }
@@ -295,7 +302,7 @@ public class TileInfoUI : MonoBehaviour
 
             structureButton.GetComponent<Button>().onClick.AddListener(() =>
             {
-                UpdateTileInfo(neighbor.Coordinate);
+                Show(neighbor.Coordinate);
             });
         }
 
@@ -355,7 +362,7 @@ public class TileInfoUI : MonoBehaviour
         MapRenderer.Instance.HideRangeHighlight();
     }
 
-    public void Hide()
+    public override void Hide()
     {
         MapRenderer.Instance.HideRangeHighlight();
         gameObject.SetActive(false);

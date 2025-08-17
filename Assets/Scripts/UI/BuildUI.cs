@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
 /// 건설 메뉴 클래스
 /// </summary>
-public class BuildMenuUI : MonoBehaviour
+public class BuildUI : BaseUI
 {
     [SerializeField] private Button _buildIcon;
     [SerializeField] private Button _quitIcon;
@@ -19,20 +17,22 @@ public class BuildMenuUI : MonoBehaviour
 
     private void Start()
     {
+        UIManager.Instance.RegisterPanel(PanelType.Build, this);
+
         _buildIcon.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowBuildMenu();
+            UIManager.Instance.ShowPanel(PanelType.Build);
         });
 
         _quitIcon.onClick.AddListener(() =>
         {
-            UIManager.Instance.HideBuildMenu();
+            UIManager.Instance.HidePanel();
         });
 
         _buttons = _content.GetComponentsInChildren<Button>();
     }
 
-    public void Show()
+    public override void Show(params object[] values)
     {
         _animator.SetBool("IsOpen", true);
         GameManager.Instance.ChangeGameState(GameState.None);
@@ -43,7 +43,7 @@ public class BuildMenuUI : MonoBehaviour
         }
     }
 
-    public void Hide()
+    public override void Hide()
     {
         _animator.SetBool("IsOpen", false);
 
