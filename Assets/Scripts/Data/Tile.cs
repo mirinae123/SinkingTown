@@ -138,7 +138,10 @@ public class Tile
             _structure.OnRenderUpdate();
         }
 
-        UIManager.Instance.UpdateTileInfo(_coordinate);
+        if (((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
+        {
+            UIManager.Instance.ShowPanel(PanelType.Tile, _coordinate);
+        }
     }
 
     /// <summary>
@@ -174,7 +177,10 @@ public class Tile
             MapRenderer.Instance.UpdateTile(_coordinate);
         }
 
-        UIManager.Instance.UpdateTileInfo(_coordinate);
+        if (((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
+        {
+            UIManager.Instance.ShowPanel(PanelType.Tile, _coordinate);
+        }
     }
 
     /// <summary>
@@ -194,7 +200,11 @@ public class Tile
         if (_structure == null)
         {
             _resource = newResource;
-            UIManager.Instance.UpdateTileInfo(_coordinate);
+
+            if (((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
+            {
+                UIManager.Instance.ShowPanel(PanelType.Tile, _coordinate);
+            }
 
             return;
         }
@@ -236,7 +246,10 @@ public class Tile
             _structure.OnNotified();
         }
 
-        UIManager.Instance.UpdateTileInfo(_coordinate);
+        if (((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
+        {
+            UIManager.Instance.ShowPanel(PanelType.Tile, _coordinate);
+        }
     }
 
     /// <summary>

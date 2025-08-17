@@ -70,7 +70,7 @@ public class MapManager : SingletonBehaviour<MapManager>
                     tile.NaturalResource = NaturalResourceType.None;
                     MapRenderer.Instance.UpdateTile(tile.Coordinate);
 
-                    UIManager.Instance.UpdateTileInfo(tile.Coordinate);
+                    UIManager.Instance.ShowPanel(PanelType.Tile, tile.Coordinate);
                 }
 
                 if (tile.Structure != null)

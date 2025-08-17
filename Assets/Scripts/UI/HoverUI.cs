@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 /// <summary>
 /// 호버 메뉴 방향
@@ -13,7 +9,7 @@ public enum HoverDirection { TopLeft, TopRight, BottomLeft, BottomRight }
 /// <summary>
 /// 호버 메뉴 클래스
 /// </summary>
-public class HoverMenuUI : MonoBehaviour
+public class HoverUI : BaseUI
 {
     [SerializeField] private RectTransform _mainCanvasTransform;
     [SerializeField] private RectTransform _hoverTransform;
@@ -25,6 +21,12 @@ public class HoverMenuUI : MonoBehaviour
     [SerializeField] private LocalizedText _descriptionLocalizer;
 
     private HoverDirection _hoverDirection;
+
+    private void Start()
+    {
+        UIManager.Instance.RegisterPanel(PanelType.Hover, this);
+        gameObject.SetActive(false);
+    }
 
     private void Update()
     {
@@ -56,23 +58,23 @@ public class HoverMenuUI : MonoBehaviour
         _hoverTransform.anchoredPosition = newPosition;
     }
 
-    public void Show(string caption, string text, HoverDirection hoverDirection)
+    public override void Show(params object[] values)
     {
         gameObject.SetActive(true);
 
-        _captionLocalizer.ChangeKey(caption);
-        _descriptionLocalizer.ChangeKey(text);
+        _captionLocalizer.ChangeKey((string)values[0]);
+        _descriptionLocalizer.ChangeKey((string)values[1]);
 
         _captionLocalizer.UpdateTextLanguage();
         _descriptionLocalizer.UpdateTextLanguage();
 
-        _hoverDirection = hoverDirection;
+        _hoverDirection = (HoverDirection)values[2];
 
         _description.ForceMeshUpdate();
         _hoverTransform.sizeDelta = new Vector2(_hoverTransform.sizeDelta.x, 115f + (_description.textInfo.lineCount - 1) * 25f);
     }
 
-    public void Hide()
+    public override void Hide()
     {
         gameObject.SetActive(false);
     }

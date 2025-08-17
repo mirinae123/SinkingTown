@@ -1,248 +1,135 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
+using System.Diagnostics;
 using UnityEngine.EventSystems;
 
 /// <summary>
 /// UI 상태
 /// </summary>
-public enum UIState { None, Build, Tile, MainMenu, Option, Confirm, End }
+public enum PanelType { None, Main, Build, Tile, Option, Confirm, End, Hover }
 
 /// <summary>
 /// UI를 관리하는 클래스
 /// </summary>
 public class UIManager : SingletonBehaviour<UIManager>
 {
-    [SerializeField] private MainMenuUI _mainMenu;
-    [SerializeField] private OptionMenuUI _optionMenu;
-    [SerializeField] private HoverMenuUI _hoverMenu;     
-    [SerializeField] private BuildMenuUI _buildMenu;
-    [SerializeField] private ConfirmMenuUI _confirmMenu;
-
-    [SerializeField] private GameObject _gameInfo;
-    [SerializeField] private TileInfoUI _tileInfo;
-
-    [SerializeField] private EndMenuUI _endMenu;
-
     /// <summary>
     /// 현재 UI 상태
     /// </summary>
-    public UIState CurrentUIState
+    public PanelType CurrentPanelType
     {
-        get => _currentUIState;
-        set => _currentUIState = value;
-    }
-    private UIState _currentUIState = UIState.None;
-
-    private UIState _previousUIState = UIState.None;
-
-    /// <summary>
-    /// 메인 메뉴를 표시한다.
-    /// </summary>
-    public void ShowMainMenu()
-    {
-        _currentUIState = UIState.MainMenu;
-
-        GameManager.Instance.ChangeGameState(GameState.Menu);
-
-        _tileInfo.Hide();
-        _buildMenu.Hide();
-        _hoverMenu.Hide();
-
-        _mainMenu.Show();
-    }
-
-    /// <summary>
-    /// 메인 메뉴를 숨긴다.
-    /// </summary>
-    public void HideMainMenu()
-    {
-        _currentUIState = UIState.None;
-
-        GameManager.Instance.ChangeGameState(GameState.None);
-
-        _mainMenu.Hide();
-    }
-
-    /// <summary>
-    /// 설정 메뉴를 표시한다.
-    /// </summary>
-    public void ShowOptionMenu()
-    {
-        _currentUIState = UIState.Option;
-
-        _mainMenu.Hide();
-        _optionMenu.Show();
-    }
-
-    /// <summary>
-    /// 설정 메뉴를 숨긴다.
-    /// </summary>
-    public void HideOptionMenu()
-    {
-        _currentUIState = UIState.MainMenu;
-
-        _mainMenu.Show();
-        _optionMenu.Hide();
-    }
-
-    /// <summary>
-    /// 호버 메뉴를 표시한다.
-    /// </summary>
-    /// <param name="caption">제목</param>
-    /// <param name="text">내용</param>
-    /// <param name="hoverDirection">방향</param>
-    public void ShowHoverMenu(string caption, string text, HoverDirection hoverDirection)
-    {
-        _hoverMenu.Show(caption, text, hoverDirection);
-    }
-
-    /// <summary>
-    /// 호버 메뉴를 숨긴다.
-    /// </summary>
-    public void HideHoverMenu()
-    {
-        _hoverMenu.Hide();
-    }
-
-    /// <summary>
-    /// 건설 메뉴를 표시한다.
-    /// </summary>
-    public void ShowBuildMenu()
-    {
-        _currentUIState = UIState.Build;
-
-        _tileInfo.Hide();
-        _buildMenu.Show();
-    }
-
-    /// <summary>
-    /// 건설 메뉴를 숨긴다.
-    /// </summary>
-    public void HideBuildMenu()
-    {
-        _currentUIState = UIState.None;
-
-        _buildMenu.Hide();
-    }
-
-    /// <summary>
-    /// 확인 메뉴를 표시한다.
-    /// </summary>
-    /// <param name="caption"></param>
-    /// <param name="description"></param>
-    /// <param name="onConfirm"></param>
-    /// <param name="onCancel"></param>
-    public void ShowConfirmMenu(string caption, string description, UnityAction onConfirm, UnityAction onCancel)
-    {
-        _previousUIState = _currentUIState;
-        _currentUIState = UIState.Confirm;
-
-        GameManager.Instance.ChangeGameState(GameState.Menu);
-
-        _confirmMenu.Show(caption, description, onConfirm, onCancel);
-    }
-
-    /// <summary>
-    /// 확인 메뉴를 숨긴다.
-    /// </summary>
-    public void HideConfirmMenu(bool isConfirmed)
-    {
-        _currentUIState = _previousUIState;
-
-        if (_currentUIState == UIState.Tile)
+        get
         {
-            GameManager.Instance.ChangeGameState(GameState.None);
-        }
-
-        _confirmMenu.Hide(isConfirmed);
-    }
-
-    /// <summary>
-    /// 타일 정보를 표시한다.
-    /// </summary>
-    public void ShowTileInfo(Vector2Int tile)
-    {
-        _currentUIState = UIState.Tile;
-
-        _buildMenu.Hide();
-        _tileInfo.Show(tile);
-    }
-
-    /// <summary>
-    /// 타일 정보를 갱신한다.
-    /// </summary>
-    public void UpdateTileInfo(Vector2Int tile)
-    {
-        if (_tileInfo.enabled && tile == _tileInfo.CurrentTile?.Coordinate)
-        {
-            _tileInfo.UpdateTileInfo(tile);
+            if (_panelStack.Count > 0)
+            {
+                return _panelStack.Peek();
+            }
+            else
+            {
+                return PanelType.None;
+            }
         }
     }
 
-    /// <summary>
-    /// 타일 정보를 숨긴다.
-    /// </summary>
-    public void HideTileInfo()
+    public IReadOnlyDictionary<PanelType, BaseUI> Panels
     {
-        _currentUIState = UIState.None;
-
-        _hoverMenu.Hide();
-        _tileInfo.Hide();
+        get => _panels;
     }
+    private Dictionary<PanelType, BaseUI> _panels = new Dictionary<PanelType, BaseUI>();
 
-    /// <summary>
-    /// 클리어 메뉴를 표시한다.
-    /// </summary>
-    /// <param name="hasCleared">클리어 여부</param>
-    public void ShowEndMenu(bool hasCleared)
+
+    private Stack<PanelType> _panelStack = new Stack<PanelType>();
+
+    public void ShowPanel(PanelType panelType, params object[] values)
     {
-        _previousUIState = _currentUIState;
-        _currentUIState = UIState.End;
-
-        GameManager.Instance.ChangeGameState(GameState.Menu);
-        _endMenu.Show(hasCleared);
-    }
-
-    /// <summary>
-    /// 클리어 메뉴를 숨긴다.
-    /// </summary>
-    public void HideEndMenu()
-    {
-        _currentUIState = _previousUIState;
-
-        GameManager.Instance.ChangeGameState(GameState.None);
-        _endMenu.Hide();
-    }
-
-    public void ProcessEscapeInput()
-    {
-        switch(_currentUIState)
+        switch (panelType)
         {
-            case UIState.Build:
-                HideBuildMenu();
-                break;
-            case UIState.Tile:
-                HideTileInfo();
-                break;
-            case UIState.MainMenu:
-                HideMainMenu();
-                break;
-            case UIState.Option:
-                HideOptionMenu();
-                break;
-            case UIState.Confirm:
-                HideConfirmMenu(false);
-                break;
-            case UIState.End:
-                HideEndMenu();
+            case PanelType.Main:
+            case PanelType.Build:
+            case PanelType.Tile:
+            case PanelType.End:
+                HideAllPanels();
                 break;
             default:
-                ShowMainMenu();
+                if (_panelStack.Count > 0)
+                {
+                    _panels[_panelStack.Peek()].Hide();
+                }
                 break;
         }
+
+        switch (panelType)
+        {
+            case PanelType.Main:
+            case PanelType.Option:
+            case PanelType.Confirm:
+            case PanelType.End:
+                GameManager.Instance.ChangeGameState(GameState.Menu);
+                HideHoverPanel();
+                break;
+        }
+
+        _panels[panelType].Show(values);
+        _panelStack.Push(panelType);
+    }
+
+    public void HidePanel()
+    {
+        if (_panelStack.Count == 0)
+        {
+            return;
+        }
+
+        _panels[_panelStack.Pop()].Hide();
+
+        if (_panelStack.Count > 0)
+        {
+            _panels[_panelStack.Peek()].Show();
+
+            switch (_panelStack.Peek())
+            {
+                case PanelType.Main:
+                case PanelType.Option:
+                case PanelType.Confirm:
+                case PanelType.End:
+                    break;
+                default:
+                    if (GameManager.Instance.GameState != GameState.Build)
+                    {
+                        GameManager.Instance.ChangeGameState(GameState.None);
+                    }
+                    break;
+            }
+        }
+        else
+        {
+            if (GameManager.Instance.GameState != GameState.Build)
+            {
+                GameManager.Instance.ChangeGameState(GameState.None);
+            }
+        }
+    }
+
+    public void HideAllPanels()
+    {
+        while (_panelStack.Count > 0)
+        {
+            _panels[_panelStack.Pop()].Hide();
+        }
+    }
+
+    public void ShowHoverPanel(string caption, string description, HoverDirection hoverDirection)
+    {
+        _panels[PanelType.Hover].Show(caption, description, hoverDirection);
+    }
+
+    public void HideHoverPanel()
+    {
+        _panels[PanelType.Hover].Hide();
+    }
+
+    public void RegisterPanel(PanelType panelType, BaseUI panel)
+    {
+        _panels[panelType] = panel;
     }
 
     /// <summary>
@@ -252,14 +139,12 @@ public class UIManager : SingletonBehaviour<UIManager>
     {
         EventTrigger.Entry entryEvent = new EventTrigger.Entry();
         entryEvent.eventID = EventTriggerType.PointerEnter;
-        entryEvent.callback.AddListener((data) => {
-            UIManager.Instance.ShowHoverMenu(caption, description, hoverDirection);
-        });
+        entryEvent.callback.AddListener((data) => { ShowHoverPanel(caption, description, hoverDirection); });
         eventTrigger.triggers.Add(entryEvent);
 
         EventTrigger.Entry exitEvent = new EventTrigger.Entry();
         exitEvent.eventID = EventTriggerType.PointerExit;
-        exitEvent.callback.AddListener((data) => { UIManager.Instance.HideHoverMenu(); });
+        exitEvent.callback.AddListener((data) => { HideHoverPanel(); });
         eventTrigger.triggers.Add(exitEvent);
     }
 }

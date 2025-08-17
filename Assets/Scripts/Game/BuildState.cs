@@ -26,7 +26,6 @@ public class BuildState : MonoBehaviour
 
     private void OnDisable()
     {
-        MapRenderer.Instance.HideRangeHighlight();
         MapRenderer.Instance.HideStructurePreview();
 
         if (InputHandler.Instance != null)
@@ -87,6 +86,7 @@ public class BuildState : MonoBehaviour
                     if (StructureManager.Instance.CheckStructureValidity(tile, _structureToBuild))
                     {
                         tile.CreateStructure(_structureToBuild);
+                        UIManager.Instance.ShowPanel(PanelType.Tile, coordinate);
 
                         GameManager.Instance.CurrentWoods -= StructureManager.Instance.GetStructureData(_structureToBuild).WoodCost;
                         GameManager.Instance.CurrentStones -= StructureManager.Instance.GetStructureData(_structureToBuild).StoneCost;
@@ -100,6 +100,7 @@ public class BuildState : MonoBehaviour
 
     private void OnEscapeInput()
     {
+        MapRenderer.Instance.HideRangeHighlight();
         GameManager.Instance.ChangeGameState(GameState.None);
     }
     

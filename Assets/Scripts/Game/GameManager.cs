@@ -263,6 +263,6 @@ public class GameManager : SingletonBehaviour<GameManager>
         }
 
         _hasEnded = true;
-        UIManager.Instance.ShowEndMenu(hasCleared);
+        UIManager.Instance.ShowPanel(PanelType.End, hasCleared);
     }
 }

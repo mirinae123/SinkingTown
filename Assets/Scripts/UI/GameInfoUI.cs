@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 게임 정보 클래스
 /// </summary>
-public class GameInfoUI : MonoBehaviour
+public class GameInfoUI : BaseUI
 {
     [SerializeField] private Button _mainMenuButton;
 
@@ -31,7 +28,7 @@ public class GameInfoUI : MonoBehaviour
 
     void Start()
     {
-        _mainMenuButton.onClick.AddListener(() => { OnMainMenuOpen(); });
+        _mainMenuButton.onClick.AddListener(() => { UIManager.Instance.ShowPanel(PanelType.Main); });
         _pauseButton.onClick.AddListener(() => { GameManager.Instance.IsPaused = !GameManager.Instance.IsPaused; });
 
         UIManager.Instance.AddHoverEvent(_currentDayInfo, "option_title", "language_label", HoverDirection.TopLeft);
@@ -52,8 +49,11 @@ public class GameInfoUI : MonoBehaviour
         _researchText.text = (int)((float)GameManager.Instance.CurrentResearchPoint / GameManager.Instance.MaxResearchPoint * 100) + "%";
     }
 
-    void OnMainMenuOpen()
+    public override void Show(params object[] values)
     {
-        UIManager.Instance.ShowMainMenu();
+    }
+
+    public override void Hide()
+    {
     }
 }

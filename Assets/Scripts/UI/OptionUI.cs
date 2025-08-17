@@ -1,29 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
 /// 설정 메뉴 클래스
 /// </summary>
-public class OptionMenuUI : MonoBehaviour
+public class OptionUI : BaseUI
 {
     [SerializeField] private Button _quitIcon;
 
     private void Start()
     {
+        UIManager.Instance.RegisterPanel(PanelType.Option, this);
+
         _quitIcon.onClick.AddListener(() =>
         {
-            UIManager.Instance.HideOptionMenu();
+            UIManager.Instance.HidePanel();
         });
+
+        transform.parent.gameObject.SetActive(false);
     }
 
-    public void Show()
+    public override void Show(params object[] values)
     {
         transform.parent.gameObject.SetActive(true);
     }
 
-    public void Hide()
+    public override void Hide()
     {
         transform.parent.gameObject.SetActive(false);
     }
