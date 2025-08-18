@@ -62,6 +62,8 @@ public class LocalizationManager : SingletonBehaviour<LocalizationManager>
 
     private void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
         _textDatabase = new Dictionary<string, string>();
     }
 

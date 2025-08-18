@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// UI 종류
@@ -18,6 +20,27 @@ public class UIManager : SingletonBehaviour<UIManager>
     private Dictionary<PanelType, BaseUI> _panels = new Dictionary<PanelType, BaseUI>();
 
     private Stack<PanelType> _panelStack = new Stack<PanelType>();
+
+    private void Start()
+    {
+        DontDestroyOnLoad(gameObject);
+
+        SceneManager.sceneLoaded += (scene, sceneLoadMode) =>
+        {
+            HideAllPanels();
+            HideHoverPanel();
+
+            _panels.Clear();
+        };
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SceneManager.LoadScene(1);
+        }
+    }
 
     /// <summary>
     /// UI를 표시한다.
@@ -130,7 +153,10 @@ public class UIManager : SingletonBehaviour<UIManager>
     /// </summary>
     public void HideHoverPanel()
     {
-        _panels[PanelType.Hover].Hide();
+        if (_panels.ContainsKey(PanelType.Hover) && _panels[PanelType.Hover] != null)
+        {
+            _panels[PanelType.Hover].Hide();
+        }
     }
 
     /// <summary>
