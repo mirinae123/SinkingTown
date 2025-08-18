@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -14,20 +12,27 @@ public class SingletonBehaviour<T> : MonoBehaviour where T : SingletonBehaviour<
         get => _instance;
     }
 
+    private bool _isMainInstance;
+
     private void Awake()
     {
         if (_instance != null)
         {
+            _isMainInstance = false;
             Destroy(gameObject);
         }
         else
         {
+            _isMainInstance = true;
             _instance = (T)this;
         }
     }
 
     private void OnDestroy()
     {
-        _instance = null;
+        if (_isMainInstance)
+        {
+            _instance = null;
+        }
     }
 }
