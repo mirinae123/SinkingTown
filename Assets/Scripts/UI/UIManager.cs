@@ -11,30 +11,11 @@ public enum PanelType { None, Main, Build, Tile, Option, Confirm, End, Hover }
 /// </summary>
 public class UIManager : SingletonBehaviour<UIManager>
 {
-    /// <summary>
-    /// 현재 UI 종류
-    /// </summary>
-    public PanelType CurrentPanelType
-    {
-        get
-        {
-            if (_panelStack.Count > 0)
-            {
-                return _panelStack.Peek();
-            }
-            else
-            {
-                return PanelType.None;
-            }
-        }
-    }
-
     public IReadOnlyDictionary<PanelType, BaseUI> Panels
     {
         get => _panels;
     }
     private Dictionary<PanelType, BaseUI> _panels = new Dictionary<PanelType, BaseUI>();
-
 
     private Stack<PanelType> _panelStack = new Stack<PanelType>();
 
