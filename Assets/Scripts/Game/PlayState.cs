@@ -66,6 +66,13 @@ public class PlayState : MonoBehaviour
 
     private void OnEscapeInput()
     {
-        UIManager.Instance.HidePanel();
+        if (UIManager.Instance.CurrentPanelType == PanelType.None)
+        {
+            UIManager.Instance.ShowPanel(PanelType.Main);
+        }
+        else
+        {
+            UIManager.Instance.HidePanel();
+        }
     }
 }
