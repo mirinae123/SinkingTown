@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine.EventSystems;
 
 /// <summary>
@@ -70,7 +69,10 @@ public class UIManager : SingletonBehaviour<UIManager>
             case PanelType.Option:
             case PanelType.Confirm:
             case PanelType.End:
-                GameManager.Instance.ChangeGameState(GameState.Menu);
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.ChangeGameState(GameState.Menu);
+                }
                 HideHoverPanel();
                 break;
         }
@@ -104,7 +106,7 @@ public class UIManager : SingletonBehaviour<UIManager>
                 case PanelType.End:
                     break;
                 default:
-                    if (GameManager.Instance.GameState != GameState.Build)
+                    if (GameManager.Instance != null && GameManager.Instance.GameState != GameState.Build)
                     {
                         GameManager.Instance.ChangeGameState(GameState.None);
                     }
@@ -113,7 +115,7 @@ public class UIManager : SingletonBehaviour<UIManager>
         }
         else
         {
-            if (GameManager.Instance.GameState != GameState.Build)
+            if (GameManager.Instance != null && GameManager.Instance.GameState != GameState.Build)
             {
                 GameManager.Instance.ChangeGameState(GameState.None);
             }
