@@ -3,7 +3,7 @@ using System.Diagnostics;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// UI 상태
+/// UI 종류
 /// </summary>
 public enum PanelType { None, Main, Build, Tile, Option, Confirm, End, Hover }
 
@@ -13,7 +13,7 @@ public enum PanelType { None, Main, Build, Tile, Option, Confirm, End, Hover }
 public class UIManager : SingletonBehaviour<UIManager>
 {
     /// <summary>
-    /// 현재 UI 상태
+    /// 현재 UI 종류
     /// </summary>
     public PanelType CurrentPanelType
     {
@@ -39,8 +39,14 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     private Stack<PanelType> _panelStack = new Stack<PanelType>();
 
+    /// <summary>
+    /// UI를 표시한다.
+    /// </summary>
+    /// <param name="panelType">UI 종류</param>
+    /// <param name="values">추가 매개변수</param>
     public void ShowPanel(PanelType panelType, params object[] values)
     {
+        // 기존에 있던 UI 숨기기
         switch (panelType)
         {
             case PanelType.Main:
@@ -57,6 +63,7 @@ public class UIManager : SingletonBehaviour<UIManager>
                 break;
         }
 
+        // 게임 상태 변경 및 호버 메뉴 숨기기
         switch (panelType)
         {
             case PanelType.Main:
@@ -72,6 +79,9 @@ public class UIManager : SingletonBehaviour<UIManager>
         _panelStack.Push(panelType);
     }
 
+    /// <summary>
+    /// 가장 위에 있는 UI를 숨긴다.
+    /// </summary>
     public void HidePanel()
     {
         if (_panelStack.Count == 0)
@@ -81,6 +91,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 
         _panels[_panelStack.Pop()].Hide();
 
+        // 기존에 있던 UI 복구 및 게임 상태 변경
         if (_panelStack.Count > 0)
         {
             _panels[_panelStack.Peek()].Show();
@@ -109,6 +120,9 @@ public class UIManager : SingletonBehaviour<UIManager>
         }
     }
 
+    /// <summary>
+    /// 모든 UI를 숨긴다.
+    /// </summary>
     public void HideAllPanels()
     {
         while (_panelStack.Count > 0)
@@ -117,16 +131,30 @@ public class UIManager : SingletonBehaviour<UIManager>
         }
     }
 
+    /// <summary>
+    /// 호버 메뉴를 표시한다.
+    /// </summary>
+    /// <param name="caption">제목</param>
+    /// <param name="description">설명</param>
+    /// <param name="hoverDirection">위치</param>
     public void ShowHoverPanel(string caption, string description, HoverDirection hoverDirection)
     {
         _panels[PanelType.Hover].Show(caption, description, hoverDirection);
     }
 
+    /// <summary>
+    /// 호버 메뉴를 숨긴다.
+    /// </summary>
     public void HideHoverPanel()
     {
         _panels[PanelType.Hover].Hide();
     }
 
+    /// <summary>
+    /// UI 창을 UI Manager에 등록한다.
+    /// </summary>
+    /// <param name="panelType">UI 종류</param>
+    /// <param name="panel">등록한 창</param>
     public void RegisterPanel(PanelType panelType, BaseUI panel)
     {
         _panels[panelType] = panel;
