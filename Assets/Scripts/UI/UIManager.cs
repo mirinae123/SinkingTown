@@ -55,14 +55,6 @@ public class UIManager : SingletonBehaviour<UIManager>
         };
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            SceneManager.LoadScene(1);
-        }
-    }
-
     /// <summary>
     /// UI를 표시한다.
     /// </summary>
