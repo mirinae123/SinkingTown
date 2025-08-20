@@ -17,7 +17,7 @@ public class TitleUI : MonoBehaviour
     {
         _newGameButton.onClick.AddListener(() =>
         {
-            SceneManager.LoadScene(1);
+            UIManager.Instance.ShowPanel(PanelType.NewGame);
         });
 
         _loadButton.onClick.AddListener(() =>
