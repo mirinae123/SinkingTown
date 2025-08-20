@@ -12,22 +12,20 @@ public enum GameState { None, Build, Menu }
 /// </summary>
 public class GameManager : SingletonBehaviour<GameManager>
 {
-    private const float OCEAN_RISE_PERIOD = 180.0f;
     private const float DAY_SPEED = 4.8f;
     private const int MAX_RESEARCH_POINT = 100;
     private const float RESEARCH_COOLDOWN = 60.0f;
 
-    private const float PIRATE_SPAWN_PERIOD = 180.0f;
     private const int MAX_PIRATE_SPAWN_COUNT = 2;
 
     [SerializeField] private MonoBehaviour[] _gameStates;
 
     [SerializeField] private Animator _dayNightAnimator;
 
-    private float _riseCooldown = OCEAN_RISE_PERIOD;
+    private float _riseCooldown = SessionManager.Instance.OceanRisePeriod;
     private float _researchCooldown = 0.0f;
 
-    private float _pirateSpawnCooldown = OCEAN_RISE_PERIOD;
+    private float _pirateSpawnCooldown = SessionManager.Instance.PirateSpawnPeriod;
     private int _pirateSpawnProbabilityIndex = 0;
     private int[] _pirateSpawnProbabilities = { 20, 60, 100 };
 
@@ -76,15 +74,6 @@ public class GameManager : SingletonBehaviour<GameManager>
         get => _timeSinceOceanRise;
     }
     private float _timeSinceOceanRise = 0;
-
-    /// <summary>
-    /// 해수면 상승 주기
-    /// </summary>
-    public float OceanRisePeriod
-    {
-        get => _oceanRisePeriod;
-    }
-    private float _oceanRisePeriod = OCEAN_RISE_PERIOD;
 
     /// <summary>
     /// 목재 소지량
@@ -175,7 +164,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
         if (_pirateSpawnCooldown < 0.0f)
         {
-            _pirateSpawnCooldown += PIRATE_SPAWN_PERIOD;
+            _pirateSpawnCooldown += SessionManager.Instance.PirateSpawnPeriod;
 
             if (Random.Range(1, 101) < _pirateSpawnProbabilities[_pirateSpawnProbabilityIndex])
             {
@@ -209,11 +198,11 @@ public class GameManager : SingletonBehaviour<GameManager>
 
         if (_riseCooldown < 0.0f)
         {
-            _riseCooldown += OCEAN_RISE_PERIOD;
+            _riseCooldown += SessionManager.Instance.OceanRisePeriod;
             MapManager.Instance.RaiseOceanLevel();
         }
 
-        _timeSinceOceanRise = OceanRisePeriod - _riseCooldown;
+        _timeSinceOceanRise = SessionManager.Instance.OceanRisePeriod - _riseCooldown;
     }
 
     /// <summary>

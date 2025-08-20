@@ -25,11 +25,22 @@ public class GameInfoUI : BaseUI
     [SerializeField] private EventTrigger _researchInfo;
 
     [SerializeField] private Button _pauseButton;
+    [SerializeField] private EventTrigger _pauseButtonInfo;
 
     void Start()
     {
         _mainMenuButton.onClick.AddListener(() => { UIManager.Instance.ShowPanel(PanelType.Main); });
-        _pauseButton.onClick.AddListener(() => { GameManager.Instance.IsPaused = !GameManager.Instance.IsPaused; });
+
+        if (SessionManager.Instance.CanPause)
+        {
+            _pauseButton.onClick.AddListener(() => { GameManager.Instance.IsPaused = !GameManager.Instance.IsPaused; });
+            UIManager.Instance.AddHoverEvent(_pauseButtonInfo, "option_title", "language_label", HoverDirection.TopLeft);
+        }
+        else
+        {
+            _pauseButton.interactable = false;
+            UIManager.Instance.AddHoverEvent(_pauseButtonInfo, "option_title", "language_label", HoverDirection.TopLeft);
+        }
 
         UIManager.Instance.AddHoverEvent(_currentDayInfo, "option_title", "language_label", HoverDirection.TopLeft);
         UIManager.Instance.AddHoverEvent(_timeTillRiseSliderInfo, "option_title", "language_label", HoverDirection.TopLeft);
@@ -41,7 +52,7 @@ public class GameInfoUI : BaseUI
     private void Update()
     {
         _currentDayText.text = "DAY " + GameManager.Instance.CurrentDay;
-        _timeTillRiseSlider.value = GameManager.Instance.TimeSinceOceanRise / GameManager.Instance.OceanRisePeriod;
+        _timeTillRiseSlider.value = GameManager.Instance.TimeSinceOceanRise / SessionManager.Instance.OceanRisePeriod;
 
         _woodText.text = GameManager.Instance.CurrentWoods.ToString();
         _stoneText.text = GameManager.Instance.CurrentStones.ToString();
