@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// UI 종류
 /// </summary>
-public enum PanelType { None, Main, Build, Tile, Option, Confirm, End, Hover }
+public enum PanelType { None, Main, Build, Tile, Option, Confirm, End, Hover, NewGame }
 
 /// <summary>
 /// UI를 관리하는 클래스
@@ -146,7 +146,12 @@ public class UIManager : SingletonBehaviour<UIManager>
     {
         while (_panelStack.Count > 0)
         {
-            _panels[_panelStack.Pop()].Hide();
+            PanelType panelToHide = _panelStack.Pop();
+
+            if (_panels[panelToHide] != null)
+            {
+                _panels[panelToHide].Hide();
+            }
         }
     }
 
