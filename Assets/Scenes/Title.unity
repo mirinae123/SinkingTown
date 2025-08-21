@@ -2129,10 +2129,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: New Game UI
       objectReference: {fileID: 0}
-    - target: {fileID: 3652091682959639833, guid: fd35b3d366d48a54189b0686d6d6d4ed, type: 3}
-      propertyPath: m_CharacterLimit
-      value: 16
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

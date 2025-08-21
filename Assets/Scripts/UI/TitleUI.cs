@@ -35,6 +35,11 @@ public class TitleUI : MonoBehaviour
 
         _quitButton.onClick.AddListener(() =>
         {
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                Application.Quit();
+            #endif
         });
     }
 }
