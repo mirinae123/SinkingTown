@@ -13,8 +13,10 @@ public class TitleUI : MonoBehaviour
     [SerializeField] Button _optionButton;
     [SerializeField] Button _quitButton;
 
-    void Start()
+    private void Start()
     {
+        InputHandler.Instance.OnEscapeInput += OnEscapeInput;
+
         _newGameButton.onClick.AddListener(() =>
         {
             UIManager.Instance.ShowPanel(PanelType.NewGame);
@@ -41,5 +43,21 @@ public class TitleUI : MonoBehaviour
                 Application.Quit();
             #endif
         });
+    }
+
+    private void OnDestroy()
+    {
+        if (InputHandler.Instance != null)
+        {
+            InputHandler.Instance.OnEscapeInput -= OnEscapeInput;
+        }
+    }
+
+    private void OnEscapeInput()
+    {
+        if (UIManager.Instance.CurrentPanelType != PanelType.Loading)
+        {
+            UIManager.Instance.HidePanel();
+        }
     }
 }
