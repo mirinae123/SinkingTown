@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// UI 종류
 /// </summary>
-public enum PanelType { None, Main, Build, Tile, Option, Confirm, End, Hover, NewGame }
+public enum PanelType { None, Main, Build, Tile, Option, Confirm, End, Hover, NewGame, Loading }
 
 /// <summary>
 /// UI를 관리하는 클래스
@@ -51,7 +51,14 @@ public class UIManager : SingletonBehaviour<UIManager>
             HideAllPanels();
             HideHoverPanel();
 
+            // 로딩 UI만 남기고 나머지는 정리
+            _panels.TryGetValue(PanelType.Loading, out BaseUI loadingPanel);
             _panels.Clear();
+
+            if (loadingPanel != null)
+            {
+                _panels[PanelType.Loading] = loadingPanel;
+            }
         };
     }
 
@@ -69,6 +76,7 @@ public class UIManager : SingletonBehaviour<UIManager>
             case PanelType.Build:
             case PanelType.Tile:
             case PanelType.End:
+            case PanelType.Loading:
                 HideAllPanels();
                 break;
             default:
@@ -86,6 +94,7 @@ public class UIManager : SingletonBehaviour<UIManager>
             case PanelType.Option:
             case PanelType.Confirm:
             case PanelType.End:
+            case PanelType.Loading:
                 if (GameManager.Instance != null)
                 {
                     GameManager.Instance.ChangeGameState(GameState.Menu);
@@ -121,6 +130,7 @@ public class UIManager : SingletonBehaviour<UIManager>
                 case PanelType.Option:
                 case PanelType.Confirm:
                 case PanelType.End:
+                case PanelType.Loading:
                     break;
                 default:
                     if (GameManager.Instance != null && GameManager.Instance.GameState != GameState.Build)
@@ -144,6 +154,11 @@ public class UIManager : SingletonBehaviour<UIManager>
     /// </summary>
     public void HideAllPanels()
     {
+        if (_panelStack.Count > 0 && _panelStack.Peek() == PanelType.Loading)
+        {
+            return;
+        }
+
         while (_panelStack.Count > 0)
         {
             PanelType panelToHide = _panelStack.Pop();

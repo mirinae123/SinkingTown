@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -109,8 +108,7 @@ public class NewGameUI : BaseUI
         {
             UIManager.Instance.ShowPanel(PanelType.Confirm, "New Game", "Create New Game?", (UnityAction)(() =>
             {
-                UIManager.Instance.HidePanel();
-                SceneManager.LoadScene(1);
+                SessionManager.Instance.LoadScene(1);
             }), null);
         });
 

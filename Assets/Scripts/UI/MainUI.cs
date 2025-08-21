@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 /// <summary>
@@ -26,6 +27,15 @@ public class MainUI : BaseUI
         _resumeButton.onClick.AddListener(() =>
         {
             UIManager.Instance.HidePanel();
+        });
+
+        _quitButton.onClick.AddListener(() =>
+        {
+            UIManager.Instance.ShowPanel(PanelType.Confirm, "QUIT", "QUIT", (UnityAction)(() =>
+            {
+                SessionManager.Instance.LoadScene(0);
+            }),
+            null);
         });
 
         _quitIcon.onClick.AddListener(() =>
