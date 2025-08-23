@@ -51,6 +51,16 @@ public class Tile
     private Structure _structure;
 
     /// <summary>
+    /// 물에 잠긴 건물
+    /// </summary>
+    public StructureType? SunkenStructure
+    {
+        get => _sunkenStructure;
+        set => _sunkenStructure = value;
+    }
+    private StructureType? _sunkenStructure;
+
+    /// <summary>
     /// 데크 여부
     /// </summary>
     public bool IsDecked

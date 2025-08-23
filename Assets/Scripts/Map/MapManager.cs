@@ -64,7 +64,7 @@ public class MapManager : SingletonBehaviour<MapManager>
 
                 if (tile.Structure != null)
                 {
-                    MapRenderer.Instance.AddSunkenStructure(tile.Coordinate, tile.Structure.StructureData.StructureType);
+                    tile.SunkenStructure = tile.Structure.StructureData.StructureType;
                     tile.DestroyStructure();
                 }
             }

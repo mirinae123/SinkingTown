@@ -28,13 +28,10 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
     private GameObject _rangeHolder;        // 모든 효과 범위 오브젝트의 부모
 
     private GameObject[][,] _meshObjects = new GameObject[32][,];   // 모든 타일 오브젝트 [height][w, h]
-    private GameObject[,] _naturalResourcesObjects;                 // 모든 천연 자원 오브젝트
+    private GameObject[,] _structureObjects;                 // 모든 천연 자원 오브젝트
 
     private Dictionary<Vector2Int, GameObject> _deckObjects;        // 모든 데크 오브젝트
     private Dictionary<Vector2Int, GameObject> _rangeObjects;       // 모든 효과 범위 오브젝트
-
-    private StructureType[,] _sunkenStructures;                     // 물에 잠긴 건물 타입
-    private GameObject[,] _sunkenStructureObjects;                  // 물에 잠긴 건물 오브젝트
 
     private Vector2Int _rangePosition = new Vector2Int(-1, -1);
     private int _rangeRadius = -1;
@@ -76,9 +73,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         _oceanObject.transform.position = (HexaUtility.GetWorldCoordinate(new Vector2Int(0, 0)) + HexaUtility.GetWorldCoordinate(new Vector2Int(w - 1, h - 1))) / 2f + Vector3.up * (oceanLevel + 0.8f);
         _oceanObject.transform.localScale = Vector3.one * 100f;
 
-        _naturalResourcesObjects = new GameObject[w, h];
-        _sunkenStructures = new StructureType[w, h];
-        _sunkenStructureObjects = new GameObject[w, h];
+        _structureObjects = new GameObject[w, h];
 
         _deckObjects = new Dictionary<Vector2Int, GameObject>();
         _rangeObjects = new Dictionary<Vector2Int, GameObject>();
@@ -118,7 +113,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
     }
 
     /// <summary>
-    /// 천연 자원 렌더링을 갱신한다.
+    /// 천연 자원 및 물에 잠긴 건물의 렌더링을 갱신한다.
     /// </summary>
     /// <param name="coordinate">좌표</param>
     public void UpdateTile(Vector2Int coordinate)
@@ -128,9 +123,9 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
         Tile currentTile = MapManager.Instance.Tiles[x, y];
 
-        if (_naturalResourcesObjects[x, y] != null)
+        if (_structureObjects[x, y] != null)
         {
-            Destroy(_naturalResourcesObjects[x, y]);
+            Destroy(_structureObjects[x, y]);
         }
 
         // 렌더링할 프리팹 탐색
@@ -148,46 +143,23 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
             }
         }
 
+        if (currentTile.SunkenStructure != null)
+        {
+            StructureData structureData = StructureManager.Instance.GetStructureData((StructureType)currentTile.SunkenStructure);
+            prefabToInstantiate = structureData.SunkenStructurePrefab[currentTile.RandomIndex % structureData.SunkenStructurePrefab.Length];
+        }
+
         // 주어진 좌표에 프리팹 렌더링
         if (prefabToInstantiate != null)
         {
             // World 좌표 계산
             Vector3 worldCoordinate = HexaUtility.GetWorldCoordinate(coordinate);
+            worldCoordinate.y = currentTile.Height + 1;
 
-            if (currentTile.IsDecked)
-            {
-                worldCoordinate.y = _oceanObject.transform.position.y;
-            }
-            else
-            {
-                worldCoordinate.y = currentTile.Height + 1;
-            }
-
-            _naturalResourcesObjects[x, y] = Instantiate(prefabToInstantiate, StructureManager.Instance.StructureHolder.transform);
-            _naturalResourcesObjects[x, y].name = x + "_" + y;
-            _naturalResourcesObjects[x, y].transform.position = worldCoordinate;
+            _structureObjects[x, y] = Instantiate(prefabToInstantiate, StructureManager.Instance.StructureHolder.transform);
+            _structureObjects[x, y].name = x + "_" + y;
+            _structureObjects[x, y].transform.position = worldCoordinate;
         }
-    }
-
-    /// <summary>
-    /// 물에 잠긴 건물을 렌더링에 추가한다.
-    /// </summary>
-    /// <param name="coordinate">좌표</param>
-    /// <param name="structureType">건물 종류</param>
-    public void AddSunkenStructure(Vector2Int coordinate, StructureType structureType)
-    {
-        int x = coordinate.x;
-        int y = coordinate.y;
-
-        Tile currentTile = MapManager.Instance.Tiles[x, y];
-        StructureData structureData = StructureManager.Instance.GetStructureData(structureType);
-
-        Vector3 position = HexaUtility.GetWorldCoordinate(coordinate);
-        position.y = currentTile.Height + 1.0f;
-
-        _sunkenStructures[x, y] = structureType;
-        _sunkenStructureObjects[x, y] = Instantiate(structureData.SunkenStructurePrefab[currentTile.RandomIndex % structureData.SunkenStructurePrefab.Length]);
-        _sunkenStructureObjects[x, y].transform.position = position;
     }
 
     /// <summary>
