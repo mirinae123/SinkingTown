@@ -212,7 +212,7 @@ public class PirateController : MonoBehaviour
     /// </summary>
     /// <param name="startCoordinate">시작 위치 좌표</param>
     /// <param name="targetCoordinate">공격 위치 좌표</param>
-    public void Initialize(Vector2Int startCoordinate, Vector2Int targetCoordinate, bool playSpawnAnimation = true)
+    public void Initialize(Vector2Int startCoordinate, Vector2Int targetCoordinate)
     {
         _currentCoordinate = startCoordinate;
         _targetCoordinate = targetCoordinate;
@@ -237,10 +237,7 @@ public class PirateController : MonoBehaviour
             }
         }
 
-        if (playSpawnAnimation)
-        {
-            StartCoroutine(CoSpawnPirate());
-        }
+        StartCoroutine(CoSpawnPirate());
     }
 
     /// <summary>
@@ -449,5 +446,49 @@ public class PirateController : MonoBehaviour
         // End Animation
 
         PirateManager.Instance.DespawnPirate(this);
+    }
+
+    /// <summary>
+    /// 해적에 대한 세이브 데이터를 생성한다.
+    /// </summary>
+    /// <returns>세이브 데이터</returns>
+    public PirateSaveData GetSaveData()
+    {
+        PirateSaveData saveData = new PirateSaveData();
+
+        saveData.Position = transform.position;
+        saveData.Rotation = transform.rotation;
+
+        saveData.CurrentCoordinate = _currentCoordinate;
+        saveData.TargetCoordinate = _targetCoordinate;
+
+        saveData.CurrentState = _currentState;
+        saveData.AttackingFortressCount = _attackingFortressCount;
+
+        saveData.CurrentHealth = _currentHealth;
+        saveData.Elapsed = _elapsed;
+
+        return saveData;
+    }
+
+    /// <summary>
+    /// 저장된 해적을 불러온다.
+    /// </summary>
+    /// <param name="saveData">세이브 데이터</param>
+    public void LoadSaveData(PirateSaveData saveData)
+    {
+        transform.position = saveData.Position;
+        transform.rotation = saveData.Rotation;
+
+        _currentCoordinate = saveData.CurrentCoordinate;
+        _targetCoordinate = saveData.TargetCoordinate;
+
+        _currentState = saveData.CurrentState;
+        _elapsed = saveData.Elapsed;
+
+        _currentHealth = saveData.CurrentHealth;
+        _attackingFortressCount = saveData.AttackingFortressCount;
+
+        GetPath();
     }
 }

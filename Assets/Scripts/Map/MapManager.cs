@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -82,5 +84,69 @@ public class MapManager : SingletonBehaviour<MapManager>
     public bool CheckCoordinateValidity(Vector2Int coordinate)
     {
         return 0 <= coordinate.x && coordinate.x < _tiles.GetLength(0) && 0 <= coordinate.y && coordinate.y < _tiles.GetLength(1);
+    }
+
+    /// <summary>
+    /// 세이브 데이터에 정보를 추가한다.
+    /// </summary>
+    /// <param name="saveData">세이브 데이터</param>
+    public void PopulateSaveData(SaveData saveData)
+    {
+        saveData.OceanHeight = _oceanLevel;
+
+        List<StructureSaveData> structureList = new List<StructureSaveData>();
+        List<SunkenStructureSaveData> sunkenStructureList = new List<SunkenStructureSaveData>();
+        List<Vector2Int> deckList = new List<Vector2Int>();
+
+        foreach (Tile tile in _tiles)
+        {
+            if (tile.Structure != null)
+            {
+                structureList.Add(tile.Structure.GetSaveData());
+            }
+
+            if (tile.SunkenStructure != null)
+            {
+                SunkenStructureSaveData sunkenStructure = new SunkenStructureSaveData();
+
+                sunkenStructure.StructureType = (StructureType)tile.SunkenStructure;
+                sunkenStructure.Coordinate = tile.Coordinate;
+
+                sunkenStructureList.Add(sunkenStructure);
+            }
+
+            if (tile.IsDecked)
+            {
+                deckList.Add(tile.Coordinate);
+            }
+        }
+
+        saveData.Structures = structureList.OrderBy(x => x is ActiveProducerSaveData ? 1 : 0).ToArray();
+        saveData.SunkenStructures = sunkenStructureList.ToArray();
+        saveData.Decks = deckList.ToArray();
+    }
+
+    /// <summary>
+    /// 세이브 데이터로부터 정보를 불러온다.
+    /// </summary>
+    /// <param name="saveData">세이브 데이터</param>
+    public void LoadSaveData(SaveData saveData)
+    {
+        _oceanLevel = saveData.OceanHeight;
+
+        foreach (Vector2Int deck in saveData.Decks)
+        {
+            _tiles[deck.x, deck.y].CreateStructure(StructureType.Deck);
+        }
+
+        foreach (StructureSaveData structure in saveData.Structures)
+        {
+            _tiles[structure.Coordinate.x, structure.Coordinate.y].CreateStructure(structure.StructureType, structure);
+        }
+
+        foreach (SunkenStructureSaveData sunkenStructure in saveData.SunkenStructures)
+        {
+            _tiles[sunkenStructure.Coordinate.x, sunkenStructure.Coordinate.y].SunkenStructure = sunkenStructure.StructureType;
+        }
     }
 }
