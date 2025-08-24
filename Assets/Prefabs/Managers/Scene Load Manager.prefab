@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3567443286683659155}
   - component: {fileID: 5956741849202791171}
   m_Layer: 0
-  m_Name: Session Manager
+  m_Name: Scene Load Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

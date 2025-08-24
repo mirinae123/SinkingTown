@@ -32,6 +32,11 @@ public class PirateManager : SingletonBehaviour<PirateManager>
     }
     private int[,] _penalties;
 
+    private void Start()
+    {
+        LoadSaveData(SaveManager.Instance.SaveData);
+    }
+
     /// <summary>
     /// 해적을 생성한다.
     /// </summary>
@@ -250,7 +255,10 @@ public class PirateManager : SingletonBehaviour<PirateManager>
 
         foreach (PirateController pirateController in _pirates)
         {
-            pirateList.Add(pirateController.GetSaveData());
+            if (pirateController.CurrentState < PirateState.Despawn)
+            {
+                pirateList.Add(pirateController.GetSaveData());
+            }
         }
 
         foreach (CannonballController cannonballController in _cannonballs)

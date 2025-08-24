@@ -26,12 +26,24 @@ public class MapManager : SingletonBehaviour<MapManager>
     }
     private int _oceanLevel;
 
+    /// <summary>
+    /// 초기화 진행 여부
+    /// </summary>
+    public bool IsInitializing
+    {
+        get => _isInitializing;
+    }
+    private bool _isInitializing;
+
     private void Start()
     {
-        _tiles = GetComponent<MapGenerator>().GenerateMap(SessionManager.Instance.MapSize, SessionManager.Instance.MapSize, 6f);
+        _oceanLevel = SaveManager.Instance.SaveData.OceanHeight;
+        _tiles = GetComponent<MapGenerator>().GenerateMap(SaveManager.Instance.SaveData.MapSize, SaveManager.Instance.SaveData.MapSize, 6f);
+      
+        PirateManager.Instance.UpdatePenalties();
         GetComponent<MapRenderer>().RenderMap();
 
-        PirateManager.Instance.UpdatePenalties();
+        LoadSaveData(SaveManager.Instance.SaveData);
     }
 
     private void Update()
@@ -94,7 +106,10 @@ public class MapManager : SingletonBehaviour<MapManager>
     {
         saveData.OceanHeight = _oceanLevel;
 
-        List<StructureSaveData> structureList = new List<StructureSaveData>();
+        List<ConsumerSaveData> consumerStructureList = new List<ConsumerSaveData>();
+        List<PassiveProducerSaveData> passiveProducerStructureList = new List<PassiveProducerSaveData>();
+        List<ActiveProducerSaveData> activeProducerStructureList = new List<ActiveProducerSaveData>();
+
         List<SunkenStructureSaveData> sunkenStructureList = new List<SunkenStructureSaveData>();
         List<Vector2Int> deckList = new List<Vector2Int>();
 
@@ -102,7 +117,18 @@ public class MapManager : SingletonBehaviour<MapManager>
         {
             if (tile.Structure != null)
             {
-                structureList.Add(tile.Structure.GetSaveData());
+                if (tile.Structure is ConsumerStructure)
+                {
+                    consumerStructureList.Add((ConsumerSaveData)tile.Structure.GetSaveData());
+                }
+                else if (tile.Structure is PassiveProducerStructure)
+                {
+                    passiveProducerStructureList.Add((PassiveProducerSaveData)tile.Structure.GetSaveData());
+                }
+                else
+                {
+                    activeProducerStructureList.Add((ActiveProducerSaveData)tile.Structure.GetSaveData());
+                }
             }
 
             if (tile.SunkenStructure != null)
@@ -121,7 +147,10 @@ public class MapManager : SingletonBehaviour<MapManager>
             }
         }
 
-        saveData.Structures = structureList.OrderBy(x => x is ActiveProducerSaveData ? 1 : 0).ToArray();
+        saveData.ConsumerStructures = consumerStructureList.ToArray();
+        saveData.PassiveProducerStructures = passiveProducerStructureList.ToArray();
+        saveData.ActiveProducerStructures = activeProducerStructureList.ToArray();
+
         saveData.SunkenStructures = sunkenStructureList.ToArray();
         saveData.Decks = deckList.ToArray();
     }
@@ -132,14 +161,24 @@ public class MapManager : SingletonBehaviour<MapManager>
     /// <param name="saveData">세이브 데이터</param>
     public void LoadSaveData(SaveData saveData)
     {
-        _oceanLevel = saveData.OceanHeight;
+        _isInitializing = true;
 
         foreach (Vector2Int deck in saveData.Decks)
         {
             _tiles[deck.x, deck.y].CreateStructure(StructureType.Deck);
         }
 
-        foreach (StructureSaveData structure in saveData.Structures)
+        foreach (ConsumerSaveData structure in saveData.ConsumerStructures)
+        {
+            _tiles[structure.Coordinate.x, structure.Coordinate.y].CreateStructure(structure.StructureType, structure);
+        }
+
+        foreach (PassiveProducerSaveData structure in saveData.PassiveProducerStructures)
+        {
+            _tiles[structure.Coordinate.x, structure.Coordinate.y].CreateStructure(structure.StructureType, structure);
+        }
+
+        foreach (ActiveProducerSaveData structure in saveData.ActiveProducerStructures)
         {
             _tiles[structure.Coordinate.x, structure.Coordinate.y].CreateStructure(structure.StructureType, structure);
         }
@@ -148,5 +187,7 @@ public class MapManager : SingletonBehaviour<MapManager>
         {
             _tiles[sunkenStructure.Coordinate.x, sunkenStructure.Coordinate.y].SunkenStructure = sunkenStructure.StructureType;
         }
+
+        _isInitializing = false;
     }
 }

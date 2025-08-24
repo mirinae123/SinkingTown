@@ -148,7 +148,7 @@ public class Tile
             _structure.OnRenderUpdate();
         }
 
-        if (((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
+        if (!MapManager.Instance.IsInitializing && ((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
         {
             UIManager.Instance.ShowPanel(PanelType.Tile, _coordinate);
         }
@@ -187,7 +187,7 @@ public class Tile
             MapRenderer.Instance.UpdateTile(_coordinate);
         }
 
-        if (((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
+        if (!MapManager.Instance.IsInitializing && ((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
         {
             UIManager.Instance.ShowPanel(PanelType.Tile, _coordinate);
         }
@@ -211,7 +211,7 @@ public class Tile
         {
             _resource = newResource;
 
-            if (((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
+            if (!MapManager.Instance.IsInitializing && ((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
             {
                 UIManager.Instance.ShowPanel(PanelType.Tile, _coordinate);
             }
@@ -256,7 +256,7 @@ public class Tile
             _structure.OnNotified();
         }
 
-        if (((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
+        if (!MapManager.Instance.IsInitializing && ((TileInfoUI)UIManager.Instance.Panels[PanelType.Tile]).CurrentTile == this)
         {
             UIManager.Instance.ShowPanel(PanelType.Tile, _coordinate);
         }

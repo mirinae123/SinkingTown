@@ -22,10 +22,10 @@ public class GameManager : SingletonBehaviour<GameManager>
 
     [SerializeField] private Animator _dayNightAnimator;
 
-    private float _riseCooldown = SessionManager.Instance.OceanRisePeriod;
+    private float _riseCooldown;
     private float _researchCooldown = 0.0f;
 
-    private float _pirateSpawnCooldown = SessionManager.Instance.PirateSpawnPeriod;
+    private float _pirateSpawnCooldown;
     private int _pirateSpawnProbabilityIndex = 0;
     private int[] _pirateSpawnProbabilities = { 20, 60, 100 };
 
@@ -128,6 +128,11 @@ public class GameManager : SingletonBehaviour<GameManager>
     }
     private bool _isResearchable = true;
 
+    private void Start()
+    {
+        LoadSaveData(SaveManager.Instance.SaveData);
+    }
+
     /// <summary>
     /// 시간을 갱신한다.
     /// </summary>
@@ -164,7 +169,7 @@ public class GameManager : SingletonBehaviour<GameManager>
 
         if (_pirateSpawnCooldown < 0.0f)
         {
-            _pirateSpawnCooldown += SessionManager.Instance.PirateSpawnPeriod;
+            _pirateSpawnCooldown += SaveManager.Instance.SaveData.PirateSpawnPeriod;
 
             if (Random.Range(1, 101) < _pirateSpawnProbabilities[_pirateSpawnProbabilityIndex])
             {
@@ -198,11 +203,11 @@ public class GameManager : SingletonBehaviour<GameManager>
 
         if (_riseCooldown < 0.0f)
         {
-            _riseCooldown += SessionManager.Instance.OceanRisePeriod;
+            _riseCooldown += SaveManager.Instance.SaveData.OceanRisePeriod;
             MapManager.Instance.RaiseOceanLevel();
         }
 
-        _timeSinceOceanRise = SessionManager.Instance.OceanRisePeriod - _riseCooldown;
+        _timeSinceOceanRise = SaveManager.Instance.SaveData.OceanRisePeriod - _riseCooldown;
     }
 
     /// <summary>

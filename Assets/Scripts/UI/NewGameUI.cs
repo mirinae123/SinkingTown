@@ -39,6 +39,7 @@ public class NewGameUI : BaseUI
         _seed.onValueChanged.AddListener((seed) =>
         {
             RandomUtility.Seed = seed.GetHashCode();
+            SaveManager.Instance.SaveData.Seed = RandomUtility.Seed;
         });
 
         _seedGenerateButton.onClick.AddListener(GenerateSeed);
@@ -101,20 +102,22 @@ public class NewGameUI : BaseUI
         // 일시정지 가능 여부
         _canPause.onValueChanged.AddListener((isOn) =>
         {
-            SessionManager.Instance.CanPause = isOn;
+            SaveManager.Instance.SaveData.CanPause = isOn;
         });
 
         _startNewGameButton.onClick.AddListener(() =>
         {
             UIManager.Instance.ShowPanel(PanelType.Confirm, "New Game", "Create New Game?", (UnityAction)(() =>
             {
-                SessionManager.Instance.LoadScene(1);
+                SceneLoadManager.Instance.LoadScene(1);
             }), null);
         });
 
         _quitIcon.onClick.AddListener(UIManager.Instance.HidePanel);
 
         // 기본 설정 값
+        SaveManager.Instance.ClearSaveData();
+
         GenerateSeed();
 
         SelectSize(1);
@@ -157,7 +160,7 @@ public class NewGameUI : BaseUI
         }
 
         _sizeButton[index].interactable = false;
-        SessionManager.Instance.MapSize = MAP_SIZE[index];
+        SaveManager.Instance.SaveData.MapSize = MAP_SIZE[index];
     }
 
     /// <summary>
@@ -172,7 +175,9 @@ public class NewGameUI : BaseUI
         }
 
         _floodFrequencyButton[index].interactable = false;
-        SessionManager.Instance.OceanRisePeriod = FLOOD_FREQUENCY[index];
+
+        SaveManager.Instance.SaveData.OceanRisePeriod = FLOOD_FREQUENCY[index];
+        SaveManager.Instance.SaveData.OceanRiseCooldown = FLOOD_FREQUENCY[index];
     }
 
     /// <summary>
@@ -187,6 +192,8 @@ public class NewGameUI : BaseUI
         }
 
         _pirateFrequencyButton[index].interactable = false;
-        SessionManager.Instance.PirateSpawnPeriod = PIRATE_FREQUENCY[index];
+
+        SaveManager.Instance.SaveData.PirateSpawnPeriod = PIRATE_FREQUENCY[index];
+        SaveManager.Instance.SaveData.PirateSpawnCooldown = PIRATE_FREQUENCY[index];
     }
 }
