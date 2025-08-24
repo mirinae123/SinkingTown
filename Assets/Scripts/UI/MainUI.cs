@@ -33,7 +33,7 @@ public class MainUI : BaseUI
         {
             UIManager.Instance.ShowPanel(PanelType.Confirm, "QUIT", "QUIT", (UnityAction)(() =>
             {
-                SessionManager.Instance.LoadScene(0);
+                SceneLoadManager.Instance.LoadScene(0);
             }),
             null);
         });

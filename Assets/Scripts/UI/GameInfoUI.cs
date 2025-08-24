@@ -31,7 +31,7 @@ public class GameInfoUI : BaseUI
     {
         _mainMenuButton.onClick.AddListener(() => { UIManager.Instance.ShowPanel(PanelType.Main); });
 
-        if (SessionManager.Instance.CanPause)
+        if (SaveManager.Instance.SaveData.CanPause)
         {
             _pauseButton.onClick.AddListener(() => { GameManager.Instance.IsPaused = !GameManager.Instance.IsPaused; });
             UIManager.Instance.AddHoverEvent(_pauseButtonInfo, "option_title", "language_label", HoverDirection.TopLeft);
@@ -52,7 +52,7 @@ public class GameInfoUI : BaseUI
     private void Update()
     {
         _currentDayText.text = "DAY " + GameManager.Instance.CurrentDay;
-        _timeTillRiseSlider.value = GameManager.Instance.TimeSinceOceanRise / SessionManager.Instance.OceanRisePeriod;
+        _timeTillRiseSlider.value = GameManager.Instance.TimeSinceOceanRise / SaveManager.Instance.SaveData.OceanRisePeriod;
 
         _woodText.text = GameManager.Instance.CurrentWoods.ToString();
         _stoneText.text = GameManager.Instance.CurrentStones.ToString();

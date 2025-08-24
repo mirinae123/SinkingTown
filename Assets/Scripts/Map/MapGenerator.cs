@@ -5,8 +5,6 @@ using UnityEngine;
 /// </summary>
 public class MapGenerator : SingletonBehaviour<MapGenerator>
 {
-    private int _initOceanLevel = 6;
-
     private int _maxHeight = 21;
     public int MaxHeight
     {
@@ -36,8 +34,6 @@ public class MapGenerator : SingletonBehaviour<MapGenerator>
     /// <returns>생성된 맵</returns>
     public Tile[,] GenerateMap(int w, int h, float c)
     {
-        MapManager.Instance.OceanLevel = _initOceanLevel;
-
         Tile[,] tiles = new Tile[w, h];
 
         float offsetX = Random.Range(-50, 50);
@@ -80,7 +76,7 @@ public class MapGenerator : SingletonBehaviour<MapGenerator>
 
                 int height = tiles[i, j].Height;
 
-                if (height <= _initOceanLevel)
+                if (height < MapManager.Instance.OceanLevel)
                 {
                     continue;
                 }

@@ -99,6 +99,11 @@ public class SaveData
     public float PirateSpawnPeriod;
     public bool CanPause;
 
+    // 카메라 상태
+    public Vector2 CameraTarget = new Vector2(-1.0f, -1.0f);
+    public int CameraRotation = 0;
+    public float CameraZoom = 11.0f;
+
     // 게임 상태
     public bool HasEnded = false;
 
@@ -120,11 +125,13 @@ public class SaveData
     // 맵 상태
     public int OceanHeight = 6;
 
-    public StructureSaveData[] Structures;
-    public SunkenStructureSaveData[] SunkenStructures;
-    public Vector2Int[] Decks;
+    public ConsumerSaveData[] ConsumerStructures = new ConsumerSaveData[] { };
+    public PassiveProducerSaveData[] PassiveProducerStructures = new PassiveProducerSaveData[] { };
+    public ActiveProducerSaveData[] ActiveProducerStructures = new ActiveProducerSaveData[] { };
+    public SunkenStructureSaveData[] SunkenStructures = new SunkenStructureSaveData[] { };
+    public Vector2Int[] Decks = new Vector2Int[] { };
 
     // 해적 상태
-    public PirateSaveData[] Pirates;
-    public CannonballSaveData[] Cannonballs;
+    public PirateSaveData[] Pirates = new PirateSaveData[] { };
+    public CannonballSaveData[] Cannonballs = new CannonballSaveData[] { };
 }

@@ -23,7 +23,7 @@ public class CameraManager : SingletonBehaviour<CameraManager>
 
     private float _x, _z;               // 초점 위치
     private float _followX, _followZ;
-    private float _phi = Mathf.PI / 4;  // 현재 회전각
+    private float _phi;                 // 현재 회전각
     private float _h, _v;               // 키보드 입력 값 저장용 변수
     private float _s;                   // 스크롤 입력 값 저장용 변수
 
@@ -42,17 +42,11 @@ public class CameraManager : SingletonBehaviour<CameraManager>
     {
         _camera = GetComponent<Camera>();
 
-        _x = MapManager.Instance.Tiles.GetLength(0) * 0.75f;
-        _z = MapManager.Instance.Tiles.GetLength(1) * Mathf.Sqrt(3.0f) / 2f;
-
-        _followX = _x;
-        _followZ = _z;
-
-        _currentZoom = 11.0f;
-
         InputHandler.Instance.OnMoveInput += OnMoveInput;
         InputHandler.Instance.OnScrollInput += OnScrollInput;
         InputHandler.Instance.OnRotateInput += OnRotateInput;
+
+        LoadSaveData();
     }
 
     private void Update()
@@ -77,6 +71,7 @@ public class CameraManager : SingletonBehaviour<CameraManager>
 
         _followX = Mathf.Lerp(_followX, _x, Time.deltaTime * 12.0f);
         _followZ = Mathf.Lerp(_followZ, _z, Time.deltaTime * 12.0f);
+
         transform.position = new Vector3(_followX + _r * Mathf.Cos(_phi), -_r * Mathf.Sin(_pi), _followZ + _r * Mathf.Sin(_phi));
         transform.LookAt(new Vector3(_followX, 0, _followZ));
     }
@@ -157,5 +152,42 @@ public class CameraManager : SingletonBehaviour<CameraManager>
         t = -(Mathf.Cos(Mathf.PI * t) - 1.0f) / 2.0f;
 
         return a * (1.0f - t) + b * t;
+    }
+
+    /// <summary>
+    /// 세이브 데이터에 정보를 추가한다.
+    /// </summary>
+    /// <param name="saveData">세이브 데이터</param>
+    public void PopulateSaveData(SaveData saveData)
+    {
+        saveData.CameraTarget = new Vector2(_x, _z);
+        saveData.CameraRotation = _currentRotation;
+        saveData.CameraZoom = _currentZoom;
+    }
+
+    /// <summary>
+    /// 세이브 데이터로부터 정보를 불러온다.
+    /// </summary>
+    /// <param name="saveData">세이브 데이터</param>
+    public void LoadSaveData()
+    {
+        if (SaveManager.Instance.SaveData.CameraTarget.x == -1.0f)
+        {
+            _x = SaveManager.Instance.SaveData.MapSize * 0.75f;
+            _z = SaveManager.Instance.SaveData.MapSize * Mathf.Sqrt(3.0f) / 2f;
+        }
+        else
+        {
+            _x = SaveManager.Instance.SaveData.CameraTarget.x;
+            _z = SaveManager.Instance.SaveData.CameraTarget.y;
+        }
+
+        _followX = _x;
+        _followZ = _z;
+
+        _currentRotation = SaveManager.Instance.SaveData.CameraRotation;
+        _phi = _rotationValues[_currentRotation] * Mathf.Deg2Rad;
+
+        _currentZoom = SaveManager.Instance.SaveData.CameraZoom;
     }
 }
