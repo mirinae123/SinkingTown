@@ -101,7 +101,7 @@ public class Structure
         return false;
     }
 
-    public virtual void Initialize() { }
+    public virtual void Initialize(StructureSaveData saveData = null) { }
 
     public virtual void OnUpdate() {
         // 낮 여부 확인
@@ -161,6 +161,11 @@ public class Structure
             GameObject.Destroy(_structureObject);
         }
     }
+
+    public virtual StructureSaveData GetSaveData()
+    {
+        return new StructureSaveData();
+    }
 }
 
 /// <summary>
@@ -177,17 +182,21 @@ public class ConsumerStructure : Structure
 
     private bool _isIncreasing;
 
-    public ConsumerStructure(StructureType type, Tile tile) : base(type, tile)
-    {
-        _currentHappiness = _structureData.MaxHappiness;
+    public ConsumerStructure(StructureType type, Tile tile) : base(type, tile) { }
 
-        _isEnabled = true;
-        _isIncreasing = true;
-    }
-
-    public override void Initialize()
+    public override void Initialize(StructureSaveData saveData)
     {
-        _tile.AddToProviders();
+        ConsumerSaveData consumerSaveData = (ConsumerSaveData)saveData;
+
+        _isEnabled = consumerSaveData?.IsEnabled ?? true;
+
+        _currentHappiness = consumerSaveData?.CurrentHappiness ?? _structureData.MaxHappiness;
+        _isIncreasing = consumerSaveData?.IsIncreasing ?? true;
+
+        if (_isEnabled)
+        {
+            _tile.AddToProviders();
+        }
     }
 
     public override void OnUpdate()
@@ -233,6 +242,20 @@ public class ConsumerStructure : Structure
     {
         _isIncreasing = !(_tile.Resource < _structureData.Needs) && (!_structureData.RequireOcean || IsOceanNearby());
     }
+
+    public override StructureSaveData GetSaveData()
+    {
+        ConsumerSaveData saveData = new ConsumerSaveData();
+
+        saveData.StructureType = _structureData.StructureType;
+        saveData.Coordinate = _tile.Coordinate;
+
+        saveData.IsEnabled = _isEnabled;
+        saveData.CurrentHappiness = _currentHappiness;
+        saveData.IsIncreasing = _isIncreasing;
+
+        return saveData;
+    }
 }
 
 /// <summary>
@@ -251,8 +274,9 @@ public class ActiveProducerStructure : Structure
 
     public ActiveProducerStructure(StructureType type, Tile tile) : base(type, tile) { }
 
-    public override void Initialize()
+    public override void Initialize(StructureSaveData saveData)
     {
+        _elapsed = ((ActiveProducerSaveData)saveData)?.Elapsed ?? 0.0f;
         _tile.AddToProviders();
     }
 
@@ -375,6 +399,18 @@ public class ActiveProducerStructure : Structure
             return true;
         }
     }
+
+    public override StructureSaveData GetSaveData()
+    {
+        ActiveProducerSaveData saveData = new ActiveProducerSaveData();
+
+        saveData.StructureType = _structureData.StructureType;
+        saveData.Coordinate = _tile.Coordinate;
+
+        saveData.Elapsed = _elapsed;
+
+        return saveData;
+    }
 }
 
 /// <summary>
@@ -399,7 +435,7 @@ public class PassiveProducerStructure : Structure
         }
     }
 
-    public override void Initialize()
+    public override void Initialize(StructureSaveData saveData)
     {
         bool satisfied = !(_tile.Resource < _structureData.Needs) && (!_structureData.RequireOcean || IsOceanNearby());
 
@@ -456,5 +492,15 @@ public class PassiveProducerStructure : Structure
 
             OnRenderUpdate();
         }
+    }
+
+    public override StructureSaveData GetSaveData()
+    {
+        PassiveProducerSaveData saveData = new PassiveProducerSaveData();
+
+        saveData.StructureType = _structureData.StructureType;
+        saveData.Coordinate = _tile.Coordinate;
+
+        return saveData;
     }
 }

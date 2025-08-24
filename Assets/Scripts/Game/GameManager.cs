@@ -254,4 +254,52 @@ public class GameManager : SingletonBehaviour<GameManager>
         _hasEnded = true;
         UIManager.Instance.ShowPanel(PanelType.End, hasCleared);
     }
+
+    /// <summary>
+    /// 세이브 데이터에 정보를 추가한다.
+    /// </summary>
+    /// <param name="saveData">세이브 데이터</param>
+    public void PopulateSaveData(SaveData saveData)
+    {
+        saveData.HasEnded = _hasEnded;
+
+        saveData.OceanRiseCooldown = _riseCooldown;
+        saveData.ResearchCooldown = _researchCooldown;
+
+        saveData.PirateSpawnCooldown = _pirateSpawnCooldown;
+        saveData.PirateSpawnProbabilityIndex = _pirateSpawnProbabilityIndex;
+
+        saveData.CurrentDay = _currentDay;
+        saveData.CurrentTime = _currentTime;
+
+        saveData.TimeSinceOceanRise = _timeSinceOceanRise;
+
+        saveData.CurrentWoods = _currentWoods;
+        saveData.CurrentStones = _currentStones;
+        saveData.CurrentResearchPoint = _currentResearchPoint;
+    }
+
+    /// <summary>
+    /// 세이브 데이터로부터 정보를 불러온다.
+    /// </summary>
+    /// <param name="saveData">세이브 데이터</param>
+    public void LoadSaveData(SaveData saveData)
+    {
+        _hasEnded = saveData.HasEnded;
+
+        _riseCooldown = saveData.OceanRiseCooldown;
+        _researchCooldown = saveData.ResearchCooldown;
+
+        _pirateSpawnCooldown = saveData.PirateSpawnCooldown;
+        _pirateSpawnProbabilityIndex = saveData.PirateSpawnProbabilityIndex;
+
+        _currentDay = saveData.CurrentDay;
+        _currentTime = saveData.CurrentTime;
+
+        _timeSinceOceanRise = saveData.TimeSinceOceanRise;
+
+        _currentWoods = saveData.CurrentWoods;
+        _currentStones = saveData.CurrentStones;
+        _currentResearchPoint = saveData.CurrentResearchPoint;
+    }
 }

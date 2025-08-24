@@ -11,10 +11,8 @@ public class PirateManager : SingletonBehaviour<PirateManager>
     [SerializeField] private GameObject _piratePrefab;
     [SerializeField] private GameObject _cannonballPrefab;
 
-    /// <summary>
-    /// 현재 해적이 공격하고 있는 타일
-    /// </summary>
-    private HashSet<Vector2Int> _targets = new HashSet<Vector2Int>();
+    private HashSet<Vector2Int> _targets = new HashSet<Vector2Int>();                       // 현재 해적이 공격하고 있는 타일
+    private List<CannonballController> _cannonballs = new List<CannonballController>();     // 현재 게임에 존재하는 모든 대포알
 
     /// <summary>
     /// 현재 게임에 존재하는 모든 해적
@@ -225,6 +223,69 @@ public class PirateManager : SingletonBehaviour<PirateManager>
         GameObject cannonball = Instantiate(_cannonballPrefab);
         cannonball.transform.position = startPosition;
 
-        cannonball.GetComponent<CannonballController>().Initialize(startPosition, endPosition, targetPirate);
+        CannonballController cannonballController = cannonball.GetComponent<CannonballController>();
+        cannonballController.Initialize(startPosition, endPosition, targetPirate);
+        _cannonballs.Add(cannonballController);
+    }
+
+    /// <summary>
+    /// 대포알을 제거한다.
+    /// </summary>
+    /// <param name="cannonballController">제거할 대포알</param>
+    public void DespawnCannonball(CannonballController cannonballController)
+    {
+        _cannonballs.Remove(cannonballController);
+
+        Destroy(cannonballController.gameObject);
+    }
+
+    /// <summary>
+    /// 저장 데이터에 정보를 추가한다.
+    /// </summary>
+    /// <param name="saveData">저장 데이터</param>
+    public void PopulateSaveData(SaveData saveData)
+    {
+        List<PirateSaveData> pirateList = new List<PirateSaveData>();
+        List<CannonballSaveData> cannonballList = new List<CannonballSaveData>();
+
+        foreach (PirateController pirateController in _pirates)
+        {
+            pirateList.Add(pirateController.GetSaveData());
+        }
+
+        foreach (CannonballController cannonballController in _cannonballs)
+        {
+            cannonballList.Add(cannonballController.GetSaveData());
+        }
+
+        saveData.Pirates = pirateList.ToArray();
+        saveData.Cannonballs = cannonballList.ToArray();
+    }
+
+    /// <summary>
+    /// 저장 데이터로부터 정보를 불러온다.
+    /// </summary>
+    /// <param name="saveData">저장 데이터</param>
+    public void LoadSaveData(SaveData saveData)
+    {
+        foreach (PirateSaveData pirateSaveData in saveData.Pirates)
+        {
+            GameObject pirateObject = Instantiate(_piratePrefab);
+
+            PirateController pirateController = pirateObject.GetComponent<PirateController>();
+            _pirates.Add(pirateController);
+
+            pirateController.LoadSaveData(pirateSaveData);
+            _targets.Add(pirateSaveData.TargetCoordinate);
+        }
+
+        foreach (CannonballSaveData cannonballSaveData in saveData.Cannonballs)
+        {
+            GameObject cannonballObject = Instantiate(_cannonballPrefab);
+
+            CannonballController cannonballController = cannonballObject.GetComponent<CannonballController>();
+            cannonballController.LoadSaveData(cannonballSaveData);
+            _cannonballs.Add(cannonballController);
+        }
     }
 }

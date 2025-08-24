@@ -119,7 +119,8 @@ public class Tile
     /// 현재 타일에 건물을 생성한다.
     /// </summary>
     /// <param name="structure">건물 유형</param>
-    public void CreateStructure(StructureType structure)
+    /// <param name="saveData">적용할 세이브 데이터</param>
+    public void CreateStructure(StructureType structure, StructureSaveData saveData = null)
     {
         // 데크를 생성하는 경우
         if (structure == StructureType.Deck)
@@ -143,8 +144,7 @@ public class Tile
             _structure = StructureManager.Instance.GetStructure(structure, this);
             MapRenderer.Instance.UpdateTile(_coordinate);
 
-            // 주변 타일의 자원 제공자에 현재 건물을 추가
-            _structure.Initialize();
+            _structure.Initialize(saveData);
             _structure.OnRenderUpdate();
         }
 
