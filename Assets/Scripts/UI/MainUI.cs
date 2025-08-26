@@ -19,6 +19,11 @@ public class MainUI : BaseUI
     {
         UIManager.Instance.RegisterPanel(PanelType.Main, this);
 
+        _saveButton.onClick.AddListener(() =>
+        {
+            UIManager.Instance.ShowPanel(PanelType.Save);
+        });
+
         _optionButton.onClick.AddListener(() =>
         {
             UIManager.Instance.ShowPanel(PanelType.Option);

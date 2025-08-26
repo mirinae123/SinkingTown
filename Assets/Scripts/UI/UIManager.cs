@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// UI 종류
 /// </summary>
-public enum PanelType { None, Main, Build, Tile, Option, Confirm, End, Hover, NewGame, Loading }
+public enum PanelType { None, Main, Build, Tile, Option, Confirm, End, Hover, NewGame, Loading, Load, Save, Notification }
 
 /// <summary>
 /// UI를 관리하는 클래스

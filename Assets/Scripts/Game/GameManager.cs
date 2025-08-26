@@ -22,6 +22,8 @@ public class GameManager : SingletonBehaviour<GameManager>
 
     [SerializeField] private Animator _dayNightAnimator;
 
+    private float _playTime;
+
     private float _riseCooldown;
     private float _researchCooldown = 0.0f;
 
@@ -131,6 +133,14 @@ public class GameManager : SingletonBehaviour<GameManager>
     private void Start()
     {
         LoadSaveData(SaveManager.Instance.SaveData);
+    }
+
+    private void Update()
+    {
+        if (_gameState != GameState.Menu)
+        {
+            _playTime += Time.deltaTime;
+        }
     }
 
     /// <summary>
@@ -266,6 +276,7 @@ public class GameManager : SingletonBehaviour<GameManager>
     /// <param name="saveData">세이브 데이터</param>
     public void PopulateSaveData(SaveData saveData)
     {
+        saveData.PlayTime = _playTime;
         saveData.HasEnded = _hasEnded;
 
         saveData.OceanRiseCooldown = _riseCooldown;
@@ -290,6 +301,7 @@ public class GameManager : SingletonBehaviour<GameManager>
     /// <param name="saveData">세이브 데이터</param>
     public void LoadSaveData(SaveData saveData)
     {
+        _playTime = saveData.PlayTime;
         _hasEnded = saveData.HasEnded;
 
         _riseCooldown = saveData.OceanRiseCooldown;
