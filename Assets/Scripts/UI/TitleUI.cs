@@ -24,6 +24,7 @@ public class TitleUI : MonoBehaviour
 
         _loadButton.onClick.AddListener(() =>
         {
+            UIManager.Instance.ShowPanel(PanelType.Load);
         });
 
         _recordButton.onClick.AddListener(() =>

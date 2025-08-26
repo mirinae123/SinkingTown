@@ -91,6 +91,11 @@ public class CannonballSaveData
 [System.Serializable]
 public class SaveData
 {
+    public string Name;
+    public byte[] Thumbnail;
+
+    public float PlayTime;
+
     // 게임 설정
     public int Seed;
 
