@@ -21,32 +21,26 @@ public class LoadUI : BaseUI
 
         _quitIcon.onClick.AddListener(UIManager.Instance.HidePanel);
 
+        UpdateSaveDataList();
+
         transform.parent.gameObject.SetActive(false);
     }
 
     public override void Show(params object[] values)
     {
-        foreach (Transform child in _content.transform)
-        {
-            Destroy(child.gameObject);
-        }
-
-        int saveDataButtonCount = SaveManager.Instance.PopulateSaveDataButtons(_content.transform, true);
-
-        if (saveDataButtonCount > 0)
-        {
-            _emptyContentText.SetActive(false);
-        }
-        else
-        {
-            _emptyContentText.SetActive(true);
-        }
-
         transform.parent.gameObject.SetActive(true);
     }
 
     public override void Hide()
     {
         transform.parent.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// 메뉴의 세이브 데이터 목록을 갱신한다.
+    /// </summary>
+    public void UpdateSaveDataList()
+    {
+        SaveManager.Instance.PopulateSaveDataButtons(_content.transform, _emptyContentText, true);
     }
 }

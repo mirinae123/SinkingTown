@@ -58,7 +58,18 @@ public class SaveDataButton : MonoBehaviour
                     if (File.Exists(_filePath))
                     {
                         File.Delete(_filePath);
+
                         UIManager.Instance.ShowPanel(PanelType.Notification, "Error", "Error");
+
+                        if (UIManager.Instance.Panels.TryGetValue(PanelType.Load, out BaseUI loadUI))
+                        {
+                            ((LoadUI)loadUI).UpdateSaveDataList();
+                        }
+
+                        if (UIManager.Instance.Panels.TryGetValue(PanelType.Save, out BaseUI saveUI))
+                        {
+                            ((SaveUI)saveUI).UpdateSaveDataList();
+                        }
                     }
                     else
                     {
