@@ -129,6 +129,16 @@ public class SaveManager : SingletonBehaviour<SaveManager>
             yield break;
         }
 
+        if (UIManager.Instance.Panels.TryGetValue(PanelType.Load, out BaseUI loadUI))
+        {
+            ((LoadUI)loadUI).UpdateSaveDataList();
+        }
+
+        if (UIManager.Instance.Panels.TryGetValue(PanelType.Save, out BaseUI saveUI))
+        {
+            ((SaveUI)saveUI).UpdateSaveDataList();
+        }
+
         // 저장 성공 시 알림 표시
         UIManager.Instance.HidePanel();
         UIManager.Instance.ShowPanel(PanelType.Notification, "Done", "Done", true);
@@ -137,11 +147,16 @@ public class SaveManager : SingletonBehaviour<SaveManager>
     /// <summary>
     /// UI에 쓸 세이브 데이터 버튼을 생성합니다.
     /// </summary>
-    /// <param name="parent">버튼의 부모 오브젝트</param>
+    /// <param name="content">버튼이 들어갈 콘텐츠 창</param>
+    /// <param name="emptyContentText">비어 있으면 표시할 텍스트</param>
     /// <param name="isLoadMenu">불러오기 메뉴 여부</param>
-    /// <returns>생성된 버튼 수</returns>
-    public int PopulateSaveDataButtons(Transform parent, bool isLoadMenu)
+    public void PopulateSaveDataButtons(Transform content, GameObject emptyContentText, bool isLoadMenu)
     {
+        foreach (Transform child in content)
+        {
+            Destroy(child.gameObject);
+        }
+
         string[] files = new string[] { };
         int saveDataButtonCount = 0;
 
@@ -158,7 +173,7 @@ public class SaveManager : SingletonBehaviour<SaveManager>
 
             try
             {
-                saveDataButtonObject = Instantiate(_saveDataButtonPrefab, parent, false);
+                saveDataButtonObject = Instantiate(_saveDataButtonPrefab, content, false);
                 saveDataButtonObject.GetComponent<SaveDataButton>().UpdateButtonContent(file, isLoadMenu);
 
                 saveDataButtonCount++;
@@ -172,6 +187,13 @@ public class SaveManager : SingletonBehaviour<SaveManager>
             }
         }
 
-        return saveDataButtonCount;
+        if (saveDataButtonCount > 0)
+        {
+            emptyContentText.SetActive(false);
+        }
+        else
+        {
+            emptyContentText.SetActive(true);
+        }
     }
 }
