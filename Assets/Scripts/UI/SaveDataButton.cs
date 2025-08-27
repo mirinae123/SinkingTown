@@ -43,15 +43,7 @@ public class SaveDataButton : MonoBehaviour
             {
                 UIManager.Instance.ShowPanel(PanelType.Confirm, "Overwrite?", "Overwrite?", (UnityAction)(() =>
                 {
-                    // 저장 시도 및 성공 여부에 따라 알림 표시
-                    if (SaveManager.Instance.SaveGame(_filePath))
-                    {
-                        UIManager.Instance.ShowPanel(PanelType.Notification, "Done", "Done");
-                    }
-                    else
-                    {
-                        UIManager.Instance.ShowPanel(PanelType.Notification, "Error", "Error");
-                    }
+                    SaveManager.Instance.SaveGame(_filePath);
                 }), null);
             }
         });

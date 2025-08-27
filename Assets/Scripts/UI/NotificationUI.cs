@@ -9,13 +9,22 @@ public class NotificationUI : BaseUI
     [SerializeField] LocalizedText _captionText;
     [SerializeField] LocalizedText _descriptionText;
 
-    [SerializeField] Button _quitIcon;
+    [SerializeField] Button _closeIcon;
+
+    /// <summary>
+    /// 닫기 가능 여부
+    /// </summary>
+    public bool IsClosable
+    {
+        get => _isClosable;
+    }
+    private bool _isClosable;
 
     private void Start()
     {
         UIManager.Instance.RegisterPanel(PanelType.Notification, this);
 
-        _quitIcon.onClick.AddListener(UIManager.Instance.HidePanel);
+        _closeIcon.onClick.AddListener(UIManager.Instance.HidePanel);
 
         transform.parent.gameObject.SetActive(false);
     }
@@ -31,6 +40,17 @@ public class NotificationUI : BaseUI
 
             _descriptionText.ChangeKey((string)values[1]);
             _descriptionText.UpdateTextLanguage();
+
+            if (values.Length > 2)
+            {
+                _isClosable = (bool)values[2];
+            }
+            else
+            {
+                _isClosable = true;
+            }
+
+            _closeIcon.gameObject.SetActive(_isClosable);
         }
     }
 

@@ -2,6 +2,9 @@ using System.Linq;
 using System;
 using UnityEngine;
 using System.IO;
+using System.Collections;
+using UnityEngine.SceneManagement;
+using System.Globalization;
 
 /// <summary>
 /// 저장, 불러오기를 관리하는 클래스
@@ -19,9 +22,17 @@ public class SaveManager : SingletonBehaviour<SaveManager>
     }
     private SaveData _saveData;
 
+    private Canvas[] _canvases;
+
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
+
+        _canvases = FindObjectsOfType<Canvas>();
+        SceneManager.sceneLoaded += (scene, loadSceneMode) =>
+        {
+            _canvases = FindObjectsOfType<Canvas>();
+        };
     }
 
     public void ClearSaveData()
@@ -43,12 +54,57 @@ public class SaveManager : SingletonBehaviour<SaveManager>
     /// 세이브 데이터를 파일로 저장합니다.
     /// </summary>
     /// <param name="filePath">저장 위치</param>
-    /// <returns>저장 성공 여부</returns>
-    public bool SaveGame(string filePath = "")
+    public void SaveGame(string filePath = "")
     {
+        // 저장 중 알림 표시
+        UIManager.Instance.ShowPanel(PanelType.Notification, "Try", "Try", false);
+
+        StartCoroutine(CoSaveGame(filePath));
+    }
+
+    private IEnumerator CoSaveGame(string filePath)
+    {
+        // UI 잠시 비활성화
+        foreach (Canvas canvas in _canvases)
+        {
+            if (canvas != null)
+            {
+                canvas.enabled = false;
+            }
+        }
+
+        yield return new WaitForEndOfFrame();
+
         try
         {
-            _saveData.Thumbnail = ImageConversion.EncodeToPNG(ScreenCapture.CaptureScreenshotAsTexture());
+            // 현재 화면 캡처
+            float width = Screen.width;
+            float height = Screen.height;
+
+            float centerX = Screen.width / 2.0f;
+            float centerY = Screen.height / 2.0f;
+
+            float k = Mathf.Min(width / 2.0f , height / 1.6f);
+
+            width = k * 2.0f;
+            height = k * 1.6f;
+
+            Texture2D screenshotTexture = new Texture2D((int)width, (int)height, TextureFormat.ARGB32, false);
+            Rect rect = new Rect(centerX - width / 2.0f, centerY - height / 2.0f, width, (int)height);
+            
+            screenshotTexture.ReadPixels(rect, 0, 0);
+            screenshotTexture.Apply();
+
+            _saveData.Thumbnail = ImageConversion.EncodeToPNG(screenshotTexture);
+
+            // UI 다시 활성화
+            foreach (Canvas canvas in _canvases)
+            {
+                if (canvas != null)
+                {
+                    canvas.enabled = true;
+                }
+            }
 
             GameManager.Instance.PopulateSaveData(_saveData);
             MapManager.Instance.PopulateSaveData(_saveData);
@@ -66,10 +122,16 @@ public class SaveManager : SingletonBehaviour<SaveManager>
         }
         catch (Exception)
         {
-            return false;
+            // 저장 실패 시 알림 표시
+            UIManager.Instance.HidePanel();
+            UIManager.Instance.ShowPanel(PanelType.Notification, "Fail", "Fail", true);
+
+            yield break;
         }
 
-        return true;
+        // 저장 성공 시 알림 표시
+        UIManager.Instance.HidePanel();
+        UIManager.Instance.ShowPanel(PanelType.Notification, "Done", "Done", true);
     }
 
     /// <summary>

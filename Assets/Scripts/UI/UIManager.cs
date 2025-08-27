@@ -131,6 +131,9 @@ public class UIManager : SingletonBehaviour<UIManager>
                 case PanelType.Confirm:
                 case PanelType.End:
                 case PanelType.Loading:
+                case PanelType.Load:
+                case PanelType.Save:
+                case PanelType.Notification:
                     break;
                 default:
                     if (GameManager.Instance != null && GameManager.Instance.GameState != GameState.Build)
