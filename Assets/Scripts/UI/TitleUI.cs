@@ -56,7 +56,9 @@ public class TitleUI : MonoBehaviour
 
     private void OnEscapeInput()
     {
-        if (UIManager.Instance.CurrentPanelType != PanelType.Loading)
+        if (UIManager.Instance.CurrentPanelType != PanelType.Loading &&
+            (UIManager.Instance.CurrentPanelType != PanelType.Notification ||
+            ((NotificationUI)UIManager.Instance.Panels[PanelType.Notification]).IsClosable))
         {
             UIManager.Instance.HidePanel();
         }

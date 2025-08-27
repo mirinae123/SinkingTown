@@ -21,15 +21,7 @@ public class SaveUI : BaseUI
         {
             UIManager.Instance.ShowPanel(PanelType.Confirm, "Save?", "Save?", (UnityAction)(() =>
             {
-                // 저장 시도 및 성공 여부에 따라 알림 표시
-                if (SaveManager.Instance.SaveGame())
-                {
-                    UIManager.Instance.ShowPanel(PanelType.Notification, "Done", "Done");
-                }
-                else
-                {
-                    UIManager.Instance.ShowPanel(PanelType.Notification, "Error", "Error");
-                }
+                SaveManager.Instance.SaveGame();
             }), null);
         });
 

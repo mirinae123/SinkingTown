@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6143801533156863873}
   - component: {fileID: 6527878546650461807}
   m_Layer: 5
-  m_Name: Quit Icon
+  m_Name: Close Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -584,7 +584,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _captionText: {fileID: 6815552752434289826}
   _descriptionText: {fileID: 8123382777263057104}
-  _quitIcon: {fileID: 6527878546650461807}
+  _closeIcon: {fileID: 6527878546650461807}
 --- !u!1 &8550197840693134232
 GameObject:
   m_ObjectHideFlags: 0

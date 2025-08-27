@@ -26,7 +26,9 @@ public class MenuState : MonoBehaviour
     private void OnEscapeInput()
     {
         if (UIManager.Instance.CurrentPanelType != PanelType.End &&
-            UIManager.Instance.CurrentPanelType != PanelType.Loading)
+            UIManager.Instance.CurrentPanelType != PanelType.Loading &&
+            (UIManager.Instance.CurrentPanelType != PanelType.Notification ||
+            ((NotificationUI)UIManager.Instance.Panels[PanelType.Notification]).IsClosable))
         {
             UIManager.Instance.HidePanel();
         }
