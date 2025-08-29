@@ -12,6 +12,8 @@ public class BuildState : MonoBehaviour
 
     private StructureType _structureToBuild;
 
+    private float _escapeCooldown;
+
     private void Start()
     {
         _mainCamera = Camera.main;
@@ -22,6 +24,8 @@ public class BuildState : MonoBehaviour
         InputHandler.Instance.OnPointMoveInput += OnPointMoveInput;
         InputHandler.Instance.OnClickInput += OnClickInput;
         InputHandler.Instance.OnEscapeInput += OnEscapeInput;
+
+        _escapeCooldown = 0.0f;
     }
 
     private void OnDisable()
@@ -42,6 +46,11 @@ public class BuildState : MonoBehaviour
         {
             GameManager.Instance.UpdateTime();
             GameManager.Instance.ProcessOceanRise();
+        }
+
+        if (_escapeCooldown < 0.5f)
+        {
+            _escapeCooldown += Time.deltaTime;
         }
 
         if (!enabled)
@@ -100,6 +109,11 @@ public class BuildState : MonoBehaviour
 
     private void OnEscapeInput()
     {
+        if (_escapeCooldown < 0.5f)
+        {
+            return;
+        }
+
         MapRenderer.Instance.HideRangeHighlight();
         GameManager.Instance.ChangeGameState(GameState.None);
     }

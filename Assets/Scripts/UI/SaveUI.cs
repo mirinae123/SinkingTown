@@ -13,6 +13,8 @@ public class SaveUI : BaseUI
     [SerializeField] Button _saveAsNewButton;
     [SerializeField] Button _quitIcon;
 
+    private UIAnimator _animator;
+
     void Start()
     {
         UIManager.Instance.RegisterPanel(PanelType.Save, this);
@@ -29,17 +31,18 @@ public class SaveUI : BaseUI
 
         UpdateSaveDataList();
 
-        transform.parent.gameObject.SetActive(false);
+        _animator = GetComponent<UIAnimator>();
+        _animator.InitializeAnimation();
     }
 
     public override void Show(params object[] values)
     {
-        transform.parent.gameObject.SetActive(true);
+        _animator.PlayShowAnimation();
     }
 
     public override void Hide()
     {
-        transform.parent.gameObject.SetActive(false);
+        _animator.PlayHideAnimation();
     }
 
     /// <summary>

@@ -1020,6 +1020,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 113261717482558498}
+  - component: {fileID: 530605466350197694}
+  - component: {fileID: 9029864443599263974}
   m_Layer: 5
   m_Name: New Game UI
   m_TagString: Untagged
@@ -1048,6 +1050,59 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &530605466350197694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622208329351602155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 861dca609b977f84f89adac8bfce001c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hidePreviousPanel: 0
+  _hideAllPanels: 1
+  _hideHoverMenu: 1
+  _setGameState: 1
+  _seed: {fileID: 3652091682959639833}
+  _seedGenerateButton: {fileID: 9164321004454125734}
+  _sizeButton:
+  - {fileID: 4635218192437461215}
+  - {fileID: 7071558807113806816}
+  - {fileID: 8656963857329005085}
+  _presetEasy: {fileID: 4612166393298630450}
+  _presetMedium: {fileID: 6228650862320243659}
+  _presetHard: {fileID: 7088516962051052071}
+  _floodFrequencyButton:
+  - {fileID: 293216765102644509}
+  - {fileID: 7068486094418739831}
+  - {fileID: 6789363127840949363}
+  _pirateFrequencyButton:
+  - {fileID: 9016003483248538360}
+  - {fileID: 3416779894293651691}
+  - {fileID: 8840228125710747140}
+  _canPause: {fileID: 1388630044084790952}
+  _startNewGameButton: {fileID: 8824831948384258237}
+  _quitIcon: {fileID: 7224427306156526667}
+--- !u!114 &9029864443599263974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622208329351602155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c35e156b93e4f04b84e3cfae5237b3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _background: {fileID: 3541720546943651936}
+  _windowRectTransform: {fileID: 5043665659655237566}
+  _windowCanvasGroup: {fileID: 2956093069360809701}
+  _showPosition: {x: -640, y: 0}
+  _hidePosition: {x: -640, y: 1000}
 --- !u!1 &1630419104370515411
 GameObject:
   m_ObjectHideFlags: 0
@@ -2923,7 +2978,7 @@ GameObject:
   - component: {fileID: 5043665659655237566}
   - component: {fileID: 6652595410919841744}
   - component: {fileID: 5661600955525833121}
-  - component: {fileID: 6637109438361944146}
+  - component: {fileID: 2956093069360809701}
   m_Layer: 5
   m_Name: New Game Window
   m_TagString: Untagged
@@ -2998,38 +3053,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6637109438361944146
-MonoBehaviour:
+--- !u!225 &2956093069360809701
+CanvasGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5678871782100858152}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 861dca609b977f84f89adac8bfce001c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _seed: {fileID: 3652091682959639833}
-  _seedGenerateButton: {fileID: 9164321004454125734}
-  _sizeButton:
-  - {fileID: 4635218192437461215}
-  - {fileID: 7071558807113806816}
-  - {fileID: 8656963857329005085}
-  _presetEasy: {fileID: 4612166393298630450}
-  _presetMedium: {fileID: 6228650862320243659}
-  _presetHard: {fileID: 7088516962051052071}
-  _floodFrequencyButton:
-  - {fileID: 293216765102644509}
-  - {fileID: 7068486094418739831}
-  - {fileID: 6789363127840949363}
-  _pirateFrequencyButton:
-  - {fileID: 9016003483248538360}
-  - {fileID: 3416779894293651691}
-  - {fileID: 8840228125710747140}
-  _canPause: {fileID: 1388630044084790952}
-  _startNewGameButton: {fileID: 8824831948384258237}
-  _quitIcon: {fileID: 7224427306156526667}
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5864870705929114094
 GameObject:
   m_ObjectHideFlags: 0

@@ -155,6 +155,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb5d656c291955f46b8b8dcfd5c82114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hidePreviousPanel: 0
+  _hideAllPanels: 1
+  _hideHoverMenu: 1
+  _setGameState: 1
 --- !u!95 &2402780313494460514
 Animator:
   serializedVersion: 5

@@ -234,15 +234,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8265050716134472787}
-  - component: {fileID: 4756618910220777748}
-  - component: {fileID: 997097527599551211}
+  - component: {fileID: 4955184280527134642}
+  - component: {fileID: 6524710499634144140}
   m_Layer: 5
   m_Name: End UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8265050716134472787
 RectTransform:
   m_ObjectHideFlags: 0
@@ -264,15 +264,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &4756618910220777748
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2899401920628397454}
-  m_CullTransparentMesh: 1
---- !u!114 &997097527599551211
+--- !u!114 &4955184280527134642
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -281,27 +273,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 2899401920628397454}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: 58204ce54973c7a4f86d02e936bcd8b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.11764706}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  _hidePreviousPanel: 0
+  _hideAllPanels: 1
+  _hideHoverMenu: 1
+  _setGameState: 1
+  _captionText: {fileID: 2105006459008718599}
+  _image: {fileID: 6156840710587233935}
+  _firstDescriptionText: {fileID: 5197122742631168303}
+  _secondDescriptionText: {fileID: 6947553710245874194}
+  _scoreLabelText: {fileID: 5539044628781838652}
+  _scoreText: {fileID: 46977680633633906}
+  _quitIcon: {fileID: 4835809023269098728}
+--- !u!114 &6524710499634144140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2899401920628397454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c35e156b93e4f04b84e3cfae5237b3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _background: {fileID: 7183863470770091061}
+  _windowRectTransform: {fileID: 7713577015881014632}
+  _windowCanvasGroup: {fileID: 8495944645900560574}
+  _showPosition: {x: 0, y: 0}
+  _hidePosition: {x: 0, y: 1000}
 --- !u!1 &3237999868251922970
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,7 +585,7 @@ GameObject:
   - component: {fileID: 7713577015881014632}
   - component: {fileID: 896821117679368308}
   - component: {fileID: 439983504894745553}
-  - component: {fileID: 8871620288736753793}
+  - component: {fileID: 8495944645900560574}
   m_Layer: 5
   m_Name: End Window
   m_TagString: Untagged
@@ -655,25 +657,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8871620288736753793
-MonoBehaviour:
+--- !u!225 &8495944645900560574
+CanvasGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4285829746755671767}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58204ce54973c7a4f86d02e936bcd8b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _captionText: {fileID: 2105006459008718599}
-  _image: {fileID: 6156840710587233935}
-  _firstDescriptionText: {fileID: 5197122742631168303}
-  _secondDescriptionText: {fileID: 6947553710245874194}
-  _scoreLabelText: {fileID: 5539044628781838652}
-  _scoreText: {fileID: 46977680633633906}
-  _quitIcon: {fileID: 4835809023269098728}
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5682288162646830382
 GameObject:
   m_ObjectHideFlags: 0
