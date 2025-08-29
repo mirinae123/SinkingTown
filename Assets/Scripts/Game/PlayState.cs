@@ -68,11 +68,11 @@ public class PlayState : MonoBehaviour
     {
         if (UIManager.Instance.CurrentPanelType == PanelType.None)
         {
-            UIManager.Instance.ShowPanel(PanelType.Main);
+            UIManager.Instance.ProcessEscapeInput(PanelType.Main);
         }
         else
         {
-            UIManager.Instance.HidePanel();
+            UIManager.Instance.ProcessEscapeInput();
         }
     }
 }

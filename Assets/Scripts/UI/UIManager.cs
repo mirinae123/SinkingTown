@@ -41,6 +41,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     private Dictionary<PanelType, BaseUI> _panels = new Dictionary<PanelType, BaseUI>();
 
     private Stack<PanelType> _panelStack = new Stack<PanelType>();
+    private float _escapeCooldown;
 
     private void Start()
     {
@@ -60,6 +61,14 @@ public class UIManager : SingletonBehaviour<UIManager>
                 _panels[PanelType.Loading] = loadingPanel;
             }
         };
+    }
+
+    private void Update()
+    {
+        if (_escapeCooldown < 0.5f)
+        {
+            _escapeCooldown += Time.deltaTime;
+        }
     }
 
     /// <summary>
@@ -92,6 +101,8 @@ public class UIManager : SingletonBehaviour<UIManager>
 
         _panels[panelType].Show(values);
         _panelStack.Push(panelType);
+
+        _escapeCooldown = 0.0f;
     }
 
     /// <summary>
@@ -122,6 +133,8 @@ public class UIManager : SingletonBehaviour<UIManager>
         {
             GameManager.Instance.ChangeGameState(GameState.None);
         }
+
+        _escapeCooldown = 0.0f;
     }
 
     /// <summary>
@@ -164,6 +177,28 @@ public class UIManager : SingletonBehaviour<UIManager>
         if (_panels.ContainsKey(PanelType.Hover) && _panels[PanelType.Hover] != null)
         {
             _panels[PanelType.Hover].Hide();
+        }
+    }
+
+    /// <summary>
+    /// ESC 키 입력을 처리한다.
+    /// </summary>
+    /// <param name="panelType">표시할 UI (UI를 숨기려면 PanelType.None)</param>
+    /// <param name="values">추가 매개변수</param>
+    public void ProcessEscapeInput(PanelType panelType = PanelType.None, params object[] values)
+    {
+        if (_escapeCooldown < 0.5f)
+        {
+            return;
+        }
+
+        if (panelType == PanelType.None)
+        {
+            HidePanel();
+        }
+        else
+        {
+            ShowPanel(panelType, values);
         }
     }
 

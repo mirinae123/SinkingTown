@@ -37,6 +37,6 @@ public class MenuState : MonoBehaviour
             return;
         }
 
-        UIManager.Instance.HidePanel();
+        UIManager.Instance.ProcessEscapeInput();
     }
 }

@@ -67,6 +67,6 @@ public class TitleUI : MonoBehaviour
             return;
         }
 
-        UIManager.Instance.HidePanel();
+        UIManager.Instance.ProcessEscapeInput();
     }
 }
