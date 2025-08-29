@@ -20,18 +20,21 @@ public class NotificationUI : BaseUI
     }
     private bool _isClosable;
 
+    private UIAnimator _animator;
+
     private void Start()
     {
         UIManager.Instance.RegisterPanel(PanelType.Notification, this);
 
         _closeIcon.onClick.AddListener(UIManager.Instance.HidePanel);
 
-        transform.parent.gameObject.SetActive(false);
+        _animator = GetComponent<UIAnimator>();
+        _animator.InitializeAnimation();
     }
 
     public override void Show(params object[] values)
     {
-        transform.parent.gameObject.SetActive(true);
+        _animator.PlayShowAnimation();
 
         if (values.Length > 0)
         {
@@ -56,6 +59,6 @@ public class NotificationUI : BaseUI
 
     public override void Hide()
     {
-        transform.parent.gameObject.SetActive(false);
+        _animator.PlayHideAnimation();
     }
 }

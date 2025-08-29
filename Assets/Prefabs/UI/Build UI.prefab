@@ -864,6 +864,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62a61817987e095459d054005ffb8247, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hidePreviousPanel: 0
+  _hideAllPanels: 1
+  _hideHoverMenu: 0
+  _setGameState: 0
   _buildIcon: {fileID: 6855090488452860466}
   _quitIcon: {fileID: 8155861507009402353}
   _content: {fileID: 2847414917200854588}
@@ -1009,7 +1013,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4662409233759973624}
   m_HandleRect: {fileID: 7973368695366030705}
   m_Direction: 0
-  m_Value: -0.000000032465508
+  m_Value: -0.000000064931015
   m_Size: 0
   m_NumberOfSteps: 0
   m_OnValueChanged:

@@ -27,6 +27,8 @@ public class GameInfoUI : BaseUI
     [SerializeField] private Button _pauseButton;
     [SerializeField] private EventTrigger _pauseButtonInfo;
 
+    private UIAnimator _animator;
+
     void Start()
     {
         _mainMenuButton.onClick.AddListener(() => { UIManager.Instance.ShowPanel(PanelType.Main); });
@@ -47,6 +49,9 @@ public class GameInfoUI : BaseUI
         UIManager.Instance.AddHoverEvent(_woodInfo, "option_title", "language_label", HoverDirection.TopLeft);
         UIManager.Instance.AddHoverEvent(_stoneInfo, "option_title", "language_label", HoverDirection.TopLeft);
         UIManager.Instance.AddHoverEvent(_researchInfo, "option_title", "language_label", HoverDirection.TopLeft);
+
+        _animator = GetComponent<UIAnimator>();
+        _animator.InitializeAnimation(UIAnimationState.Show);
     }
 
     private void Update()
@@ -62,9 +67,11 @@ public class GameInfoUI : BaseUI
 
     public override void Show(params object[] values)
     {
+        _animator.PlayShowAnimation();
     }
 
     public override void Hide()
     {
+        _animator.PlayHideAnimation();
     }
 }

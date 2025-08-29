@@ -14,6 +14,8 @@ public class ConfirmUI : BaseUI
     [SerializeField] Button _confirmButton;
     [SerializeField] Button _cancelButton;
 
+    private UIAnimator _animator;
+
     private bool _isConfirmed;
 
     private UnityAction _onConfirm;
@@ -22,13 +24,14 @@ public class ConfirmUI : BaseUI
     private void Start()
     {
         UIManager.Instance.RegisterPanel(PanelType.Confirm, this);
-        transform.parent.gameObject.SetActive(false);
+
+        _animator = GetComponent<UIAnimator>();
+        _animator.InitializeAnimation();
     }
 
     public override void Show(params object[] values)
     {
-
-        transform.parent.gameObject.SetActive(true);
+        _animator.PlayShowAnimation();
 
         _captionText.ChangeKey((string)values[0]);
         _captionText.UpdateTextLanguage();
@@ -59,6 +62,6 @@ public class ConfirmUI : BaseUI
             _OnCancel?.Invoke();
         }
 
-        transform.parent.gameObject.SetActive(false);
+        _animator.PlayHideAnimation();
     }
 }

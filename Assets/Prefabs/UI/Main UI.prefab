@@ -1162,13 +1162,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 334600605868109531}
+  - component: {fileID: 8395385402047924498}
+  - component: {fileID: 2831068465210473137}
   m_Layer: 5
   m_Name: Main UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &334600605868109531
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1190,6 +1192,45 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8395385402047924498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4734435772452082839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e898d92e62c98545b232425fbe9a1b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hidePreviousPanel: 0
+  _hideAllPanels: 1
+  _hideHoverMenu: 1
+  _setGameState: 1
+  _saveButton: {fileID: 976283635983181083}
+  _loadButton: {fileID: 2062349129162684375}
+  _optionButton: {fileID: 8850717930657444777}
+  _resumeButton: {fileID: 8402428059983742117}
+  _quitButton: {fileID: 211779700262522038}
+  _quitIcon: {fileID: 2389011590769983449}
+--- !u!114 &2831068465210473137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4734435772452082839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c35e156b93e4f04b84e3cfae5237b3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _background: {fileID: 7822676942672410357}
+  _windowRectTransform: {fileID: 8989311538995039872}
+  _windowCanvasGroup: {fileID: 7230640001963645815}
+  _showPosition: {x: 0, y: 0}
+  _hidePosition: {x: 0, y: 1000}
 --- !u!1 &5160433500270385344
 GameObject:
   m_ObjectHideFlags: 0
@@ -1518,7 +1559,7 @@ GameObject:
   - component: {fileID: 8989311538995039872}
   - component: {fileID: 2997261820229133761}
   - component: {fileID: 280408491726744812}
-  - component: {fileID: 5081445629193652043}
+  - component: {fileID: 7230640001963645815}
   m_Layer: 5
   m_Name: Main Menu Window
   m_TagString: Untagged
@@ -1589,21 +1630,15 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5081445629193652043
-MonoBehaviour:
+--- !u!225 &7230640001963645815
+CanvasGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8960095719608744553}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e898d92e62c98545b232425fbe9a1b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _saveButton: {fileID: 976283635983181083}
-  _loadButton: {fileID: 2062349129162684375}
-  _optionButton: {fileID: 8850717930657444777}
-  _resumeButton: {fileID: 8402428059983742117}
-  _quitButton: {fileID: 211779700262522038}
-  _quitIcon: {fileID: 2389011590769983449}
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

@@ -56,11 +56,17 @@ public class TitleUI : MonoBehaviour
 
     private void OnEscapeInput()
     {
-        if (UIManager.Instance.CurrentPanelType != PanelType.Loading &&
-            (UIManager.Instance.CurrentPanelType != PanelType.Notification ||
-            ((NotificationUI)UIManager.Instance.Panels[PanelType.Notification]).IsClosable))
+        if (UIManager.Instance.CurrentPanelType == PanelType.Loading)
         {
-            UIManager.Instance.HidePanel();
+            return;
         }
+
+        if (UIManager.Instance.CurrentPanelType == PanelType.Notification &&
+            !((NotificationUI)UIManager.Instance.Panels[PanelType.Notification]).IsClosable)
+        {
+            return;
+        }
+
+        UIManager.Instance.HidePanel();
     }
 }

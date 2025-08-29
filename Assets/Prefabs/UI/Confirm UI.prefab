@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 3610044097090057083}
   - component: {fileID: 1668064103313039266}
   - component: {fileID: 8123886735766140050}
-  - component: {fileID: 2304728107359949789}
+  - component: {fileID: 5105322336498377150}
   m_Layer: 5
   m_Name: Confirm Window
   m_TagString: Untagged
@@ -201,22 +201,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2304728107359949789
-MonoBehaviour:
+--- !u!225 &5105322336498377150
+CanvasGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1386252862572501100}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d676eb9d5a4d134083d159e02eb8119, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _captionText: {fileID: 1655131760452221626}
-  _descriptionText: {fileID: 2350715302721239835}
-  _confirmButton: {fileID: 6040560904315620842}
-  _cancelButton: {fileID: 5939352668788904681}
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2603986695088893808
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,15 +222,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8823115136979034946}
-  - component: {fileID: 749234733518726414}
-  - component: {fileID: 5380900947706212779}
+  - component: {fileID: 1494350562945736172}
+  - component: {fileID: 8125004570467314921}
   m_Layer: 5
   m_Name: Confirm UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8823115136979034946
 RectTransform:
   m_ObjectHideFlags: 0
@@ -256,15 +252,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &749234733518726414
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2603986695088893808}
-  m_CullTransparentMesh: 1
---- !u!114 &5380900947706212779
+--- !u!114 &1494350562945736172
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -273,27 +261,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 2603986695088893808}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d676eb9d5a4d134083d159e02eb8119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.11764706}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  _hidePreviousPanel: 0
+  _hideAllPanels: 0
+  _hideHoverMenu: 1
+  _setGameState: 1
+  _captionText: {fileID: 1655131760452221626}
+  _descriptionText: {fileID: 2350715302721239835}
+  _confirmButton: {fileID: 6040560904315620842}
+  _cancelButton: {fileID: 5939352668788904681}
+--- !u!114 &8125004570467314921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2603986695088893808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c35e156b93e4f04b84e3cfae5237b3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _background: {fileID: 4223789291342719733}
+  _windowRectTransform: {fileID: 3610044097090057083}
+  _windowCanvasGroup: {fileID: 5105322336498377150}
+  _showPosition: {x: 0, y: 0}
+  _hidePosition: {x: 0, y: 1000}
 --- !u!1 &2946887982635310790
 GameObject:
   m_ObjectHideFlags: 0

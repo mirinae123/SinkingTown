@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -14,6 +16,8 @@ public class MainUI : BaseUI
     [SerializeField] private Button _quitButton;
 
     [SerializeField] private Button _quitIcon;
+
+    private UIAnimator _animator;
 
     private void Start()
     {
@@ -48,16 +52,33 @@ public class MainUI : BaseUI
             UIManager.Instance.HidePanel();
         });
 
-        transform.parent.gameObject.SetActive(false);
+        _animator = GetComponent<UIAnimator>();
+        _animator.InitializeAnimation();
     }
 
     public override void Show(params object[] values)
     {
-        transform.parent.gameObject.SetActive(true);
+        _animator.PlayShowAnimation();
+
+        //_saveButton.interactable = true;
+        //_loadButton.interactable = true;
+        //_optionButton.interactable = true;
+        //_resumeButton.interactable = true;
+        //_quitButton.interactable = true;
+
+        //_quitIcon.interactable = true;
     }
 
     public override void Hide()
     {
-        transform.parent.gameObject.SetActive(false);
+        _animator.PlayHideAnimation();
+
+        //_saveButton.interactable = false;
+        //_loadButton.interactable = false;
+        //_optionButton.interactable = false;
+        //_resumeButton.interactable = false;
+        //_quitButton.interactable = false;
+
+        //_quitIcon.interactable = false;
     }
 }

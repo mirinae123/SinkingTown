@@ -62,6 +62,8 @@ public class TileInfoUI : BaseUI
         get => _currentTile;
     }
 
+    private UIAnimator _animator;
+
     void Start()
     {
         UIManager.Instance.RegisterPanel(PanelType.Tile, this);
@@ -112,7 +114,8 @@ public class TileInfoUI : BaseUI
         UIManager.Instance.AddHoverEvent(_providesToInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_providedFromInfo, "language_label", "language_label", HoverDirection.TopRight);
 
-        gameObject.SetActive(false);
+        _animator = GetComponent<UIAnimator>();
+        _animator.InitializeAnimation();
     }
 
     private void Update()
@@ -147,7 +150,7 @@ public class TileInfoUI : BaseUI
         }
 
         UpdateTileInfo();
-        gameObject.SetActive(true);
+        _animator.PlayShowAnimation();
     }
 
     /// <summary>
@@ -365,6 +368,7 @@ public class TileInfoUI : BaseUI
     public override void Hide()
     {
         MapRenderer.Instance.HideRangeHighlight();
-        gameObject.SetActive(false);
+
+        _animator.PlayHideAnimation();
     }
 }
