@@ -69,38 +69,25 @@ public class UIManager : SingletonBehaviour<UIManager>
     /// <param name="values">추가 매개변수</param>
     public void ShowPanel(PanelType panelType, params object[] values)
     {
-        // 기존에 있던 UI 숨기기
-        switch (panelType)
+        BaseUI panelToShow = _panels[panelType];
+
+        if (panelToShow.HideAllPanels)
         {
-            case PanelType.Main:
-            case PanelType.Build:
-            case PanelType.Tile:
-            case PanelType.End:
-            case PanelType.Loading:
-                HideAllPanels();
-                break;
-            default:
-                if (_panelStack.Count > 0)
-                {
-                    _panels[_panelStack.Peek()].Hide();
-                }
-                break;
+            HideAllPanels();
+        }
+        else if (panelToShow.HidePreviousPanel && _panelStack.Count > 0)
+        {
+            _panels[_panelStack.Peek()].Hide();
         }
 
-        // 게임 상태 변경 및 호버 메뉴 숨기기
-        switch (panelType)
+        if (panelToShow.HideHoverMenu)
         {
-            case PanelType.Main:
-            case PanelType.Option:
-            case PanelType.Confirm:
-            case PanelType.End:
-            case PanelType.Loading:
-                if (GameManager.Instance != null)
-                {
-                    GameManager.Instance.ChangeGameState(GameState.Menu);
-                }
-                HideHoverPanel();
-                break;
+            HideHoverPanel();
+        }
+
+        if (panelToShow.SetGameState && GameManager.Instance != null)
+        {
+            GameManager.Instance.ChangeGameState(GameState.Menu);
         }
 
         _panels[panelType].Show(values);
@@ -117,38 +104,23 @@ public class UIManager : SingletonBehaviour<UIManager>
             return;
         }
 
-        _panels[_panelStack.Pop()].Hide();
+        BaseUI panelToHide = _panels[_panelStack.Pop()];
+        panelToHide.Hide();
 
-        // 기존에 있던 UI 복구 및 게임 상태 변경
-        if (_panelStack.Count > 0)
+        if (_panelStack.Count > 0 && panelToHide.HidePreviousPanel)
         {
             _panels[_panelStack.Peek()].Show();
-
-            switch (_panelStack.Peek())
-            {
-                case PanelType.Main:
-                case PanelType.Option:
-                case PanelType.Confirm:
-                case PanelType.End:
-                case PanelType.Loading:
-                case PanelType.Load:
-                case PanelType.Save:
-                case PanelType.Notification:
-                    break;
-                default:
-                    if (GameManager.Instance != null && GameManager.Instance.GameState != GameState.Build)
-                    {
-                        GameManager.Instance.ChangeGameState(GameState.None);
-                    }
-                    break;
-            }
         }
-        else
+
+        bool inBuildState = GameManager.Instance == null || GameManager.Instance.GameState == GameState.Build;
+
+        if (_panelStack.Count == 0 && !inBuildState)
         {
-            if (GameManager.Instance != null && GameManager.Instance.GameState != GameState.Build)
-            {
-                GameManager.Instance.ChangeGameState(GameState.None);
-            }
+            GameManager.Instance.ChangeGameState(GameState.None);
+        }
+        else if (_panelStack.Count > 0 && !_panels[_panelStack.Peek()].SetGameState && !inBuildState)
+        {
+            GameManager.Instance.ChangeGameState(GameState.None);
         }
     }
 
