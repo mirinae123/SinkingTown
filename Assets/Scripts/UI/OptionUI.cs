@@ -8,7 +8,7 @@ public class OptionUI : BaseUI
 {
     [SerializeField] private Button _quitIcon;
 
-    private UIAnimator _animator;
+    private BaseUIAnimator _animator;
 
     private void Start()
     {
@@ -19,17 +19,16 @@ public class OptionUI : BaseUI
             UIManager.Instance.HidePanel();
         });
 
-        _animator = GetComponent<UIAnimator>();
-        _animator.InitializeAnimation();
+        _animator = GetComponent<BaseUIAnimator>();
     }
 
     public override void Show(params object[] values)
     {
-        _animator.PlayShowAnimation();
+        _animator.Show();
     }
 
     public override void Hide()
     {
-        _animator.PlayHideAnimation();
+        _animator.Hide();
     }
 }

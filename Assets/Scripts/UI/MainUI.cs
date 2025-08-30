@@ -17,7 +17,7 @@ public class MainUI : BaseUI
 
     [SerializeField] private Button _quitIcon;
 
-    private UIAnimator _animator;
+    private BaseUIAnimator _animator;
 
     private void Start()
     {
@@ -52,33 +52,16 @@ public class MainUI : BaseUI
             UIManager.Instance.HidePanel();
         });
 
-        _animator = GetComponent<UIAnimator>();
-        _animator.InitializeAnimation();
+        _animator = GetComponent<BaseUIAnimator>();
     }
 
     public override void Show(params object[] values)
     {
-        _animator.PlayShowAnimation();
-
-        //_saveButton.interactable = true;
-        //_loadButton.interactable = true;
-        //_optionButton.interactable = true;
-        //_resumeButton.interactable = true;
-        //_quitButton.interactable = true;
-
-        //_quitIcon.interactable = true;
+        _animator.Show();
     }
 
     public override void Hide()
     {
-        _animator.PlayHideAnimation();
-
-        //_saveButton.interactable = false;
-        //_loadButton.interactable = false;
-        //_optionButton.interactable = false;
-        //_resumeButton.interactable = false;
-        //_quitButton.interactable = false;
-
-        //_quitIcon.interactable = false;
+        _animator.Hide();
     }
 }

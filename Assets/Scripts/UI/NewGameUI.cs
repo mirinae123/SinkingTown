@@ -31,7 +31,7 @@ public class NewGameUI : BaseUI
     [SerializeField] Button _startNewGameButton;
     [SerializeField] Button _quitIcon;
 
-    private UIAnimator _animator;
+    private BaseUIAnimator _animator;
 
     private void Start()
     {
@@ -129,18 +129,17 @@ public class NewGameUI : BaseUI
         _canPause.isOn = true;
         _canPause.onValueChanged.Invoke(_canPause.isOn);
 
-        _animator = GetComponent<UIAnimator>();
-        _animator.InitializeAnimation();
+        _animator = GetComponent<BaseUIAnimator>();
     }
 
     public override void Show(params object[] values)
     {
-        _animator.PlayShowAnimation();
+        _animator.Show();
     }
 
     public override void Hide()
     {
-        _animator.PlayHideAnimation();
+        _animator.Hide();
     }
 
     /// <summary>
