@@ -62,7 +62,7 @@ public class TileInfoUI : BaseUI
         get => _currentTile;
     }
 
-    private UIAnimator _animator;
+    private BaseUIAnimator _animator;
 
     void Start()
     {
@@ -114,8 +114,7 @@ public class TileInfoUI : BaseUI
         UIManager.Instance.AddHoverEvent(_providesToInfo, "language_label", "language_label", HoverDirection.TopRight);
         UIManager.Instance.AddHoverEvent(_providedFromInfo, "language_label", "language_label", HoverDirection.TopRight);
 
-        _animator = GetComponent<UIAnimator>();
-        _animator.InitializeAnimation();
+        _animator = GetComponent<BaseUIAnimator>();
     }
 
     private void Update()
@@ -150,7 +149,7 @@ public class TileInfoUI : BaseUI
         }
 
         UpdateTileInfo();
-        _animator.PlayShowAnimation();
+        _animator.Show();
     }
 
     /// <summary>
@@ -369,6 +368,6 @@ public class TileInfoUI : BaseUI
     {
         MapRenderer.Instance.HideRangeHighlight();
 
-        _animator.PlayHideAnimation();
+        _animator.Hide();
     }
 }

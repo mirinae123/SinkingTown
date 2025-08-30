@@ -14,7 +14,7 @@ public class ConfirmUI : BaseUI
     [SerializeField] Button _confirmButton;
     [SerializeField] Button _cancelButton;
 
-    private UIAnimator _animator;
+    private BaseUIAnimator _animator;
 
     private bool _isConfirmed;
 
@@ -25,13 +25,12 @@ public class ConfirmUI : BaseUI
     {
         UIManager.Instance.RegisterPanel(PanelType.Confirm, this);
 
-        _animator = GetComponent<UIAnimator>();
-        _animator.InitializeAnimation();
+        _animator = GetComponent<BaseUIAnimator>();
     }
 
     public override void Show(params object[] values)
     {
-        _animator.PlayShowAnimation();
+        _animator.Show();
 
         _captionText.ChangeKey((string)values[0]);
         _captionText.UpdateTextLanguage();
@@ -62,6 +61,6 @@ public class ConfirmUI : BaseUI
             _OnCancel?.Invoke();
         }
 
-        _animator.PlayHideAnimation();
+        _animator.Hide();
     }
 }

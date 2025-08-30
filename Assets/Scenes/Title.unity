@@ -558,10 +558,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Option UI
       objectReference: {fileID: 0}
-    - target: {fileID: 2659938451039884422, guid: 2684322104180e849950d99b1688175d, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3080545156862544055, guid: 2684322104180e849950d99b1688175d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -679,10 +675,6 @@ PrefabInstance:
     - target: {fileID: 2603986695088893808, guid: 18337389d6fcb164a8a09feec72fd9a2, type: 3}
       propertyPath: m_Name
       value: Confirm UI
-      objectReference: {fileID: 0}
-    - target: {fileID: 2603986695088893808, guid: 18337389d6fcb164a8a09feec72fd9a2, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8823115136979034946, guid: 18337389d6fcb164a8a09feec72fd9a2, type: 3}
       propertyPath: m_Pivot.x
@@ -916,18 +908,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 28734663}
     m_Modifications:
-    - target: {fileID: 210814169121825215, guid: 8ba7a9a45b2fe0a4a8ab67388934105f, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 210814169121825215, guid: 8ba7a9a45b2fe0a4a8ab67388934105f, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 210814169121825215, guid: 8ba7a9a45b2fe0a4a8ab67388934105f, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1577143413097975986, guid: 8ba7a9a45b2fe0a4a8ab67388934105f, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0

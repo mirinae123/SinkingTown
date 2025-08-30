@@ -15,7 +15,7 @@ public class LoadUI : BaseUI
 
     [SerializeField] Button _quitIcon;
 
-    private UIAnimator _animator;
+    private BaseUIAnimator _animator;
 
     void Start()
     {
@@ -25,18 +25,17 @@ public class LoadUI : BaseUI
 
         UpdateSaveDataList();
 
-        _animator = GetComponent<UIAnimator>();
-        _animator.InitializeAnimation();
+        _animator = GetComponent<BaseUIAnimator>();
     }
 
     public override void Show(params object[] values)
     {
-        _animator.PlayShowAnimation();
+        _animator.Show();
     }
 
     public override void Hide()
     {
-        _animator.PlayHideAnimation();
+        _animator.Hide();
     }
 
     /// <summary>

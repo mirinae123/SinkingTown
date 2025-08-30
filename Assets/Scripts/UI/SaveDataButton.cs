@@ -101,10 +101,10 @@ public class SaveDataButton : MonoBehaviour
         float playSeconds = _saveData.PlayTime;
 
         int playHours = (int)(playSeconds / 3600.0f);
-        playSeconds -= (float)playHours;
+        playSeconds -= (float)(playHours * 3600);
 
         int playMinutes = (int)(playSeconds / 60.0f);
-        playSeconds -= (float)playMinutes;
+        playSeconds -= (float)(playMinutes * 60);
 
         StringBuilder playTimeString = new StringBuilder();
 

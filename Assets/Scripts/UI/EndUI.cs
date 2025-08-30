@@ -19,7 +19,7 @@ public class EndUI : BaseUI
 
     [SerializeField] Button _quitIcon;
 
-    private UIAnimator _animator;
+    private BaseUIAnimator _animator;
 
     private void Start()
     {
@@ -30,13 +30,12 @@ public class EndUI : BaseUI
             UIManager.Instance.HidePanel();
         });
 
-        _animator = GetComponent<UIAnimator>();
-        _animator.InitializeAnimation();
+        _animator = GetComponent<BaseUIAnimator>();
     }
 
     public override void Show(params object[] values)
     {
-        _animator.PlayShowAnimation();
+        _animator.Show();
 
         if ((bool)values[0])
         {
@@ -62,6 +61,6 @@ public class EndUI : BaseUI
 
     public override void Hide()
     {
-        _animator.PlayHideAnimation();
+        _animator.Hide();
     }
 }

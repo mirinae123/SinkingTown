@@ -1910,6 +1910,8 @@ GameObject:
   - component: {fileID: 5974009408229763571}
   - component: {fileID: 638450576295744385}
   - component: {fileID: 2577068958675653733}
+  - component: {fileID: 1404648992790822642}
+  - component: {fileID: 1096128623509153589}
   m_Layer: 5
   m_Name: Tile Info
   m_TagString: Untagged
@@ -2061,11 +2063,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c35e156b93e4f04b84e3cfae5237b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _background: {fileID: 0}
-  _windowRectTransform: {fileID: 5763208046188125350}
-  _windowCanvasGroup: {fileID: 5974009408229763571}
-  _showPosition: {x: -32, y: -32}
-  _hidePosition: {x: 1000, y: -32}
+  _positionTweener: {fileID: 1404648992790822642}
+  _backgroundTweener: {fileID: 0}
+  _canvasGroupTweener: {fileID: 1096128623509153589}
+  _initialTime: 0
+--- !u!114 &1404648992790822642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2799310046693336642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f75ff251d55aa34094a127b700fea83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _duration: 0.3
+  _rectTransform: {fileID: 5763208046188125350}
+  _startPosition: {x: 300, y: -32}
+  _endPosition: {x: -32, y: -32}
+--- !u!114 &1096128623509153589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2799310046693336642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da9b950331dbea48854e35c5d193b20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _duration: 0.3
+  _canvasGroup: {fileID: 5974009408229763571}
 --- !u!1 &2821770125917611470
 GameObject:
   m_ObjectHideFlags: 0

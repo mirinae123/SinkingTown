@@ -13,6 +13,8 @@ public enum PanelType { None, Main, Build, Tile, Option, Confirm, End, Hover, Ne
 /// </summary>
 public class UIManager : SingletonBehaviour<UIManager>
 {
+    private const float ESCAPE_COOLDOWN = 0.3f;
+
     /// <summary>
     /// 현재 UI 종류
     /// </summary>
@@ -65,7 +67,7 @@ public class UIManager : SingletonBehaviour<UIManager>
 
     private void Update()
     {
-        if (_escapeCooldown < 0.5f)
+        if (_escapeCooldown < ESCAPE_COOLDOWN)
         {
             _escapeCooldown += Time.deltaTime;
         }
@@ -187,7 +189,7 @@ public class UIManager : SingletonBehaviour<UIManager>
     /// <param name="values">추가 매개변수</param>
     public void ProcessEscapeInput(PanelType panelType = PanelType.None, params object[] values)
     {
-        if (_escapeCooldown < 0.5f)
+        if (_escapeCooldown < ESCAPE_COOLDOWN)
         {
             return;
         }
