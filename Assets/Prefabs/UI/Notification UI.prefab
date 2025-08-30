@@ -633,7 +633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dced81afdcea47f4798ffe0811af2599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hidePreviousPanel: 1
+  _hidePreviousPanel: 0
   _hideAllPanels: 0
   _hideHoverMenu: 1
   _setGameState: 1
