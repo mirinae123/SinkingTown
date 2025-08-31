@@ -10,7 +10,7 @@ public class GameInfoUI : BaseUI
 {
     [SerializeField] private Button _mainMenuButton;
 
-    [SerializeField] private TMP_Text _currentDayText;
+    [SerializeField] private LocalizedText _currentDayText;
     [SerializeField] private EventTrigger _currentDayInfo;
 
     [SerializeField] private Slider _timeTillRiseSlider;
@@ -55,7 +55,7 @@ public class GameInfoUI : BaseUI
 
     private void Update()
     {
-        _currentDayText.text = "DAY " + GameManager.Instance.CurrentDay;
+        _currentDayText.ChangeKey("current_day", GameManager.Instance.CurrentDay);
         _timeTillRiseSlider.value = GameManager.Instance.TimeSinceOceanRise / SaveManager.Instance.SaveData.OceanRisePeriod;
 
         _woodText.text = GameManager.Instance.CurrentWoods.ToString();

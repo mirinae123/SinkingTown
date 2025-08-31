@@ -10,12 +10,9 @@ using UnityEngine.UI;
 public class MainUI : BaseUI
 {
     [SerializeField] private Button _saveButton;
-    [SerializeField] private Button _loadButton;
     [SerializeField] private Button _optionButton;
     [SerializeField] private Button _resumeButton;
     [SerializeField] private Button _quitButton;
-
-    [SerializeField] private Button _quitIcon;
 
     private BaseUIAnimator _animator;
 
@@ -40,16 +37,11 @@ public class MainUI : BaseUI
 
         _quitButton.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowPanel(PanelType.Confirm, "QUIT", "QUIT", (UnityAction)(() =>
+            UIManager.Instance.ShowPanel(PanelType.Confirm, new KeyWrapper("quit_confirm_caption"), new KeyWrapper("quit_confirm_description"), (UnityAction)(() =>
             {
                 SceneLoadManager.Instance.LoadScene(0);
             }),
             null);
-        });
-
-        _quitIcon.onClick.AddListener(() =>
-        {
-            UIManager.Instance.HidePanel();
         });
 
         _animator = GetComponent<BaseUIAnimator>();

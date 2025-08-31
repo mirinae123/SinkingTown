@@ -21,7 +21,7 @@ public class SaveUI : BaseUI
 
         _saveAsNewButton.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowPanel(PanelType.Confirm, "Save?", "Save?", (UnityAction)(() =>
+            UIManager.Instance.ShowPanel(PanelType.Confirm, new KeyWrapper("save_as_new_confirm_caption"), new KeyWrapper("save_as_new_confirm_description"), (UnityAction)(() =>
             {
                 SaveManager.Instance.SaveGame();
             }), null);

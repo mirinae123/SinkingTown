@@ -423,6 +423,7 @@ GameObject:
   - component: {fileID: 2091228435470006489}
   - component: {fileID: 3682169600568609341}
   - component: {fileID: 5192875656167772394}
+  - component: {fileID: 4420783946140633324}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -548,6 +549,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4420783946140633324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4539366368916325247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa34b762887d64241a231e69eedb4e62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _key: cancel_button
 --- !u!1 &4660974937747558988
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,9 +628,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Are you sure you want to quit?
+  m_text: 'Description.
 
-    Any unsaved progress will be lost.'
+    Description.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bc0c3be559d99444ca47c6b077b7e531, type: 2}
   m_sharedMaterial: {fileID: -5292969587588953101, guid: bc0c3be559d99444ca47c6b077b7e531, type: 2}
@@ -764,9 +778,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Quit
-
-'
+  m_text: Caption
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bc0c3be559d99444ca47c6b077b7e531, type: 2}
   m_sharedMaterial: {fileID: -5292969587588953101, guid: bc0c3be559d99444ca47c6b077b7e531, type: 2}
@@ -980,6 +992,7 @@ GameObject:
   - component: {fileID: 3695884251236959775}
   - component: {fileID: 7222831022499078881}
   - component: {fileID: 5009931377642646910}
+  - component: {fileID: 1837882876158917359}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1105,3 +1118,16 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1837882876158917359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8591569065941725233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa34b762887d64241a231e69eedb4e62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _key: confirm_button

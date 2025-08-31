@@ -37,11 +37,8 @@ public class NotificationUI : BaseUI
 
         if (values.Length > 0)
         {
-            _captionText.ChangeKey((string)values[0]);
-            _captionText.UpdateTextLanguage();
-
-            _descriptionText.ChangeKey((string)values[1]);
-            _descriptionText.UpdateTextLanguage();
+            _captionText.ChangeKey(((KeyWrapper)values[0]).key, ((KeyWrapper)values[0]).parameters);
+            _descriptionText.ChangeKey(((KeyWrapper)values[1]).key, ((KeyWrapper)values[1]).parameters);
 
             if (values.Length > 2)
             {

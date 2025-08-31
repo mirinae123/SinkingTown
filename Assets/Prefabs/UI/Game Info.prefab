@@ -670,6 +670,7 @@ GameObject:
   - component: {fileID: 2215269042115698973}
   - component: {fileID: 7578676809971146557}
   - component: {fileID: 9147999566852615304}
+  - component: {fileID: 4717417790014960381}
   m_Layer: 5
   m_Name: Day Text
   m_TagString: Untagged
@@ -793,6 +794,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4717417790014960381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3193622766673832399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa34b762887d64241a231e69eedb4e62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _key: 
 --- !u!1 &3416748094866396035
 GameObject:
   m_ObjectHideFlags: 0
@@ -1176,7 +1190,7 @@ MonoBehaviour:
   _hideHoverMenu: 0
   _setGameState: 0
   _mainMenuButton: {fileID: 3991200180485019974}
-  _currentDayText: {fileID: 9147999566852615304}
+  _currentDayText: {fileID: 4717417790014960381}
   _currentDayInfo: {fileID: 4076247965907652667}
   _timeTillRiseSlider: {fileID: 6132704183377470670}
   _timeTillRiseSliderInfo: {fileID: 8403041549566196775}
