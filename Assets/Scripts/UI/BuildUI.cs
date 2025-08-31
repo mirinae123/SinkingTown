@@ -7,13 +7,12 @@ using UnityEngine.UI;
 public class BuildUI : BaseUI
 {
     [SerializeField] private Button _buildIcon;
-    [SerializeField] private Button _quitIcon;
+    [SerializeField] private ScrollRect _scrollRect;
 
-    [SerializeField] private GameObject _content;
+    private float _buttonCooldown = 0.3f;
+    private bool _isOpen = false;
 
-    [SerializeField] private Animator _animator;
-
-    private Button[] _buttons;
+    private BuildUIAnimator _animator;
 
     private void Start()
     {
@@ -21,35 +20,77 @@ public class BuildUI : BaseUI
 
         _buildIcon.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowPanel(PanelType.Build);
+            if (_buttonCooldown < 0.3f)
+            {
+                return;
+            }
+
+            if (_isOpen)
+            {
+                UIManager.Instance.HidePanel();
+            }
+            else
+            {
+                UIManager.Instance.ShowPanel(PanelType.Build);
+            }
         });
 
-        _quitIcon.onClick.AddListener(() =>
+        _animator = GetComponent<BuildUIAnimator>();
+    }
+
+    private void Update()
+    {
+        if (_buttonCooldown < 0.3f)
         {
-            UIManager.Instance.HidePanel();
-        });
+            _buttonCooldown += Time.deltaTime;
 
-        _buttons = _content.GetComponentsInChildren<Button>();
+            if (_buttonCooldown >= 0.3f)
+            {
+                _buildIcon.interactable = true;
+            }
+        }
     }
 
     public override void Show(params object[] values)
     {
-        _animator.SetBool("IsOpen", true);
-        GameManager.Instance.ChangeGameState(GameState.None);
+        _isOpen = true;
+        _animator.Open();
 
-        foreach (Button button in _buttons)
+        _buttonCooldown = 0.0f;
+        _buildIcon.interactable = false;
+
+        _scrollRect.horizontalNormalizedPosition = 0.0f;
+
+        if (GameManager.Instance.GameState == GameState.Build)
         {
-            button.enabled = true;
+            GameManager.Instance.ChangeGameState(GameState.None);
+            MapRenderer.Instance.HideRangeHighlight();
         }
     }
 
     public override void Hide()
     {
-        _animator.SetBool("IsOpen", false);
+        _isOpen = false;
+        _animator.Close();
 
-        foreach (Button button in _buttons)
+        _buttonCooldown = 0.0f;
+        _buildIcon.interactable = false;
+    }
+
+    public void ShowToScreen()
+    {
+        _animator.Show();
+    }
+
+    public void HideFromScreen()
+    {
+        Hide();
+        _animator.Hide();
+
+        if (GameManager.Instance.GameState == GameState.Build)
         {
-            button.enabled = false;
+            GameManager.Instance.ChangeGameState(GameState.None);
+            MapRenderer.Instance.HideRangeHighlight();
         }
     }
 }

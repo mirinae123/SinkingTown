@@ -1075,6 +1075,7 @@ GameObject:
   - component: {fileID: 1638378896417324959}
   - component: {fileID: 1415049177588300024}
   - component: {fileID: 2897774172241496208}
+  - component: {fileID: 2338090349691771783}
   m_Layer: 5
   m_Name: Game Info
   m_TagString: Untagged
@@ -1201,7 +1202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _positionTweener: {fileID: 2897774172241496208}
   _backgroundTweener: {fileID: 0}
-  _canvasGroupTweener: {fileID: 0}
+  _canvasGroupTweener: {fileID: 2338090349691771783}
   _initialTime: 1
 --- !u!114 &2897774172241496208
 MonoBehaviour:
@@ -1217,8 +1218,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _duration: 0.3
   _rectTransform: {fileID: 7435476446138897154}
-  _startPosition: {x: 32, y: 1000}
+  _startPosition: {x: 32, y: 300}
   _endPosition: {x: 32, y: -32}
+--- !u!114 &2338090349691771783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5582560110149253736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da9b950331dbea48854e35c5d193b20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _duration: 0.3
+  _canvasGroup: {fileID: 6503250730056788789}
 --- !u!1 &5605065777726050668
 GameObject:
   m_ObjectHideFlags: 0
