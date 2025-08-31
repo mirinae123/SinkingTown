@@ -65,9 +65,6 @@ public class HoverUI : BaseUI
         _captionLocalizer.ChangeKey((string)values[0]);
         _descriptionLocalizer.ChangeKey((string)values[1]);
 
-        _captionLocalizer.UpdateTextLanguage();
-        _descriptionLocalizer.UpdateTextLanguage();
-
         _hoverDirection = (HoverDirection)values[2];
 
         _description.ForceMeshUpdate();

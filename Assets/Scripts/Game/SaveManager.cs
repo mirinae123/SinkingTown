@@ -57,7 +57,7 @@ public class SaveManager : SingletonBehaviour<SaveManager>
     public void SaveGame(string filePath = "")
     {
         // 저장 중 알림 표시
-        UIManager.Instance.ShowPanel(PanelType.Notification, "Try", "Try", false);
+        UIManager.Instance.ShowPanel(PanelType.Notification, new KeyWrapper("save_try_notification_caption"), new KeyWrapper("save_try_notification_description"), false);
 
         StartCoroutine(CoSaveGame(filePath));
     }
@@ -124,7 +124,7 @@ public class SaveManager : SingletonBehaviour<SaveManager>
         {
             // 저장 실패 시 알림 표시
             UIManager.Instance.HidePanel();
-            UIManager.Instance.ShowPanel(PanelType.Notification, "Fail", "Fail", true);
+            UIManager.Instance.ShowPanel(PanelType.Notification, new KeyWrapper("save_fail_notification_caption"), new KeyWrapper("save_fail_notification_description"), true);
 
             yield break;
         }
@@ -141,7 +141,7 @@ public class SaveManager : SingletonBehaviour<SaveManager>
 
         // 저장 성공 시 알림 표시
         UIManager.Instance.HidePanel();
-        UIManager.Instance.ShowPanel(PanelType.Notification, "Done", "Done", true);
+        UIManager.Instance.ShowPanel(PanelType.Notification, new KeyWrapper("save_complete_notification_caption"), new KeyWrapper("save_complete_notification_description"), true);
     }
 
     /// <summary>

@@ -109,7 +109,7 @@ public class NewGameUI : BaseUI
 
         _startNewGameButton.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowPanel(PanelType.Confirm, "New Game", "Create New Game?", (UnityAction)(() =>
+            UIManager.Instance.ShowPanel(PanelType.Confirm, new KeyWrapper("new_game_confirm_caption"), new KeyWrapper("new_game_confirm_description"), (UnityAction)(() =>
             {
                 SceneLoadManager.Instance.LoadScene(1);
             }), null);

@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _key: 
+  _parameters: []
 --- !u!1 &1619466506009521394
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,8 +499,8 @@ MonoBehaviour:
   _deleteButton: {fileID: 6555891973740592999}
   _thumbnail: {fileID: 3378623735053442674}
   _saveName: {fileID: 4866654614106292663}
-  _lastSavedTime: {fileID: 749406929956074083}
-  _playTime: {fileID: 6267881519902610398}
+  _lastSavedTime: {fileID: 5464646393516332735}
+  _playTime: {fileID: 7781889291453358047}
 --- !u!1 &7532623722275118291
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,7 +512,6 @@ GameObject:
   - component: {fileID: 2638264272043205483}
   - component: {fileID: 3791005353285344268}
   - component: {fileID: 4866654614106292663}
-  - component: {fileID: 7548625809857443590}
   m_Layer: 5
   m_Name: Save Name Text
   m_TagString: Untagged
@@ -635,19 +635,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &7548625809857443590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7532623722275118291}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa34b762887d64241a231e69eedb4e62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _key: 
 --- !u!1 &7553772598425516216
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,3 +783,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _key: 
+  _parameters: []

@@ -75,7 +75,7 @@ public class TileInfoUI : BaseUI
 
         _destroyButton.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowPanel(PanelType.Confirm, "language_label", "language_label", (UnityAction)(() =>
+            UIManager.Instance.ShowPanel(PanelType.Confirm, new KeyWrapper("destroy_structure_confirm_caption"), new KeyWrapper("destroy_structure_confirm_description", new KeyWrapper(_currentTile.Structure.StructureData.StructureNameKey)), (UnityAction)(() =>
             {
                 _currentTile.DestroyStructure();
             }
@@ -84,7 +84,7 @@ public class TileInfoUI : BaseUI
 
         _researchButton.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowPanel(PanelType.Confirm, "language_label", "language_label", (UnityAction)(() =>
+            UIManager.Instance.ShowPanel(PanelType.Confirm, new KeyWrapper("research_confirm_caption"), new KeyWrapper("research_confirm_description"), (UnityAction)(() =>
             {
                 GameManager.Instance.CurrentWoods -= RESEARCH_COST_WOODS;
                 GameManager.Instance.CurrentStones -= RESEARCH_COST_STONES;
@@ -186,7 +186,6 @@ public class TileInfoUI : BaseUI
             structureButton.transform.SetParent(_providedFromContent.transform, false);
 
             structureButton.GetComponentInChildren<LocalizedText>().ChangeKey(provider.StructureData.StructureNameKey);
-            structureButton.GetComponentInChildren<LocalizedText>().UpdateTextLanguage();
 
             structureButton.GetComponent<Button>().onClick.AddListener(() =>
             {
@@ -201,7 +200,6 @@ public class TileInfoUI : BaseUI
     private void ProcesssStructureTile()
     {
         _titleText.ChangeKey(_currentTile.Structure.StructureData.StructureNameKey);
-        _titleText.UpdateTextLanguage();
 
         // !TEST: 건물 상태 확인용
         if (_currentTile.Structure.IsEnabled)
@@ -300,7 +298,6 @@ public class TileInfoUI : BaseUI
             structureButton.transform.SetParent(_providesToContent.transform, false);
 
             structureButton.GetComponentInChildren<LocalizedText>().ChangeKey(neighbor.Structure.StructureData.StructureNameKey);
-            structureButton.GetComponentInChildren<LocalizedText>().UpdateTextLanguage();
 
             structureButton.GetComponent<Button>().onClick.AddListener(() =>
             {
@@ -340,8 +337,6 @@ public class TileInfoUI : BaseUI
                 _titleText.ChangeKey("empty_tile_title");
             }
         }
-
-        _titleText.UpdateTextLanguage();
 
         _happinessInfo.gameObject.SetActive(false);
         _timeToProduceInfo.gameObject.SetActive(false);

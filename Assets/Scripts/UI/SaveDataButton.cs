@@ -17,8 +17,8 @@ public class SaveDataButton : MonoBehaviour
     [SerializeField] Image _thumbnail;
 
     [SerializeField] TMP_Text _saveName;
-    [SerializeField] TMP_Text _lastSavedTime;
-    [SerializeField] TMP_Text _playTime;
+    [SerializeField] LocalizedText _lastSavedTime;
+    [SerializeField] LocalizedText _playTime;
 
     private bool _isLoadButton;
 
@@ -32,7 +32,7 @@ public class SaveDataButton : MonoBehaviour
             // 불러오기 버튼인 경우
             if (_isLoadButton)
             {
-                UIManager.Instance.ShowPanel(PanelType.Confirm, "Load this?", "Load this?", (UnityAction)(() =>
+                UIManager.Instance.ShowPanel(PanelType.Confirm, new KeyWrapper("load_confirm_caption"), new KeyWrapper("load_confirm_description", _saveData.Name), (UnityAction)(() =>
                 {
                     SaveManager.Instance.LoadGame(_saveData);
                     SceneLoadManager.Instance.LoadScene(1);
@@ -41,7 +41,7 @@ public class SaveDataButton : MonoBehaviour
             // 저장 버튼인 경우
             else
             {
-                UIManager.Instance.ShowPanel(PanelType.Confirm, "Overwrite?", "Overwrite?", (UnityAction)(() =>
+                UIManager.Instance.ShowPanel(PanelType.Confirm, new KeyWrapper("overwrite_confirm_caption"), new KeyWrapper("overwrite_confirm_description", _saveData.Name), (UnityAction)(() =>
                 {
                     SaveManager.Instance.SaveGame(_filePath);
                 }), null);
@@ -50,7 +50,7 @@ public class SaveDataButton : MonoBehaviour
 
         _deleteButton.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowPanel(PanelType.Confirm, "Delete this?", "Delete this?", (UnityAction)(() =>
+            UIManager.Instance.ShowPanel(PanelType.Confirm, new KeyWrapper("delete_confirm_caption"), new KeyWrapper("delete_confirm_description", _saveData.Name), (UnityAction)(() =>
             {
                 // 삭제 시도 및 성공 여부에 따라 알림 표시
                 try
@@ -59,7 +59,7 @@ public class SaveDataButton : MonoBehaviour
                     {
                         File.Delete(_filePath);
 
-                        UIManager.Instance.ShowPanel(PanelType.Notification, "Error", "Error");
+                        UIManager.Instance.ShowPanel(PanelType.Notification, new KeyWrapper("delete_complete_notification_caption"), new KeyWrapper("delete_complete_notification_description"));
 
                         if (UIManager.Instance.Panels.TryGetValue(PanelType.Load, out BaseUI loadUI))
                         {
@@ -78,7 +78,7 @@ public class SaveDataButton : MonoBehaviour
                 }
                 catch (Exception)
                 {
-                    UIManager.Instance.ShowPanel(PanelType.Notification, "Error", "Error");
+                    UIManager.Instance.ShowPanel(PanelType.Notification, new KeyWrapper("delete_fail_notification_caption"), new KeyWrapper("delete_fail_notification_description"));
                 }
             }), null);
         });
@@ -95,7 +95,9 @@ public class SaveDataButton : MonoBehaviour
         _saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(_filePath));
 
         _saveName.text = _saveData.Name;
-        _lastSavedTime.text = new FileInfo(filePath).LastWriteTime.ToString("yyyy/MM/dd hh:mm");
+
+        DateTime lastSavedTime = new FileInfo(filePath).LastWriteTime;
+        _lastSavedTime.ChangeKey("last_saved_time", lastSavedTime.ToString("yyyy"), lastSavedTime.ToString("MM"), lastSavedTime.ToString("dd"), lastSavedTime.ToString("hh"), lastSavedTime.ToString("mm"));
 
         // 플레이 시간 계산
         float playSeconds = _saveData.PlayTime;
@@ -106,21 +108,18 @@ public class SaveDataButton : MonoBehaviour
         int playMinutes = (int)(playSeconds / 60.0f);
         playSeconds -= (float)(playMinutes * 60);
 
-        StringBuilder playTimeString = new StringBuilder();
-
         if (playHours > 0)
         {
-            playTimeString.Append(playHours + " Hours ");
+            _playTime.ChangeKey("hours_minutes_seconds", playHours.ToString(), playMinutes.ToString(), ((int)playSeconds).ToString());
         }
-
-        if (playMinutes > 0)
+        else if (playMinutes > 0)
         {
-            playTimeString.Append(playMinutes + " Minutes ");
+            _playTime.ChangeKey("minutes_seconds", playMinutes.ToString(), ((int)playSeconds).ToString());
         }
-
-        playTimeString.Append((int)playSeconds + " Seconds");
-
-        _playTime.text = playTimeString.ToString();
+        else
+        {
+            _playTime.ChangeKey("seconds", ((int)playSeconds).ToString());
+        }
 
         // 썸네일 불러오기
         Texture2D thumbnail = new Texture2D(0, 0);

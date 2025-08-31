@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 class MainParser
 {
@@ -17,6 +15,21 @@ class TextParser
 {
     public string key;
     public string text;
+}
+
+/// <summary>
+/// 현지화 텍스트의 키와 매개변수를 담는 Wrapper
+/// </summary>
+class KeyWrapper
+{
+    public string key;
+    public object[] parameters;
+
+    public KeyWrapper(string key, params object[] parameters)
+    {
+        this.key = key;
+        this.parameters = parameters;
+    }
 }
 
 /// <summary>
@@ -57,14 +70,19 @@ public class LocalizationManager : SingletonBehaviour<LocalizationManager>
     }
     private Dictionary<string, string> _textDatabase;
 
-    private OnLanguageUpdate _onLanguageUpdate;
-    public delegate void OnLanguageUpdate();
+    public UnityAction OnLanguageUpdate
+    {
+        get => _onLanguageUpdate;
+        set => _onLanguageUpdate = value;
+    }
+    private UnityAction _onLanguageUpdate;
 
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
 
         _textDatabase = new Dictionary<string, string>();
+        ChangeLanguage("ko");
     }
 
     private void Update()
@@ -114,21 +132,30 @@ public class LocalizationManager : SingletonBehaviour<LocalizationManager>
         _onLanguageUpdate?.Invoke();
     }
 
-    /// <summary>
-    /// 언어 변경 이벤트에 함수를 등록한다.
-    /// </summary>
-    /// <param name="function">함수</param>
-    public void AddToLanguageUpdateCallback(OnLanguageUpdate function)
+    public string GetText(string key, params object[] parameters)
     {
-        _onLanguageUpdate += function;
-    }
+        if (_textDatabase.ContainsKey(key))
+        {
+            string[] texts = new string[parameters.Length];
 
-    /// <summary>
-    /// 언어 변경 이벤트에서 함수를 등록 해제한다.
-    /// </summary>
-    /// <param name="function">함수</param>
-    public void RemoveFromLanguageUpdateCallback(OnLanguageUpdate function)
-    {
-        _onLanguageUpdate -= function;
+            for (int i = 0; i < texts.Length; i++)
+            {
+                if (parameters[i] is KeyWrapper)
+                {
+                    KeyWrapper wrapper = (KeyWrapper)parameters[i];
+                    texts[i] = GetText(wrapper.key, wrapper.parameters);
+                }
+                else
+                {
+                    texts[i] = parameters[i].ToString();
+                }
+            }
+
+            return string.Format(_textDatabase[key], texts);
+        }
+        else
+        {
+            return $"No string found for {key}";
+        }
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -14,51 +12,47 @@ public class LocalizedText : MonoBehaviour
     [SerializeField] private string _key;
 
     private TMP_Text _text;
+    private object[] _parameters;
 
-    void Start()
+    private void Start()
     {
-        if (!_text)
-        {
-            _text = GetComponent<TMP_Text>();
-            LocalizationManager.Instance.AddToLanguageUpdateCallback(UpdateTextLanguage);
-            UpdateTextLanguage();
-        }
-    }
-
-    /// <summary>
-    /// 텍스트 언어를 갱신한다.
-    /// </summary>
-    public void UpdateTextLanguage()
-    {
-        if (LocalizationManager.Instance.TextDatabase == null)
-        {
-            return;
-        }
-
-        if (LocalizationManager.Instance.TextDatabase.ContainsKey(_key))
-        {
-            if (!_text)
-            {
-                _text = GetComponent<TMP_Text>();
-                LocalizationManager.Instance.AddToLanguageUpdateCallback(UpdateTextLanguage);
-            }
-
-            _text.font = LocalizationManager.Instance.CurrentFont;
-            _text.text = LocalizationManager.Instance.TextDatabase[_key];
-        }
-    }
-
-    // Key 값을 변경한다.
-    public void ChangeKey(string newKey)
-    {
-        if (_key != newKey)
-        {
-            _key = newKey;
-        }
+        Initialize();
     }
 
     private void OnDestroy()
     {
-        LocalizationManager.Instance?.RemoveFromLanguageUpdateCallback(UpdateTextLanguage);
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.OnLanguageUpdate -= UpdateText;
+        }
+    }
+
+    private void Initialize()
+    {
+        if (!_text)
+        {
+            _text = GetComponent<TMP_Text>();
+            _parameters = new object[0];
+
+            LocalizationManager.Instance.OnLanguageUpdate += UpdateText;
+            UpdateText();
+        }
+    }
+
+    private void UpdateText()
+    {
+        _text.font = LocalizationManager.Instance.CurrentFont;
+        _text.text = LocalizationManager.Instance.GetText(_key, _parameters);
+    }
+
+    // Key 값을 변경한다.
+    public void ChangeKey(string newKey, params object[] parameters)
+    {
+        Initialize();
+
+        _key = newKey;
+        _parameters = parameters;
+
+        UpdateText();
     }
 }
