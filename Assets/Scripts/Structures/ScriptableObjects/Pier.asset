@@ -15,6 +15,7 @@ MonoBehaviour:
   StructureType: 5
   StructureImage: {fileID: 0}
   StructureNameKey: pier_title
+  StructureDescriptionKey: pier_hover_description
   DayStructurePrefab:
   - {fileID: 9073670328388804027, guid: 354f11bcec99f1c4dab68c3972c18cde, type: 3}
   NightStructurePrefab:
@@ -49,3 +50,6 @@ MonoBehaviour:
   IncreaseSpeed: 0
   DecreaseSpeed: 0
   TimeToProduce: 0
+  WoodProduce: 0
+  StoneProduce: 0
+  ResearchPointProduce: 0

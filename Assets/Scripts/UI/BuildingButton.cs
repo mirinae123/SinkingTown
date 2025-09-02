@@ -19,10 +19,10 @@ public class BuildingButton : MonoBehaviour
 
     void Start()
     {
-        UIManager.Instance.AddHoverEvent(_buttonEvent, "option_title", "language_label", HoverDirection.BottomLeft);
+        StructureData structureData = StructureManager.Instance.GetStructureData(_structureType);
 
-        _buildingImage.sprite = StructureManager.Instance.GetStructureData(_structureType)?.StructureImage;
-        _buildingText.ChangeKey(StructureManager.Instance.GetStructureData(_structureType).StructureNameKey);
+        _buildingImage.sprite = structureData.StructureImage;
+        _buildingText.ChangeKey(structureData.StructureNameKey);
 
         _buildingButton.onClick.AddListener(() => {
             GameManager.Instance.ChangeGameState(GameState.Build, _structureType);
@@ -30,9 +30,10 @@ public class BuildingButton : MonoBehaviour
             UIManager.Instance.HidePanel();
         });
 
-        StructureData structureData = StructureManager.Instance.GetStructureData(_structureType);
         _woodCost = structureData.WoodCost;
         _stoneCost = structureData.StoneCost;
+
+        UIManager.Instance.AddHoverEvent(_buttonEvent, new KeyWrapper(structureData.StructureNameKey), new KeyWrapper(structureData.StructureDescriptionKey), HoverDirection.BottomLeft, _structureType);
     }
 
     void Update()

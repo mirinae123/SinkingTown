@@ -180,6 +180,10 @@ public class ConsumerStructure : Structure
     }
     private float _currentHappiness;
 
+    public bool IsIncreasing
+    {
+        get => _isIncreasing;
+    }
     private bool _isIncreasing;
 
     public ConsumerStructure(StructureType type, Tile tile) : base(type, tile) { }
@@ -298,13 +302,13 @@ public class ActiveProducerStructure : Structure
                 switch (_structureData.StructureType)
                 {
                     case StructureType.TownHall:
-                        GameManager.Instance.ChangeResearchPoint(2);
+                        GameManager.Instance.ChangeResearchPoint(_structureData.ResearchPointProduce);
                         break;
                     case StructureType.LumberCamp:
-                        GameManager.Instance.CurrentWoods += 2; ;
+                        GameManager.Instance.CurrentWoods += _structureData.WoodProduce;
                         break;
                     case StructureType.Quarry:
-                        GameManager.Instance.CurrentStones += 1;
+                        GameManager.Instance.CurrentStones += _structureData.StoneProduce;
                         break;
                     case StructureType.Fortress:
                         if (AttackPirate())

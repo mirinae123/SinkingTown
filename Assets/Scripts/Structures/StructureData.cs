@@ -10,6 +10,7 @@ public class StructureData : ScriptableObject
 
     public Sprite StructureImage;           // 건물 이미지
     public string StructureNameKey;         // 건물 이름 키
+    public string StructureDescriptionKey;  // 건물 설명 키
 
     public GameObject[] DayStructurePrefab;         // 낮 건물 프리팹
     public GameObject[] NightStructurePrefab;       // 밤 건물 프리팹
@@ -29,4 +30,8 @@ public class StructureData : ScriptableObject
     public float DecreaseSpeed; // 행복도 감소량
 
     public float TimeToProduce; // 자원 생산 시간
+
+    public int WoodProduce;             // 목재 생산량
+    public int StoneProduce;            // 석재 생산량
+    public int ResearchPointProduce;    // 연구 포인트 생산량
 }

@@ -15,6 +15,7 @@ MonoBehaviour:
   StructureType: 3
   StructureImage: {fileID: 0}
   StructureNameKey: lumber_camp_title
+  StructureDescriptionKey: lumber_camp_hover_description
   DayStructurePrefab:
   - {fileID: 9073670328388804027, guid: 2346b0deb54982744b9b629d8bc7fcea, type: 3}
   NightStructurePrefab:
@@ -49,3 +50,6 @@ MonoBehaviour:
   IncreaseSpeed: 0
   DecreaseSpeed: 0
   TimeToProduce: 60
+  WoodProduce: 2
+  StoneProduce: 0
+  ResearchPointProduce: 0

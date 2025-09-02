@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -33,22 +34,69 @@ public class GameInfoUI : BaseUI
     {
         _mainMenuButton.onClick.AddListener(() => { UIManager.Instance.ShowPanel(PanelType.Main); });
 
+        // 현재 날짜
+        UIManager.Instance.AddHoverEvent(_currentDayInfo, new KeyWrapper("current_day_hover_caption"), new KeyWrapper("current_day_hover_description", ""), HoverDirection.TopLeft, (UnityAction)(() =>
+        {
+            HoverUI hoverUI = (HoverUI)UIManager.Instance.Panels[PanelType.Hover];
+            
+            if (PirateManager.Instance.Pirates.Count > 0)
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("current_day_hover_caption"), new KeyWrapper("current_day_invade_hover_description", GameManager.Instance.CurrentDay));
+            }
+            else
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("current_day_hover_caption"), new KeyWrapper("current_day_hover_description", GameManager.Instance.CurrentDay));
+            }
+        }));
+
+        // 해수면 상승까지 남은 시간
+        UIManager.Instance.AddHoverEvent(_timeTillRiseSliderInfo, new KeyWrapper("flood_time_hover_caption"), new KeyWrapper("flood_time_hover_description", ""), HoverDirection.TopLeft, (UnityAction)(() =>
+        {
+            HoverUI hoverUI = (HoverUI)UIManager.Instance.Panels[PanelType.Hover];
+
+            if (MapRenderer.Instance.IsOceanRising)
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("flood_time_hover_caption"), new KeyWrapper("flood_time_increasing_hover_description"));
+            }
+            else if (MapManager.Instance.OceanLevel == MapGenerator.Instance.MaxHeight)
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("flood_time_hover_caption"), new KeyWrapper("flood_time_stop_hover_description"));
+            }
+            else
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("flood_time_hover_caption"), new KeyWrapper("flood_time_hover_description", (int)(SaveManager.Instance.SaveData.OceanRisePeriod - GameManager.Instance.TimeSinceOceanRise)));
+            }
+        }));
+
+        // 현재 자원
+        UIManager.Instance.AddHoverEvent(_woodInfo, new KeyWrapper("current_wood_hover_caption"), new KeyWrapper("current_wood_hover_description"), HoverDirection.TopLeft);
+        UIManager.Instance.AddHoverEvent(_stoneInfo, new KeyWrapper("current_stone_hover_caption"), new KeyWrapper("current_stone_hover_description"), HoverDirection.TopLeft);
+        UIManager.Instance.AddHoverEvent(_researchInfo, new KeyWrapper("current_research_point_hover_caption"), new KeyWrapper("current_research_point_hover_description"), HoverDirection.TopLeft);
+
+        // 일시 정지
         if (SaveManager.Instance.SaveData.CanPause)
         {
             _pauseButton.onClick.AddListener(() => { GameManager.Instance.IsPaused = !GameManager.Instance.IsPaused; });
-            UIManager.Instance.AddHoverEvent(_pauseButtonInfo, "option_title", "language_label", HoverDirection.TopLeft);
+            UIManager.Instance.AddHoverEvent(_pauseButtonInfo, new KeyWrapper("pause_button_hover_caption"), new KeyWrapper("pause_button_enabled_hover_description"), HoverDirection.TopLeft, (UnityAction)(() =>
+            {
+                HoverUI hoverUI = (HoverUI)UIManager.Instance.Panels[PanelType.Hover];
+
+                if (GameManager.Instance.IsPaused)
+                {
+                    hoverUI.UpdateHoverText(new KeyWrapper("pause_button_hover_caption"), new KeyWrapper("pause_button_play_hover_description"));
+                }
+                else
+                {
+                    hoverUI.UpdateHoverText(new KeyWrapper("pause_button_hover_caption"), new KeyWrapper("pause_button_pause_hover_description"));
+                }
+            })
+            );
         }
         else
         {
             _pauseButton.interactable = false;
-            UIManager.Instance.AddHoverEvent(_pauseButtonInfo, "option_title", "language_label", HoverDirection.TopLeft);
+            UIManager.Instance.AddHoverEvent(_pauseButtonInfo, new KeyWrapper("pause_button_hover_caption"), new KeyWrapper("pause_button_disabled_hover_description"), HoverDirection.TopLeft);
         }
-
-        UIManager.Instance.AddHoverEvent(_currentDayInfo, "option_title", "language_label", HoverDirection.TopLeft);
-        UIManager.Instance.AddHoverEvent(_timeTillRiseSliderInfo, "option_title", "language_label", HoverDirection.TopLeft);
-        UIManager.Instance.AddHoverEvent(_woodInfo, "option_title", "language_label", HoverDirection.TopLeft);
-        UIManager.Instance.AddHoverEvent(_stoneInfo, "option_title", "language_label", HoverDirection.TopLeft);
-        UIManager.Instance.AddHoverEvent(_researchInfo, "option_title", "language_label", HoverDirection.TopLeft);
 
         _animator = GetComponent<BaseUIAnimator>();
     }

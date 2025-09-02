@@ -3,76 +3,92 @@
 	"font":		"Paperlogy SDF",
 	"texts": [
 		{
-			"key": "option_title",
-			"text": "설정"
+			"key": "town_hall_title",
+			"text": "시청"
 		},
 		{
-			"key": "language_label",
-			"text": "언어"
-		},
-		{
-			"key": "language_name",
-			"text": "한국어"
-		},
-		{
-			"key": "apartment_title",
-			"text": "공동 주택"
-		},
-		{
-			"key": "dock_title",
-			"text": "선착장"
-		},
-		{
-			"key": "farm_title",
-			"text": "농장"
-		},
-		{
-			"key": "fortress_title",
-			"text": "요새"
+			"key": "town_hall_hover_description",
+			"text": "갈매기 마을의 중심지입니다. 열기구 연구를 진행합니다."
 		},
 		{
 			"key": "house_title",
 			"text": "집"
 		},
 		{
-			"key": "hydroponics_farm_title",
-			"text": "수경 농장"
-		},
-		{
-			"key": "lumber_camp_title",
-			"text": "벌목장"
+			"key": "house_hover_description",
+			"text": "갈매기들의 집입니다. 주변 타일에 인구를 공급합니다."
 		},
 		{
 			"key": "market_title",
 			"text": "시장"
 		},
 		{
-			"key": "pier_title",
-			"text": "낚시터"
+			"key": "market_hover_description",
+			"text": "주변 타일의 효과 범위를 증가시킵니다."
+		},
+		{
+			"key": "lumber_camp_title",
+			"text": "벌목장"
+		},
+		{
+			"key": "lumber_camp_hover_description",
+			"text": "목재를 생산합니다. 숲 타일 위에만 건설할 수 있습니다."
 		},
 		{
 			"key": "quarry_title",
 			"text": "채석장"
 		},
 		{
+			"key": "quarry_hover_description",
+			"text": "석재를 생산합니다. 돌 타일 위에만 건설할 수 있습니다."
+		},
+		{
+			"key": "pier_title",
+			"text": "낚시터"
+		},
+		{
+			"key": "pier_hover_description",
+			"text": "물고기를 잡아 주변 식당에 공급합니다. 물 타일 근처에만 건설할 수 있습니다."
+		},
+		{
+			"key": "farm_title",
+			"text": "농장"
+		},
+		{
+			"key": "farm_hover_description",
+			"text": "땅에서 목화를 채취해 주변 방직소에 공급합니다. 육지 위에만 건설할 수 있습니다."
+		},
+		{
 			"key": "restaurant_title",
 			"text": "식당"
 		},
 		{
-			"key": "school_title",
-			"text": "학교"
+			"key": "restaurant_hover_description",
+			"text": "물고기를 음식으로 조리해 주변에 공급합니다. 공급받은 물고기만큼 음식을 제공합니다."
 		},
 		{
 			"key": "textile_mill_title",
 			"text": "방직소"
 		},
 		{
-			"key": "town_hall_title",
-			"text": "시청"
+			"key": "textile_mill_hover_description",
+			"text": "목화를 옷으로 가공해 주변에 공급합니다. 공급받은 목화만큼 옷을 제공합니다."
+		},
+		{
+			"key": "fortress_title",
+			"text": "요새"
+		},
+		{
+			"key": "fortress_hover_description",
+			"text": "주변에 다가오는 해적을 공격해 방어합니다."
 		},
 		{
 			"key": "deck_title",
 			"text": "데크"
+		},
+		{
+			"key": "deck_hover_description",
+			"text": "물 위에 건물을 지을 수 있도록 데크를 건설합니다."
 		},
 		{
 			"key": "empty_tile_title",
@@ -111,11 +127,19 @@
 			"text": "옷"
 		},
 		{
-			"key": "efficiency_bonus_label",
-			"text": "효율 보너스"
+			"key": "wood_label",
+			"text": "목재"
 		},
 		{
-			"key": "radius_bonus_label",
+			"key": "stone_label",
+			"text": "석재"
+		},
+		{
+			"key": "range_label",
+			"text": "범위"
+		},
+		{
+			"key": "range_bonus_label",
 			"text": "추가 범위"
 		},
 		{
@@ -397,6 +421,258 @@
 		{
 			"key": "build_button",
 			"text": "건설"
+		},
+		{
+			"key": "happiness_hover_caption",
+			"text": "행복도"
+		},
+		{
+			"key": "happiness_hover_description",
+			"text": "건물의 행복도입니다.\n<size=50%> </size>\n요구 사항이 충족되지 않으면 행복도가 감소하고, 행복도가 0이 되면 건물이 멈춥니다.{0}"
+		},
+		{
+			"key": "happiness_increase_hover_description",
+			"text": "\n<size=50%> </size>\n건물 재가동까지 {0}초 남음"
+		},
+		{
+			"key": "happiness_decrease_hover_description",
+			"text": "\n<size=50%> </size>\n건물 멈춤까지 {0}초 남음"
+		},
+		{
+			"key": "happiness_enabled_hover_description",
+			"text": "\n<size=50%> </size>\n현재 건물 가동 중"
+		},
+		{
+			"key": "happiness_disabled_hover_description",
+			"text": "\n<size=50%> </size>\n현재 건물 멈춤"
+		},
+		{
+			"key": "time_to_produce_hover_caption",
+			"text": "생산 시간"
+		},
+		{
+			"key": "time_to_produce_hover_description",
+			"text": "일정 시간마다 자원을 생산합니다.{0}"
+		},
+		{
+			"key": "time_to_produce_disabled_hover_description",
+			"text": "\n<size=50%> </size>\n현재 건물 멈춤"
+		},
+		{
+			"key": "research_time_hover_caption",
+			"text": "연구 시간"
+		},
+		{
+			"key": "research_time_hover_description",
+			"text": "일정 시간마다 연구를 진행합니다.{0}"
+		},
+		{
+			"key": "research_time_disabled_hover_description",
+			"text": "\n<size=50%> </size>\n현재 건물 멈춤"
+		},
+		{
+			"key": "fortress_time_hover_caption",
+			"text": "공격 준비 시간"
+		},
+		{
+			"key": "fortress_time_hover_description",
+			"text": "일정 시간마다 공격을 준비합니다. 준비가 됐을 때 주변에 해적이 있으면 공격합니다.{0}"
+		},
+		{
+			"key": "fortress_time_disabled_hover_description",
+			"text": "\n<size=50%> </size>\n현재 건물 멈춤"
+		},
+		{
+			"key": "research_button_hover_caption",
+			"text": "연구 가속"
+		},
+		{
+			"key": "research_button_hover_description",
+			"text": "<sprite=3> {0} <sprite=4> {1} 자원을 소모해 <sprite=16> {2} 연구 포인트를 얻습니다. {3}초마다 한 번만 진행할 수 있습니다.{4}"
+		},
+		{
+			"key": "research_button_disabled_hover_description",
+			"text": "\n<size=50%> </size>\n멈춤 상태에서는 연구 가속 불가능"
+		},
+		{
+			"key": "research_button_cooldown_hover_description",
+			"text": "\n<size=50%> </size>\n{0}초 후 연구 가속 가능"
+		},
+		{
+			"key": "destroy_button_hover_caption",
+			"text": "건물 파괴"
+		},
+		{
+			"key": "destroy_button_hover_description",
+			"text": "현재 타일에 지어진 건물을 파괴합니다."
+		},
+		{
+			"key": "resource_hover_caption",
+			"text": "공급 현황"
+		},
+		{
+			"key": "resource_hover_description",
+			"text": "현재 타일에 공급되고 있는 자원들입니다."
+		},
+		{
+			"key": "population_hover_caption",
+			"text": "<sprite=0> 인구"
+		},
+		{
+			"key": "population_hover_description",
+			"text": "노동력을 제공합니다. 집을 통해 공급할 수 있습니다."
+		},
+		{
+			"key": "fish_hover_caption",
+			"text": "<sprite=1> 물고기"
+		},
+		{
+			"key": "fish_hover_description",
+			"text": "<sprite=2> 음식에 쓰일 재료를 제공합니다. 낚시터를 통해 공급할 수 있습니다."
+		},
+		{
+			"key": "food_hover_caption",
+			"text": "<sprite=2> 음식"
+		},
+		{
+			"key": "food_hover_description",
+			"text": "갈매기들이 먹을 음식을 제공합니다. 식당을 통해 공급할 수 있습니다."
+		},
+		{
+			"key": "cotton_hover_caption",
+			"text": "<sprite=5> 목화"
+		},
+		{
+			"key": "cotton_hover_description",
+			"text": "<sprite=6> 옷에 쓰일 재료를 제공합니다. 농장을 통해 공급할 수 있습니다."
+		},
+		{
+			"key": "clothe_hover_caption",
+			"text": "<sprite=6> 옷"
+		},
+		{
+			"key": "clothe_hover_description",
+			"text": "갈매기들이 입을 옷을 제공합니다. 방직소를 통해 공급할 수 있습니다."
+		},
+		{
+			"key": "range_bonus_hover_caption",
+			"text": "<sprite=7> 추가 범위"
+		},
+		{
+			"key": "range_bonus_hover_description",
+			"text": "건물의 효과 범위를 증가시킵니다. 시장을 통해 공급할 수 있습니다."
+		},
+		{
+			"key": "provides_to_hover_description",
+			"text": "현재 타일로부터 공급받고 있는 이웃 건물들입니다."
+		},
+		{
+			"key": "provided_from_hover_description",
+			"text": "현재 타일에 공급하고 있는 이웃 건물들입니다."
+		},
+		{
+			"key": "current_day_hover_caption",
+			"text": "현재 상태: 평화로움"
+		},
+		{
+			"key": "current_day_hover_description",
+			"text": "{0}일차. 평화로운 하루입니다."
+		},
+		{
+			"key": "current_day_invade_hover_caption",
+			"text": "현재 상태: 침공"
+		},
+		{
+			"key": "current_day_invade_hover_description",
+			"text": "{0}일차. 해적들이 침공하고 있습니다!"
+		},
+		{
+			"key": "flood_time_hover_caption",
+			"text": "해수면 상승 시간"
+		},
+		{
+			"key": "flood_time_hover_description",
+			"text": "앞으로 {0}초 뒤에 해수면이 상승합니다."
+		},
+		{
+			"key": "flood_time_increasing_hover_description",
+			"text": "현재 해수면이 상승하고 있습니다."
+		},
+		{
+			"key": "flood_time_stop_hover_description",
+			"text": "더 이상 해수면은 상승하지 않습니다."
+		},
+		{
+			"key": "current_wood_hover_caption",
+			"text": "<sprite=3> 목재"
+		},
+		{
+			"key": "current_wood_hover_description",
+			"text": "현재 목재 소지량입니다. 벌목장에서 생산할 수 있습니다."
+		},
+		{
+			"key": "current_stone_hover_caption",
+			"text": "<sprite=4> 석재"
+		},
+		{
+			"key": "current_stone_hover_description",
+			"text": "현재 석재 소지량입니다. 채석장에서 생산할 수 있습니다."
+		},
+		{
+			"key": "current_research_point_hover_caption",
+			"text": "<sprite=16> 연구 포인트"
+		},
+		{
+			"key": "current_research_point_hover_description",
+			"text": "열기구 연구에 필요한 포인트입니다. 시청에서 연구를 진행할 수 있습니다.\n<size=50%> </size>\n육지가 완전히 잠기기 전에 100%를 달성해야 합니다."
+		},
+		{
+			"key": "pause_button_hover_caption",
+			"text": "일시정지"
+		},
+		{
+			"key": "pause_button_pause_hover_description",
+			"text": "게임을 일시정지합니다."
+		},
+		{
+			"key": "pause_button_play_hover_description",
+			"text": "일시정지를 해제합니다."
+		},
+		{
+			"key": "pause_button_disabled_hover_description",
+			"text": "일시정지 기능이 비활성화되어 있습니다."
+		},
+		{
+			"key": "build_hover_need_label",
+			"text": "요구사항"
+		},
+		{
+			"key": "build_hover_produce_label",
+			"text": "생산량"
+		},
+		{
+			"key": "build_hover_produce_per_second",
+			"text": "{0}초당 {1}"
+		},
+		{
+			"key": "build_hover_resource_count",
+			"text": "{0}"
+		},
+		{
+			"key": "research_point_label",
+			"text": "연구 포인트"
+		},
+		{
+			"key": "attack_pirate_label",
+			"text": "해적 공격"
+		},
+		{
+			"key": "option_title",
+			"text": "설정"
+		},
+		{
+			"key": "language_label",
+			"text": "언어"
 		}
 	]
 }
