@@ -124,11 +124,30 @@ public class GameManager : SingletonBehaviour<GameManager>
     }
     private bool _hasTownHall = false;
 
+    /// <summary>
+    /// 연구 가속이 가능한지 여부
+    /// </summary>
     public bool IsResearchable
     {
         get => _isResearchable;
     }
     private bool _isResearchable = true;
+
+    /// <summary>
+    /// 연구 가속 쿨타임
+    /// </summary>
+    public float ResearchCooldown
+    {
+        get => RESEARCH_COOLDOWN;
+    }
+
+    /// <summary>
+    /// 연구 가속이 가능하기까지 남은 시간
+    /// </summary>
+    public float ResearchCooldownLeft
+    {
+        get => RESEARCH_COOLDOWN - _researchCooldown;
+    }
 
     private void Start()
     {

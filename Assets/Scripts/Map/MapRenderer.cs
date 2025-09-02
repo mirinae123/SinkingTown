@@ -43,6 +43,12 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
     private GameObject _oceanObject;
 
+    public bool IsOceanRising
+    {
+        get => _isOceanRising;
+    }
+    private bool _isOceanRising;
+
     public float OceanHeight
     {
         get => _oceanObject.transform.position.y;
@@ -457,6 +463,8 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
 
     private IEnumerator CoRaiseOceanLevel(int before, int after)
     {
+        _isOceanRising = true;
+
         Vector3 origianlPosition = _oceanObject.transform.position;
         Vector3 newOceanPosition = _oceanObject.transform.position;
         newOceanPosition.y = after + 0.8f;
@@ -514,6 +522,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
             yield return null;
         }
 
+        _isOceanRising = false;
         _oceanObject.transform.position = newOceanPosition;
     }
 }

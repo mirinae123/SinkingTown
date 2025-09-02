@@ -75,7 +75,7 @@ public class TileInfoUI : BaseUI
 
         _destroyButton.onClick.AddListener(() =>
         {
-            UIManager.Instance.ShowPanel(PanelType.Confirm, new KeyWrapper("destroy_structure_confirm_caption"), new KeyWrapper("destroy_structure_confirm_description", new KeyWrapper(_currentTile.Structure.StructureData.StructureNameKey)), (UnityAction)(() =>
+            UIManager.Instance.ShowPanel(PanelType.Confirm, new KeyWrapper("destroy_structure_confirm_caption"), new KeyWrapper("destroy_structure_confirm_description", new KeyWrapper(_currentTile.Structure != null ? _currentTile.Structure.StructureData.StructureNameKey : StructureManager.Instance.GetStructureData(StructureType.Deck).StructureNameKey)), (UnityAction)(() =>
             {
                 _currentTile.DestroyStructure();
             }
@@ -95,24 +95,123 @@ public class TileInfoUI : BaseUI
             ), null);
         });
 
-        UIManager.Instance.AddHoverEvent(_happinessInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_timeToProduceInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_researchInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_fortressInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_researchButtonInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_destroyButtonInfo, "language_label", "language_label", HoverDirection.TopRight);
+        // 행복도 게이지
+        UIManager.Instance.AddHoverEvent(_happinessInfo, new KeyWrapper("happiness_hover_caption"), new KeyWrapper("happiness_hover_description", ""), HoverDirection.TopRight, (UnityAction)(() =>
+        {
+            ConsumerStructure structure = (ConsumerStructure)_currentTile.Structure;
+            HoverUI hoverUI = (HoverUI)UIManager.Instance.Panels[PanelType.Hover];
 
-        UIManager.Instance.AddHoverEvent(_resourceInfo, "language_label", "language_label", HoverDirection.TopRight);
+            if (structure.IsEnabled)
+            {
+                if (structure.IsIncreasing)
+                {
+                    hoverUI.UpdateHoverText(new KeyWrapper("happiness_hover_caption"), new KeyWrapper("happiness_hover_description", new KeyWrapper("happiness_enabled_hover_description")));
+                }
+                else
+                {
+                    hoverUI.UpdateHoverText(new KeyWrapper("happiness_hover_caption"), new KeyWrapper("happiness_hover_description", new KeyWrapper("happiness_decrease_hover_description", (int)(structure.CurrentHappiness / structure.StructureData.DecreaseSpeed))));
+                }
+            }
+            else
+            {
+                if (structure.IsIncreasing)
+                {
+                    hoverUI.UpdateHoverText(new KeyWrapper("happiness_hover_caption"), new KeyWrapper("happiness_hover_description", new KeyWrapper("happiness_increase_hover_description", (int)((structure.StructureData.MaxHappiness - structure.CurrentHappiness) / structure.StructureData.IncreaseSpeed))));
+                }
+                else
+                {
+                    hoverUI.UpdateHoverText(new KeyWrapper("happiness_hover_caption"), new KeyWrapper("happiness_hover_description", new KeyWrapper("happiness_disabled_hover_description")));
+                }
+            }
+        }
+        ));
 
-        UIManager.Instance.AddHoverEvent(_populationInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_fishInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_foodInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_cottonInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_clotheInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_rangeBonusInfo, "language_label", "language_label", HoverDirection.TopRight);
+        // 생산 시간 게이지
+        UIManager.Instance.AddHoverEvent(_timeToProduceInfo, new KeyWrapper("time_to_produce_hover_caption"), new KeyWrapper("time_to_produce_hover_description", ""), HoverDirection.TopRight, (UnityAction)(() =>
+        {
+            ActiveProducerStructure structure = (ActiveProducerStructure)_currentTile.Structure;
+            HoverUI hoverUI = (HoverUI)UIManager.Instance.Panels[PanelType.Hover];
 
-        UIManager.Instance.AddHoverEvent(_providesToInfo, "language_label", "language_label", HoverDirection.TopRight);
-        UIManager.Instance.AddHoverEvent(_providedFromInfo, "language_label", "language_label", HoverDirection.TopRight);
+            if (structure.IsEnabled)
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("time_to_produce_hover_caption"), new KeyWrapper("time_to_produce_hover_description", ""));
+            }
+            else
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("time_to_produce_hover_caption"), new KeyWrapper("time_to_produce_hover_description", new KeyWrapper("time_to_produce_disabled_hover_description")));
+            }
+        }));
+
+        // 연구 시간 게이지
+        UIManager.Instance.AddHoverEvent(_researchInfo, new KeyWrapper("research_time_hover_caption"), new KeyWrapper("research_time_hover_description", ""), HoverDirection.TopRight, (UnityAction)(() =>
+        {
+            ActiveProducerStructure structure = (ActiveProducerStructure)_currentTile.Structure;
+            HoverUI hoverUI = (HoverUI)UIManager.Instance.Panels[PanelType.Hover];
+
+            if (structure.IsEnabled)
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("research_time_hover_caption"), new KeyWrapper("research_time_hover_description", ""));
+            }
+            else
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("research_time_hover_caption"), new KeyWrapper("research_time_hover_description", new KeyWrapper("research_time_disabled_hover_description")));
+            }
+        }));
+
+        // 요새 공격 시간 게이지
+        UIManager.Instance.AddHoverEvent(_fortressInfo, new KeyWrapper("fortress_time_hover_caption"), new KeyWrapper("fortress_time_hover_description", ""), HoverDirection.TopRight, (UnityAction)(() =>
+        {
+            ActiveProducerStructure structure = (ActiveProducerStructure)_currentTile.Structure;
+            HoverUI hoverUI = (HoverUI)UIManager.Instance.Panels[PanelType.Hover];
+
+            if (structure.IsEnabled)
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("fortress_time_hover_caption"), new KeyWrapper("fortress_time_hover_description", ""));
+            }
+            else
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("fortress_time_hover_caption"), new KeyWrapper("fortress_time_hover_description", new KeyWrapper("fortress_time_disabled_hover_description")));
+            }
+        }));
+
+        // 연구 가속 버튼
+        UIManager.Instance.AddHoverEvent(_researchButtonInfo, new KeyWrapper("research_button_hover_caption"), new KeyWrapper("research_button_hover_description", 2, 2, 2, GameManager.Instance.ResearchCooldown, ""), HoverDirection.TopRight, (UnityAction)(() =>
+        {
+            ActiveProducerStructure structure = (ActiveProducerStructure)_currentTile.Structure;
+            HoverUI hoverUI = (HoverUI)UIManager.Instance.Panels[PanelType.Hover];
+
+            if (structure.IsEnabled)
+            {
+                if (GameManager.Instance.IsResearchable)
+                {
+                    hoverUI.UpdateHoverText(new KeyWrapper("research_button_hover_caption"), new KeyWrapper("research_button_hover_description", RESEARCH_COST_WOODS, RESEARCH_COST_STONES, structure.StructureData.ResearchPointProduce, GameManager.Instance.ResearchCooldown, ""));
+                }
+                else
+                {
+                    hoverUI.UpdateHoverText(new KeyWrapper("research_button_hover_caption"), new KeyWrapper("research_button_hover_description", RESEARCH_COST_WOODS, RESEARCH_COST_STONES, structure.StructureData.ResearchPointProduce, GameManager.Instance.ResearchCooldown, new KeyWrapper("research_button_cooldown_hover_description", (int)GameManager.Instance.ResearchCooldownLeft)));
+                }
+            }
+            else
+            {
+                hoverUI.UpdateHoverText(new KeyWrapper("research_button_hover_caption"), new KeyWrapper("research_button_hover_description", RESEARCH_COST_WOODS, RESEARCH_COST_STONES, structure.StructureData.ResearchPointProduce, GameManager.Instance.ResearchCooldown, new KeyWrapper("research_button_disabled_hover_description")));
+            }
+        }));
+
+        // 파괴 버튼
+        UIManager.Instance.AddHoverEvent(_destroyButtonInfo, new KeyWrapper("destroy_button_hover_caption"), new KeyWrapper("destroy_button_hover_description"), HoverDirection.TopRight);
+
+        // 자원 관련
+        UIManager.Instance.AddHoverEvent(_resourceInfo, new KeyWrapper("resource_hover_caption"), new KeyWrapper("resource_hover_description"), HoverDirection.TopRight);
+
+        UIManager.Instance.AddHoverEvent(_populationInfo, new KeyWrapper("population_hover_caption"), new KeyWrapper("population_hover_description"), HoverDirection.TopRight);
+        UIManager.Instance.AddHoverEvent(_fishInfo, new KeyWrapper("fish_hover_caption"), new KeyWrapper("fish_hover_description"), HoverDirection.TopRight);
+        UIManager.Instance.AddHoverEvent(_foodInfo, new KeyWrapper("food_hover_caption"), new KeyWrapper("food_hover_description"), HoverDirection.TopRight);
+        UIManager.Instance.AddHoverEvent(_cottonInfo, new KeyWrapper("cotton_hover_caption"), new KeyWrapper("cotton_hover_description"), HoverDirection.TopRight);
+        UIManager.Instance.AddHoverEvent(_clotheInfo, new KeyWrapper("clothe_hover_caption"), new KeyWrapper("clothe_hover_description"), HoverDirection.TopRight);
+        UIManager.Instance.AddHoverEvent(_rangeBonusInfo, new KeyWrapper("range_bonus_hover_caption"), new KeyWrapper("range_bonus_hover_description"), HoverDirection.TopRight);
+
+        UIManager.Instance.AddHoverEvent(_providesToInfo, new KeyWrapper("provides_to_label"), new KeyWrapper("provides_to_hover_description"), HoverDirection.TopRight);
+        UIManager.Instance.AddHoverEvent(_providedFromInfo, new KeyWrapper("provided_from_label"), new KeyWrapper("provided_from_hover_description"), HoverDirection.TopRight);
 
         _animator = GetComponent<BaseUIAnimator>();
     }

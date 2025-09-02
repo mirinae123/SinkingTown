@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
@@ -161,17 +162,6 @@ public class UIManager : SingletonBehaviour<UIManager>
     }
 
     /// <summary>
-    /// 호버 메뉴를 표시한다.
-    /// </summary>
-    /// <param name="caption">제목</param>
-    /// <param name="description">설명</param>
-    /// <param name="hoverDirection">위치</param>
-    public void ShowHoverPanel(string caption, string description, HoverDirection hoverDirection)
-    {
-        _panels[PanelType.Hover].Show(caption, description, hoverDirection);
-    }
-
-    /// <summary>
     /// 호버 메뉴를 숨긴다.
     /// </summary>
     public void HideHoverPanel()
@@ -217,11 +207,27 @@ public class UIManager : SingletonBehaviour<UIManager>
     /// <summary>
     /// 마우스 호버 시, 호버 메뉴가 나타나는 이벤트를 추가한다.
     /// </summary>
-    public void AddHoverEvent(EventTrigger eventTrigger, string caption, string description, HoverDirection hoverDirection)
+    public void AddHoverEvent(EventTrigger eventTrigger, KeyWrapper caption, KeyWrapper description, HoverDirection hoverDirection, params object[] values)
     {
         EventTrigger.Entry entryEvent = new EventTrigger.Entry();
         entryEvent.eventID = EventTriggerType.PointerEnter;
-        entryEvent.callback.AddListener((data) => { ShowHoverPanel(caption, description, hoverDirection); });
+        entryEvent.callback.AddListener((data) =>
+        {
+            HoverUI hoverUI = (HoverUI)_panels[PanelType.Hover];
+            hoverUI.Show(caption, description, hoverDirection);
+
+            if (values.Length > 0)
+            {
+                if (values[0] is UnityAction)
+                {
+                    hoverUI.SetOnUpdate((UnityAction)values[0]);
+                }
+                else if (values[0] is StructureType)
+                {
+                    hoverUI.SetStructureData((StructureType)values[0]);
+                }
+            }
+        });
         eventTrigger.triggers.Add(entryEvent);
 
         EventTrigger.Entry exitEvent = new EventTrigger.Entry();

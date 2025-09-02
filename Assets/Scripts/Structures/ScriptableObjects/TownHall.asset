@@ -15,6 +15,7 @@ MonoBehaviour:
   StructureType: 0
   StructureImage: {fileID: 0}
   StructureNameKey: town_hall_title
+  StructureDescriptionKey: town_hall_hover_description
   DayStructurePrefab:
   - {fileID: 9073670328388804027, guid: ecd9ef31f9193d34799198bf6e5f7849, type: 3}
   NightStructurePrefab:
@@ -49,3 +50,6 @@ MonoBehaviour:
   IncreaseSpeed: 10
   DecreaseSpeed: 5
   TimeToProduce: 60
+  WoodProduce: 0
+  StoneProduce: 0
+  ResearchPointProduce: 2

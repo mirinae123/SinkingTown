@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -20,7 +21,7 @@ class TextParser
 /// <summary>
 /// 현지화 텍스트의 키와 매개변수를 담는 Wrapper
 /// </summary>
-class KeyWrapper
+public class KeyWrapper
 {
     public string key;
     public object[] parameters;
@@ -151,7 +152,25 @@ public class LocalizationManager : SingletonBehaviour<LocalizationManager>
                 }
             }
 
-            return string.Format(_textDatabase[key], texts);
+            try
+            {
+                return string.Format(_textDatabase[key], texts);
+            }
+            catch
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append($"Failed to format string \"{_textDatabase[key]}\" with [");
+
+                foreach (string text in texts)
+                {
+                    sb.Append($"{texts} ");
+                }
+
+                sb.Append("]");
+                Debug.LogError(sb.ToString());
+
+                return $"String Format Error";
+            }
         }
         else
         {
