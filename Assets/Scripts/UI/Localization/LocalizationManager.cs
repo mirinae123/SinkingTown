@@ -4,35 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-class MainParser
-{
-    public string language;
-    public string font;
-    public TextParser[] texts;
-}
-
-[System.Serializable]
-class TextParser
-{
-    public string key;
-    public string text;
-}
-
-/// <summary>
-/// 현지화 텍스트의 키와 매개변수를 담는 Wrapper
-/// </summary>
-public struct KeyWrapper
-{
-    public string key;
-    public object[] parameters;
-
-    public KeyWrapper(string key, params object[] parameters)
-    {
-        this.key = key;
-        this.parameters = parameters;
-    }
-}
-
 /// <summary>
 /// 현지화를 관리하는 매니저 클래스
 /// </summary>
