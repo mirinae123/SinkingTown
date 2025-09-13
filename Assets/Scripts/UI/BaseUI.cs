@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 모든 UI 클래스의 기반이 되는 클래스
+/// </summary>
 public abstract class BaseUI : MonoBehaviour
 {
     public bool HidePreviousPanel

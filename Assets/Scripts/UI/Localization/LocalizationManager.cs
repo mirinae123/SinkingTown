@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -106,41 +106,33 @@ public class LocalizationManager : SingletonBehaviour<LocalizationManager>
 
     public string GetText(string key, params object[] parameters)
     {
-        if (_textDatabase.ContainsKey(key))
+        if (_textDatabase.TryGetValue(key, out string localizedText))
         {
-            string[] texts = new string[parameters.Length];
+            string[] localizedParameters = new string[parameters?.Length ?? 0];
 
-            for (int i = 0; i < texts.Length; i++)
+            for (int i = 0; i < localizedParameters.Length; i++)
             {
-                if (parameters[i] is KeyWrapper)
+                if (parameters[i] is KeyWrapper keyWrapper)
                 {
-                    KeyWrapper wrapper = (KeyWrapper)parameters[i];
-                    texts[i] = GetText(wrapper.key, wrapper.parameters);
+                    localizedParameters[i] = GetText(keyWrapper.key, keyWrapper.parameters);
+                }
+                else if (parameters[i] is not null)
+                {
+                    localizedParameters[i] = parameters[i].ToString();
                 }
                 else
                 {
-                    texts[i] = parameters[i].ToString();
+                    localizedParameters[i] = "Null";
                 }
             }
 
             try
             {
-                return string.Format(_textDatabase[key], texts);
+                return string.Format(localizedText, localizedParameters);
             }
-            catch
+            catch (FormatException)
             {
-                StringBuilder sb = new StringBuilder();
-                sb.Append($"Failed to format string \"{_textDatabase[key]}\" with [");
-
-                foreach (string text in texts)
-                {
-                    sb.Append($"{texts} ");
-                }
-
-                sb.Append("]");
-                Debug.LogError(sb.ToString());
-
-                return $"String Format Error";
+                return $"Failed to format string \"{_textDatabase[key]}\" with [{string.Join(", ", localizedParameters)}]";
             }
         }
         else
