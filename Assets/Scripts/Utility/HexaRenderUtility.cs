@@ -4,6 +4,8 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public enum TextureType { Dirt, GrassSide, Rock, SnowSide, Grass = 9, Snow = 11 }
+
 /// <summary>
 /// 육각형 타일을 렌더링할 때 필요한 정보를 담은 클래스
 /// </summary>
@@ -84,7 +86,9 @@ public class HexaRenderUtility
     }
 
     private static Vector2[] _topUv = {
-        new Vector2(0.5f, 0.5f), new Vector2(0.0f, 0.5f), new Vector2(0.25f, 1.0f),
+        new Vector2(0.5f, 0.5f),
+        new Vector2(0.0f, 0.5f),
+        new Vector2(0.25f, 1.0f),
          new Vector2(0.75f, 1.0f),
          new Vector2(1.0f, 0.5f),
          new Vector2(0.75f, 0.0f),

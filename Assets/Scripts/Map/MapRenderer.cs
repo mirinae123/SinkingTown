@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 /// </summary>
 public class MapRenderer : SingletonBehaviour<MapRenderer>
 {
-    private const int CHUNK_SIZE = 64;
+    private const int CHUNK_SIZE = 32;
     private const float OCEAN_RISE_DURATION = 2f;
 
     [SerializeField] private GameObject _tilePrefab;
@@ -27,8 +27,9 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
     private GameObject _tileHolder;         // 모든 타일 오브젝트의 부모 (정리용)
     private GameObject _rangeHolder;        // 모든 효과 범위 오브젝트의 부모
 
-    private GameObject[][,] _meshObjects = new GameObject[32][,];   // 모든 타일 오브젝트 [height][w, h]
+    private GameObject[,] _meshObjects;
     private GameObject[,] _structureObjects;                 // 모든 천연 자원 오브젝트
+    private Material _sharedTileMaterial;
 
     private Dictionary<Vector2Int, GameObject> _deckObjects;        // 모든 데크 오브젝트
     private Dictionary<Vector2Int, GameObject> _rangeObjects;       // 모든 효과 범위 오브젝트
@@ -79,6 +80,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         _oceanObject.transform.position = (HexaUtility.GetWorldCoordinate(new Vector2Int(0, 0)) + HexaUtility.GetWorldCoordinate(new Vector2Int(w - 1, h - 1))) / 2f + Vector3.up * (oceanLevel + 0.8f);
         _oceanObject.transform.localScale = Vector3.one * 100f;
 
+        _meshObjects = new GameObject[w / CHUNK_SIZE, h / CHUNK_SIZE];
         _structureObjects = new GameObject[w, h];
 
         _deckObjects = new Dictionary<Vector2Int, GameObject>();
@@ -87,35 +89,23 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         _tileHolder = new GameObject("Tiles");
         _rangeHolder = new GameObject("Range");
 
-        // 높이 i = 0부터 시작
-        for (int i = 0; i < _meshObjects.Length; i++)
+        // 청크 좌표 (p, q)에 대해 반복
+        for (int p = 0; p < _meshObjects.GetLength(0); p++)
         {
-            _meshObjects[i] = new GameObject[w / CHUNK_SIZE, h / CHUNK_SIZE];
-            
-            // 청크 좌표 (p, q)에 대해 반복
-            for (int p = 0; p < _meshObjects[i].GetLength(0); p++)
+            for (int q = 0; q < _meshObjects.GetLength(1); q++)
             {
-                for (int q = 0; q < _meshObjects[i].GetLength(1); q++)
+                _meshObjects[p, q] = Instantiate(_tilePrefab, _tileHolder.transform);
+                _meshObjects[p, q].GetComponent<MeshFilter>().mesh = CreateChunkMesh(p, q);
+                _meshObjects[p, q].GetComponent<MeshCollider>().sharedMesh = _meshObjects[p, q].GetComponent<MeshFilter>().mesh;
+
+                if (_sharedTileMaterial == null)
                 {
-                    _meshObjects[i][p, q] = Instantiate(_tilePrefab, _tileHolder.transform);
-                    _meshObjects[i][p, q].GetComponent<MeshFilter>().mesh = CreateChunkMesh(i, p, q);
-                    _meshObjects[i][p, q].GetComponent<MeshCollider>().sharedMesh = _meshObjects[i][p, q].GetComponent<MeshFilter>().mesh;
-
-                    // 바다에 잠겨 있으면 모래 Material로 변경
-                    if (i <= MapManager.Instance.OceanLevel)
-                    {
-                        Material[] materials = _meshObjects[i][p, q].GetComponent<MeshRenderer>().materials;
-
-                        for (int j = 0; j < materials.Length; j++)
-                        {
-                            materials[j] = _sandMaterial;
-                        }
-
-                        _meshObjects[i][p, q].GetComponent<MeshRenderer>().materials = materials;
-                    }
+                    _sharedTileMaterial = _meshObjects[p, q].GetComponent<MeshRenderer>().sharedMaterial;
                 }
             }
         }
+
+        _sharedTileMaterial.SetFloat("_OceanLevel", _oceanObject.transform.position.y);
     }
 
     /// <summary>
@@ -337,122 +327,116 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
     /// <param name="p">청크 좌표 p</param>
     /// <param name="q">청크 좌표 q</param>
     /// <returns>메시</returns>
-    private Mesh CreateChunkMesh(int i, int p, int q)
+    private Mesh CreateChunkMesh(int p, int q)
     {
         Mesh combinedMesh = new Mesh();
         combinedMesh.indexFormat = IndexFormat.UInt32;
         combinedMesh.subMeshCount = 8;
 
         List<Vector3> vertices = new List<Vector3>();
-        List<Vector2> uv = new List<Vector2>();
-        List<int>[] triangles = new List<int>[8];
-
-        for (int j = 0; j < 8; j++)
-        {
-            triangles[j] = new List<int>();
-        }
+        List<Vector3> uv = new List<Vector3>();
+        List<int> triangles = new List<int>();
 
         int vertexIndex = 0;
 
-        for (int x = p * CHUNK_SIZE; x < (p + 1) * CHUNK_SIZE; x++)
+        for (int i = 0; i <= MapGenerator.Instance.MaxHeight; i++)
         {
-            for (int y = q * CHUNK_SIZE; y < (q + 1) * CHUNK_SIZE; y++)
+            for (int x = p * CHUNK_SIZE; x < (p + 1) * CHUNK_SIZE; x++)
             {
-                if (MapManager.Instance.Tiles[x, y].Height < i)
+                for (int y = q * CHUNK_SIZE; y < (q + 1) * CHUNK_SIZE; y++)
                 {
-                    continue;
-                }
-                else if (MapManager.Instance.Tiles[x, y].Height == i)
-                {
-                    UpdateTile(new Vector2Int(x, y));
-                }
-
-                Vector3 worldPosition = HexaUtility.GetWorldCoordinate(new Vector2Int(x, y));
-                worldPosition.y = i;
-
-                int topIndex = 0;
-                int sideIndex = 1;
-
-                if (MapManager.Instance.Tiles[x, y].Height > i)
-                {
-                    if (MapManager.Instance.Tiles[x, y].Height > MapGenerator.Instance.SnowThreshold)
-                    {
-                        sideIndex = 5;
-                    }
-                    else
-                    {
-                        sideIndex = 4;
-                    }
-                }
-                else if (MapManager.Instance.Tiles[x, y].Height > MapGenerator.Instance.SnowThreshold)
-                {
-                    topIndex = 2;
-                    sideIndex = 3;
-                }
-
-                for (int t = 0; t < 6; t++)
-                {
-                    Vector2Int neighbor = HexaUtility.GetNeighbor(new Vector2Int(x, y), (TileNeighbor)t);
-
-                    if (neighbor.x < 0 || neighbor.x >= MapManager.Instance.Tiles.GetLength(0) ||
-                        neighbor.y < 0 || neighbor.y >= MapManager.Instance.Tiles.GetLength(1))
+                    if (MapManager.Instance.Tiles[x, y].Height < i)
                     {
                         continue;
                     }
-
-                    // 옆면 그리기
-                    if (MapManager.Instance.Tiles[neighbor.x, neighbor.y].Height < i)
+                    else if (MapManager.Instance.Tiles[x, y].Height == i)
                     {
-                        vertices.Add(HexaRenderUtility.Vertices[HexaRenderUtility.Triangles[t][0]] + worldPosition);
-                        vertices.Add(HexaRenderUtility.Vertices[HexaRenderUtility.Triangles[t][1]] + worldPosition);
-                        vertices.Add(HexaRenderUtility.Vertices[HexaRenderUtility.Triangles[t][2]] + worldPosition);
-                        vertices.Add(HexaRenderUtility.Vertices[HexaRenderUtility.Triangles[t][5]] + worldPosition);
-
-                        uv.Add(HexaRenderUtility.Uv[0]);
-                        uv.Add(HexaRenderUtility.Uv[1]);
-                        uv.Add(HexaRenderUtility.Uv[2]);
-                        uv.Add(HexaRenderUtility.Uv[3]);
-
-                        triangles[sideIndex].Add(vertexIndex);
-                        triangles[sideIndex].Add(vertexIndex + 1);
-                        triangles[sideIndex].Add(vertexIndex + 2);
-                        triangles[sideIndex].Add(vertexIndex + 2);
-                        triangles[sideIndex].Add(vertexIndex + 1);
-                        triangles[sideIndex].Add(vertexIndex + 3);
-
-                        vertexIndex += 4;
-                    }
-                }
-
-                // 윗면 그리기
-                if (MapManager.Instance.Tiles[x, y].Height == i)
-                {
-                    vertices.Add(HexaRenderUtility.Vertices[12] + worldPosition);
-                    uv.Add(HexaRenderUtility.TopUv[0]);
-
-                    for (int j = 0; j < 6; j++)
-                    {
-                        vertices.Add(HexaRenderUtility.Vertices[j] + worldPosition);
-                        uv.Add(HexaRenderUtility.TopUv[j]);
+                        UpdateTile(new Vector2Int(x, y));
                     }
 
-                    for (int j = 0; j < 18; j++)
+                    Vector3 worldPosition = HexaUtility.GetWorldCoordinate(new Vector2Int(x, y));
+                    worldPosition.y = i;
+
+                    TextureType sideTexture = TextureType.GrassSide;
+                    TextureType topTexture = TextureType.Grass;
+
+                    if (MapManager.Instance.Tiles[x, y].Height > i)
                     {
-                        triangles[topIndex].Add(vertexIndex + HexaRenderUtility.TopTriangles[j]);
+                        if (MapManager.Instance.Tiles[x, y].Height > MapGenerator.Instance.SnowThreshold)
+                        {
+                            sideTexture = TextureType.Rock;
+                        }
+                        else
+                        {
+                            sideTexture = TextureType.Dirt;
+                        }
+                    }
+                    else if (MapManager.Instance.Tiles[x, y].Height > MapGenerator.Instance.SnowThreshold)
+                    {
+                        sideTexture = TextureType.SnowSide;
+                        topTexture = TextureType.Snow;
                     }
 
-                    vertexIndex += 7;
+                    for (int t = 0; t < 6; t++)
+                    {
+                        Vector2Int neighbor = HexaUtility.GetNeighbor(new Vector2Int(x, y), (TileNeighbor)t);
+
+                        if (neighbor.x < 0 || neighbor.x >= MapManager.Instance.Tiles.GetLength(0) ||
+                            neighbor.y < 0 || neighbor.y >= MapManager.Instance.Tiles.GetLength(1))
+                        {
+                            continue;
+                        }
+
+                        // 옆면 그리기
+                        if (MapManager.Instance.Tiles[neighbor.x, neighbor.y].Height < i)
+                        {
+                            vertices.Add(HexaRenderUtility.Vertices[HexaRenderUtility.Triangles[t][0]] + worldPosition);
+                            vertices.Add(HexaRenderUtility.Vertices[HexaRenderUtility.Triangles[t][1]] + worldPosition);
+                            vertices.Add(HexaRenderUtility.Vertices[HexaRenderUtility.Triangles[t][2]] + worldPosition);
+                            vertices.Add(HexaRenderUtility.Vertices[HexaRenderUtility.Triangles[t][5]] + worldPosition);
+
+                            uv.Add(new Vector3(HexaRenderUtility.Uv[0][0], HexaRenderUtility.Uv[0][1], (float)sideTexture));
+                            uv.Add(new Vector3(HexaRenderUtility.Uv[1][0], HexaRenderUtility.Uv[1][1], (float)sideTexture));
+                            uv.Add(new Vector3(HexaRenderUtility.Uv[2][0], HexaRenderUtility.Uv[2][1], (float)sideTexture));
+                            uv.Add(new Vector3(HexaRenderUtility.Uv[3][0], HexaRenderUtility.Uv[3][1], (float)sideTexture));
+
+                            triangles.Add(vertexIndex);
+                            triangles.Add(vertexIndex + 1);
+                            triangles.Add(vertexIndex + 2);
+                            triangles.Add(vertexIndex + 2);
+                            triangles.Add(vertexIndex + 1);
+                            triangles.Add(vertexIndex + 3);
+
+                            vertexIndex += 4;
+                        }
+                    }
+
+                    // 윗면 그리기
+                    if (MapManager.Instance.Tiles[x, y].Height == i)
+                    {
+                        vertices.Add(HexaRenderUtility.Vertices[12] + worldPosition);
+                        uv.Add(new Vector3(HexaRenderUtility.TopUv[0][0], HexaRenderUtility.TopUv[0][1], (float)topTexture));
+
+                        for (int j = 0; j < 6; j++)
+                        {
+                            vertices.Add(HexaRenderUtility.Vertices[j] + worldPosition);
+                            uv.Add(new Vector3(HexaRenderUtility.TopUv[j + 1][0], HexaRenderUtility.TopUv[j + 1][1], (float)topTexture));
+                        }
+
+                        for (int j = 0; j < 18; j++)
+                        {
+                            triangles.Add(vertexIndex + HexaRenderUtility.TopTriangles[j]);
+                        }
+
+                        vertexIndex += 7;
+                    }
                 }
             }
         }
 
         combinedMesh.SetVertices(vertices);
         combinedMesh.SetUVs(0, uv);
-
-        for (int j = 0; j < 8; j++)
-        {
-            combinedMesh.SetTriangles(triangles[j], j);
-        }
+        combinedMesh.SetTriangles(triangles, 0);
 
         combinedMesh.RecalculateNormals();
         combinedMesh.RecalculateBounds();
@@ -469,21 +453,6 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
         Vector3 newOceanPosition = _oceanObject.transform.position;
         newOceanPosition.y = after + 0.8f;
 
-        MeshRenderer[] meshRenderers = new MeshRenderer[(after - before) * (_meshObjects[0].GetLength(0) * _meshObjects[0].GetLength(1))];
-
-        for (int i = 0; i < after - before; i++)
-        {
-            for (int p = 0; p < _meshObjects[0].GetLength(0); p++)
-            {
-                for (int q = 0; q < _meshObjects[0].GetLength(1); q++)
-                {
-                    meshRenderers[i * _meshObjects[0].GetLength(0) * _meshObjects[0].GetLength(1) + p * _meshObjects[0].GetLength(1) + q] = _meshObjects[before + i + 1][p, q].GetComponent<MeshRenderer>();
-                }
-            }
-        }
-
-        Material[] materials = meshRenderers[0].materials;
-
         float elapsed = 0f;
 
         while (elapsed < OCEAN_RISE_DURATION)
@@ -493,16 +462,7 @@ public class MapRenderer : SingletonBehaviour<MapRenderer>
                 elapsed += Time.deltaTime;
 
                 _oceanObject.transform.position = Vector3.Lerp(origianlPosition, newOceanPosition, elapsed / OCEAN_RISE_DURATION);
-
-                for (int i = 0; i < materials.Length; i++)
-                {
-                    materials[i].Lerp(materials[i], _sandMaterial, elapsed / OCEAN_RISE_DURATION);
-                }
-
-                for (int i = 0; i < meshRenderers.Length; i++)
-                {
-                    meshRenderers[i].materials = materials;
-                }
+                _sharedTileMaterial.SetFloat("_OceanLevel", origianlPosition.y + (newOceanPosition.y - origianlPosition.y) * (1.0f - Mathf.Pow(1.0f - elapsed / OCEAN_RISE_DURATION, 3)));
 
                 foreach (GameObject deck in _deckObjects.Values)
                 {
